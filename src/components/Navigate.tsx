@@ -2,6 +2,8 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Index from '../pages/Index'
 import ExerciseList from '../pages/ExerciseList'
+import FilterGroup from '../pages/FilterGroup'
+import User from '../pages/User'
 import My404Component from './My404Component'
 import '../styles/Navigate.sass'
 
@@ -15,8 +17,15 @@ const Navigate = (props: { collapsed: boolean }) => {
             <div className="top">
             </div>
             <Switch>
+                {/* 主页 */}
                 <Route exact path='/' component={Index}></Route>
+                {/* 题目管理 */}
                 <Route exact path='/exerciseList' component={ExerciseList}></Route>
+                {/* 题集管理 */}
+                <Route exact path='/filterGroup' component={FilterGroup}></Route>
+                {/* 用户管理 */}
+                <Route exact path='/user' component={User}></Route>
+                {/* 404 */}
                 <Route component={My404Component}></Route>
             </Switch>
         </div>
