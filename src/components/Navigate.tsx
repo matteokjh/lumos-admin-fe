@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Index from '../pages/Index'
 import ExerciseList from '../pages/ExerciseList'
+import SingleExercise from '../pages/SingleExercise'
 import FilterGroup from '../pages/FilterGroup'
 import User from '../pages/User'
 import My404Component from './My404Component'
@@ -10,6 +11,7 @@ import '../styles/Navigate.sass'
 
 const Navigate = (props: { collapsed: boolean }) => {
     const { collapsed } = props
+
     return (
         <div className="Navigate" style={{
             width: `calc(100vw - ${collapsed ? '80px' : '250px'})`
@@ -21,6 +23,8 @@ const Navigate = (props: { collapsed: boolean }) => {
                 <Route exact path='/' component={Index}></Route>
                 {/* 题目管理 */}
                 <Route exact path='/exerciseList' component={ExerciseList}></Route>
+                {/* 新增题目 */}
+                <Route exact path='/exerciseList/new' component={SingleExercise}></Route>
                 {/* 题集管理 */}
                 <Route exact path='/filterGroup' component={FilterGroup}></Route>
                 {/* 用户管理 */}

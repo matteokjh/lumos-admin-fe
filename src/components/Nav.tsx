@@ -13,7 +13,7 @@ const Nav = (props: { collapsed: boolean, setCollapsed: (c: boolean) => void }) 
             width: collapsed ? '80px' : '250px'
         }}>
             <Icon className='collapse-btn' onClick={() => setCollapsed(!collapsed)} type={collapsed ? 'menu-unfold' : 'menu-fold'} />
-            <Menu selectedKeys={[location.pathname]} inlineCollapsed={collapsed} mode='inline' theme='dark' defaultSelectedKeys={['/']}>
+            <Menu selectedKeys={[`/${location.pathname.split('/')[1]}`]} inlineCollapsed={collapsed} mode='inline' theme='dark' defaultSelectedKeys={['/']}>
                 <Header collapsed={collapsed}></Header>
                 {/* 主页 */}
                 <Menu.Item key='/'>
