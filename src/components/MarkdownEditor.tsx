@@ -24,6 +24,7 @@ const MarkdownEditor = () => {
                 ref={ref}
                 onChange={handleTextChange}
                 className='md-editor'
+                placeholder='请在此输入题目介绍（markdown）'
             ></Input.TextArea>
             {/* preview */}
             <ReactMarkdown className='preview' source={mdContent}></ReactMarkdown>

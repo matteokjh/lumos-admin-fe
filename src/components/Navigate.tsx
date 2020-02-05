@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Index from '../pages/Index'
 import ExerciseList from '../pages/ExerciseList'
-import SingleExercise from '../pages/SingleExercise'
+import Exercise from '../pages/Exercise'
 import FilterGroup from '../pages/FilterGroup'
 import User from '../pages/User'
 import My404Component from './My404Component'
@@ -24,7 +24,7 @@ const Navigate = (props: { collapsed: boolean }) => {
                 {/* 题目管理 */}
                 <Route exact path='/exerciseList' component={ExerciseList}></Route>
                 {/* 新增题目 */}
-                <Route exact path='/exerciseList/new' component={SingleExercise}></Route>
+                <Route exact path='/exerciseList/new' component={Exercise}></Route>
                 {/* 题集管理 */}
                 <Route exact path='/filterGroup' component={FilterGroup}></Route>
                 {/* 用户管理 */}
