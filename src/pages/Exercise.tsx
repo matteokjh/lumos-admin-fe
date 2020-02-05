@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Icon, Menu, Divider } from "antd";
+import { Button, Icon, Menu } from "antd";
 import { useHistory } from "react-router-dom";
 import MarkdownEditor from "../components/MarkdownEditor";
 import ExerciseForm from "../components/ExerciseForm";

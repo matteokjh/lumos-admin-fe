@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Icon, Button, Radio } from 'antd'
+import { Form, Input, InputNumber, Button, Radio } from 'antd'
 import '../styles/ExerciseForm.sass'
 import { COLOR } from '../utils/global_config'
 
@@ -17,8 +17,10 @@ const ExerciseForm = (props: any) => {
                 {getFieldDecorator('id', {
                     rules: [{ required: true, message: '请输入数字编号', type: 'number' }],
                 })(
-                    <Input
+                    <InputNumber
                         placeholder="编号"
+                        min={0}
+                        max={99999999}
                     />,
                 )}
                 </Form.Item>
@@ -28,6 +30,8 @@ const ExerciseForm = (props: any) => {
                 })(
                     <Input
                         placeholder="标题"
+                        allowClear
+                        autoComplete='off'
                     />,
                 )}
                 </Form.Item>
@@ -49,7 +53,9 @@ const ExerciseForm = (props: any) => {
                     </Radio.Group>
                 )}
                 </Form.Item>
-                
+                <Form.Item className='btn-group'>
+                    <Button type='primary'>保存</Button>
+                </Form.Item>
             </Form>
         </div>
     )
