@@ -20,3 +20,11 @@ export const exerciseShow = (id: number, show: boolean) => {
         show
     })
 }
+
+export const getExeInfo = (id: number) => {
+    return fetch.get(`${PREFIX}/get`, {
+        params: {
+            id: id
+        }
+    })
+}

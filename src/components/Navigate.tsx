@@ -25,6 +25,8 @@ const Navigate = (props: { collapsed: boolean }) => {
                 <Route exact path='/exerciseList' component={ExerciseList}></Route>
                 {/* 新增题目 */}
                 <Route exact path='/exerciseList/new' component={Exercise}></Route>
+                {/* 题目详情 */}
+                <Route exact path='/exerciseList/detail/:id' component={Exercise}></Route>
                 {/* 题集管理 */}
                 <Route exact path='/filterGroup' component={FilterGroup}></Route>
                 {/* 用户管理 */}

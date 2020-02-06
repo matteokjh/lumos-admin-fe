@@ -161,10 +161,6 @@ const ExerciseList = () => {
             message.error(err);
         }
     };
-    // 详情
-    const goDetail = (id: number) => {
-        console.log(id);
-    };
     // 显示/隐藏 题目
     const changeShow = async (id: number, e: RadioChangeEvent) => {
         let res = await exerciseShow(id, e.target.value);
@@ -182,7 +178,7 @@ const ExerciseList = () => {
     const deleteExercise = () => {
         console.log(selectedExercise);
     };
-    //
+    // 确认删除
     const handleInput = (e: ChangeEvent) => {
         e.stopPropagation();
         setTimeout(() => {

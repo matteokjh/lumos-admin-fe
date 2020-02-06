@@ -1,18 +1,45 @@
-import React, { useState } from "react";
-import { Button, Icon, Menu } from "antd";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { Button, Icon, Menu, message } from "antd";
+import { useHistory, useLocation } from "react-router-dom";
 import MarkdownEditor from "../components/MarkdownEditor";
 import ExerciseForm from "../components/ExerciseForm";
 import CodeView from "../components/CodeView";
 import TestCaseForm from "../components/TestCaseForm";
 
+import { getExeInfo } from "../api/exercise";
+
 import "../styles/Exercise.sass";
 import { SelectParam } from "antd/lib/menu";
+import { store } from '../store/index'
 
 // 单个题目组件，适用 新增题目、题目详情（含编辑）
-const Exercise = () => {
+const Exercise = (props: any) => {
     const history = useHistory();
     const [Active, setActive] = useState("baseInfo");
+    const location = useLocation();
+    const { dispatch } = useContext(store)
+
+    useEffect(() => {
+        (async () => {
+            // 题目详情
+            if (location.pathname.indexOf("detail") >= 0) {
+                let id = props.match.params["id"];
+                try {
+                    let r = await getExeInfo(id);
+                    if (r.code === 200) {
+                        dispatch({
+                            type: 'SET_EXERCISE',
+                            payload: r.data
+                        })
+                    } else {
+                        message.error(r.msg);
+                    }
+                } catch (err) {
+                    message.error(err);
+                }
+            }
+        })();
+    }, [location.pathname, props.match.params, dispatch]);
 
     // methods
     const back = () => {
