@@ -1,14 +1,46 @@
-import React from 'react'
-import { Form, Input, InputNumber, Button, Radio } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { Form, Input, InputNumber, Button, Radio, message } from 'antd'
 import '../styles/ExerciseForm.sass'
 import { COLOR } from '../utils/global_config'
+import { ExeBaseInfo, opType } from '../types/exercise'
+import { saveExercise } from '../api/exercise'
+import { useLocation } from 'react-router-dom'
+
+
 
 const ExerciseForm = (props: any) => {
     const { getFieldDecorator } = props.form
+    const location = useLocation()
+    const [type, setType] = useState('' as opType)
+
+    useEffect(() => {
+        if(location.pathname.indexOf('new') >= 0) {
+            setType('new') // 新建题目，id可变
+        } else {
+            setType('detail') // 修改题目，id不可变
+        }
+    }, [location.pathname])
 
     // methods
     const save = () => {
-
+        props.form.validateFields(async (err: Error, values: ExeBaseInfo) => {
+            if(!err) {
+                try {
+                    let res = await saveExercise({
+                        data: values,
+                        type: type
+                    })
+                    console.log(res)
+                    if(res.code === 200) {
+                        message.success(res.msg)
+                    } else {
+                        message.error(res.msg)
+                    }
+                } catch(err) {
+                    message.error(err)
+                }
+            }
+        })
     }
     return (
         <div className="ExerciseForm">
@@ -53,8 +85,16 @@ const ExerciseForm = (props: any) => {
                     </Radio.Group>
                 )}
                 </Form.Item>
+                <Form.Item label='贡献者'>
+                {getFieldDecorator('contributor')(
+                    <Input
+                        allowClear
+                        autoComplete='off'
+                    />,
+                )}
+                </Form.Item>
                 <Form.Item className='btn-group'>
-                    <Button type='primary'>保存</Button>
+                    <Button onClick={save} type='primary'>新建题目</Button>
                 </Form.Item>
             </Form>
         </div>
