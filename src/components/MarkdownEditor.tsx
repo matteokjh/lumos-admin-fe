@@ -32,6 +32,11 @@ const MarkdownEditor = () => {
         value: string
     ) => {
         setMdContent(value);
+        // 给markdown的链接加上跳转新页面
+        let aTag = window.document.querySelectorAll('.preview a')
+        aTag.forEach(e => {
+            e.setAttribute('target', '_blank')
+        })
     };
     // 阻止 ctrl s 默认事件
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
