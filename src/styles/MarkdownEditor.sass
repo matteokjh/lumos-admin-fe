@@ -3,15 +3,23 @@
     width: 100%
     padding: 10px
     height: calc(100vh - 125px)
+    background-color: #fafafa
     .md-editor
         resize: none
         width: 50%
         margin-right: 10px
+        .react-codemirror2
+            height: 100%
+            .CodeMirror
+                height: 100%
+                border-radius: 5px
     .preview
+        background-color: #fff
         user-select: text
         padding: 10px 20px
         width: 50%
         border: 1px solid #d9d9d9
         border-radius: 5px
+        overflow: auto
         *
             user-select: text

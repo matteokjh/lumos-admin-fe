@@ -1,79 +1,149 @@
-import React, { useState, useRef, ChangeEvent, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import ReactMarkdown from "react-markdown";
-import { Input } from "antd";
-import "../styles/MarkdownEditor.sass";
+import { message } from "antd";
 import { saveExercise } from "../api/exercise";
-import { store } from '../store'
+import { store } from "../store";
+import CodeBlock from "./code-block";
+import { UnControlled as CodeMirror } from "react-codemirror2";
+import { debounce } from "../utils/methods";
+
+import "../styles/MarkdownEditor.sass";
+import "../styles/markdown.sass";
+import "codemirror/lib/codemirror.css";
+import "codemirror/theme/monokai.css";
+require("codemirror/mode/markdown/markdown");
+require("codemirror/mode/javascript/javascript");
 
 const MarkdownEditor = () => {
     const [mdContent, setMdContent] = useState("");
-    const ref = useRef(null as any);
+    const inputRef = useRef(null as any);
+    const previewRef = useRef(null as any);
     const [isCtrl, setIsCtrl] = useState(false);
-    const { opType } = useContext(store).state
-
+    const { dispatch, state } = useContext(store);
+    const { opType, exerciseInfo } = state;
+    const [ratio, setRatio] = useState(0)
 
     // methods
 
-    const handleTextChange = (e: ChangeEvent) => {
-        e.stopPropagation();
-        setTimeout(() => {
-            setMdContent(ref.current.state.value);
-        }, 200);
+    // 文本变化
+    const handleTextChange = (
+        editor: CodeMirror.Editor,
+        data: CodeMirror.EditorChange,
+        value: string
+    ) => {
+        // setData之后会blur，setCursor让它focus到正确的位置
+        let p = editor.getCursor();
+        setMdContent(value);
+        editor.setCursor({
+            line: p.line,
+            ch: p.ch
+        });
     };
-
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // 阻止 ctrl s 默认事件
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         // ctrl or command
-        if((navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey) && e.keyCode === 83) {
-            e.preventDefault()
-            setIsCtrl(true)
+        if (
+            (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) &&
+            e.keyCode === 83
+        ) {
+            e.preventDefault();
+            setIsCtrl(true);
         }
     };
-    const handleKeyUp = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // 改为保存
+    const handleKeyUp = (e: React.KeyboardEvent<HTMLDivElement>) => {
         // ctrl or command
-        if((navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
-            setIsCtrl(false)
+        if (e.keyCode === 17) {
+            setTimeout(() => {
+                setIsCtrl(false);
+            }, 200);
         }
-        if(isCtrl) {
+        if (isCtrl) {
             switch (e.keyCode) {
                 case 83:
                     // s
-                    saveMd()
+                    saveMd();
                     break;
             }
         }
     };
+    // 保存
+    const saveMd = async () => {
+        try {
+            let res = await saveExercise({
+                data: {
+                    id: exerciseInfo.id,
+                    introduction: mdContent
+                },
+                type: opType
+            });
+            if (res.code === 200) {
+                message.success("保存成功");
+                dispatch({
+                    type: "SET_EXERCISE",
+                    payload: res.data
+                });
+            } else {
+                message.error(res.msg);
+            }
+        } catch (err) {
+            message.error(err);
+        }
+    };
+    // 滚动矫正（右 => 左）
+    const handleScroll = (type: 'input' | 'preview') => {
+        if(type === 'input') {
+            previewRef.current.scrollTop = inputRef.current.editor.getScrollInfo().top * ratio
+        } else {
+            inputRef.current.editor.scrollTo(0, previewRef.current.scrollTop);
+        }
+    };
 
-    const saveMd = () => {
-        console.log(mdContent)
-        saveExercise({
-            data: {
-                introduction: mdContent
-            },
-            type: opType
-        })
-    }
-
+    // 默认值
     useEffect(() => {
-        return () => {};
-    }, []);
+        setMdContent(exerciseInfo.introduction || "");
+        // 计算两个窗口的高度的比例
+        setTimeout(() => {
+            inputRef.current.editor.scrollTo(0,0);
+            let scrollInfo = inputRef.current.editor.getScrollInfo()
+            let a = scrollInfo.height - scrollInfo.clientHeight
+            let b = previewRef.current.scrollHeight - previewRef.current.clientHeight
+            setRatio(b / a)
+        }, 200);
+    }, [exerciseInfo, inputRef]);
 
     return (
         <div className="MarkdownEditor">
             {/* editor */}
-            <Input.TextArea
-                spellCheck="false"
-                ref={ref}
-                onChange={handleTextChange}
+            <div
                 className="md-editor"
-                placeholder="请在此输入题目介绍（markdown），ctrl + s 保存"
                 onKeyDown={handleKeyDown}
                 onKeyUp={handleKeyUp}
-            ></Input.TextArea>
+                onWheel={debounce(handleScroll, 'input')}
+            >
+                <CodeMirror
+                    value={mdContent}
+                    ref={inputRef}
+                    options={{
+                        mode: "markdown",
+                        theme: "monokai",
+                        lineNumbers: true,
+                        lineWrapping: true,
+                    }}
+                    onChange={handleTextChange}
+                />
+            </div>
             {/* preview */}
-            <ReactMarkdown
+            <div
                 className="preview"
-                source={mdContent}
-            ></ReactMarkdown>
+                onWheel={debounce(handleScroll, 'preview')}
+                ref={previewRef}
+            >
+                <ReactMarkdown
+                    source={mdContent}
+                    renderers={{ code: CodeBlock }}
+                ></ReactMarkdown>
+            </div>
         </div>
     );
 };
