@@ -1,28 +1,18 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Form, Input, InputNumber, Button, Radio, message } from "antd";
 import "../styles/ExerciseForm.sass";
 import { COLOR } from "../utils/global_config";
-import { ExeBaseInfo, opType } from "../types/exercise";
+import { ExeBaseInfo } from "../types/exercise";
 import { saveExercise } from "../api/exercise";
-import { useLocation, useHistory } from "react-router-dom";
 import { store } from "../store/index";
+import { useHistory } from "react-router-dom";
 
 const ExerciseForm = (props: any) => {
     const { getFieldDecorator, setFieldsValue } = props.form;
-    const location = useLocation();
+    const { state } = useContext(store);
     const history = useHistory()
-    const [opType, setOpType] = useState("" as opType);
+    const { exerciseInfo, opType } = state;
     const [isEdit, setIsEdit] = useState(false);
-    const { state, dispatch } = useContext(store);
-    const { exerciseInfo } = state;
-
-    useEffect(() => {
-        if (location.pathname.indexOf("new") >= 0) {
-            setOpType("new"); // 新建题目，id可变
-        } else {
-            setOpType("detail"); // 修改题目，id不可变
-        }
-    }, [location.pathname]);
 
     // methods
 

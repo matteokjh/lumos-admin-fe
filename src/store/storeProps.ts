@@ -1,25 +1,30 @@
-import { UserProps } from '../types/user'
-import { ExeProps } from '../types/exercise'
+import { UserProps } from "../types/user";
+import { ExeProps, opTypeProps } from "../types/exercise";
 
 export interface stateProps {
-    userInfo: UserProps,
-    exerciseInfo: ExeProps
+    userInfo: UserProps;
+    exerciseInfo: ExeProps;
+    opType: opTypeProps
 }
 
 export interface contextProps {
-    state: stateProps,
-    dispatch: React.Dispatch<any>
+    state: stateProps;
+    dispatch: React.Dispatch<any>;
 }
 
 export interface setUserAction {
-    type: 'SET_USER'
-    payload: UserProps
+    type: "SET_USER";
+    payload: UserProps;
 }
 export interface setExerciseAction {
-    type: 'SET_EXERCISE'
-    payload: ExeProps
+    type: "SET_EXERCISE";
+    payload: ExeProps;
+}
+export interface setOpTypeAction {
+    type: "SET_OPTYPE";
+    payload: opTypeProps;
 }
 
-export type actionProps = setUserAction | setExerciseAction
+export type actionProps = setUserAction | setExerciseAction | setOpTypeAction;
 
-export type Reducer<S, A> = (prevState: S, action: A) => S
+export type Reducer<S, A> = (prevState: S, action: A) => S;

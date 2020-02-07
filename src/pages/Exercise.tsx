@@ -37,6 +37,15 @@ const Exercise = (props: any) => {
                 } catch (err) {
                     message.error(err);
                 }
+                dispatch({
+                    type: 'SET_OPTYPE',
+                    payload: 'detail'
+                })
+            } else {
+                dispatch({
+                    type: 'SET_OPTYPE',
+                    payload: 'new'
+                })
             }
         })();
     }, [location.pathname, props.match.params, dispatch]);

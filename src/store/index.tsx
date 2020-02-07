@@ -3,13 +3,14 @@ import React, { createContext, useReducer } from 'react'
 import { contextProps } from './storeProps'
 import { stateProps } from './storeProps'
 import { actionProps, Reducer } from './storeProps'
-import { ExeProps } from '../types/exercise'
+import { ExeProps, opTypeProps } from '../types/exercise'
 import { UserProps } from '../types/user'
 
 const initialContext = {
   state: {
     userInfo: {} as UserProps,
-    exerciseInfo: {} as ExeProps
+    exerciseInfo: {} as ExeProps,
+    opType: '' as opTypeProps
   },
   dispatch: () => {}
 } as contextProps
@@ -30,6 +31,11 @@ const reducer: Reducer<stateProps, actionProps> = (state, action) => {
             return {
                 ...state,
                 exerciseInfo: action.payload
+            }
+        case 'SET_OPTYPE': 
+            return {
+                ...state,
+                opType: action.payload
             }
         default:
             throw new Error()

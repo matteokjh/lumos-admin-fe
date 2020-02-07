@@ -6,7 +6,7 @@ export interface ExeBaseInfo {
     contributor: string
 }
 
-export type opType = 'new' | 'detail'
+export type opTypeProps = 'new' | 'detail'
 
 export type testCaseType = {
     input: string,
