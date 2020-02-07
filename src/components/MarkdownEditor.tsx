@@ -4,7 +4,7 @@ import { message } from "antd";
 import { saveExercise } from "../api/exercise";
 import { store } from "../store";
 import CodeBlock from "./code-block";
-import { UnControlled as CodeMirror } from "react-codemirror2";
+import { Controlled as CodeMirror } from "react-codemirror2";
 import { debounce } from "../utils/methods";
 
 import "../styles/MarkdownEditor.sass";
@@ -15,13 +15,13 @@ require("codemirror/mode/markdown/markdown");
 require("codemirror/mode/javascript/javascript");
 
 const MarkdownEditor = () => {
-    const [mdContent, setMdContent] = useState("");
+    const [mdContent, setMdContent] = useState(""); // 右边的真实data
     const inputRef = useRef(null as any);
     const previewRef = useRef(null as any);
     const [isCtrl, setIsCtrl] = useState(false);
     const { dispatch, state } = useContext(store);
     const { opType, exerciseInfo } = state;
-    const [ratio, setRatio] = useState(0)
+    const [ratio, setRatio] = useState(0);
 
     // methods
 
@@ -31,13 +31,7 @@ const MarkdownEditor = () => {
         data: CodeMirror.EditorChange,
         value: string
     ) => {
-        // setData之后会blur，setCursor让它focus到正确的位置
-        let p = editor.getCursor();
         setMdContent(value);
-        editor.setCursor({
-            line: p.line,
-            ch: p.ch
-        });
     };
     // 阻止 ctrl s 默认事件
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -91,9 +85,10 @@ const MarkdownEditor = () => {
         }
     };
     // 滚动矫正（右 => 左）
-    const handleScroll = (type: 'input' | 'preview') => {
-        if(type === 'input') {
-            previewRef.current.scrollTop = inputRef.current.editor.getScrollInfo().top * ratio
+    const handleScroll = (type: "input" | "preview") => {
+        if (type === "input") {
+            previewRef.current.scrollTop =
+                inputRef.current.editor.getScrollInfo().top * ratio;
         } else {
             inputRef.current.editor.scrollTo(0, previewRef.current.scrollTop);
         }
@@ -102,15 +97,16 @@ const MarkdownEditor = () => {
     // 默认值
     useEffect(() => {
         setMdContent(exerciseInfo.introduction || "");
-        // 计算两个窗口的高度的比例
         setTimeout(() => {
-            inputRef.current.editor.scrollTo(0,0);
-            let scrollInfo = inputRef.current.editor.getScrollInfo()
-            let a = scrollInfo.height - scrollInfo.clientHeight
-            let b = previewRef.current.scrollHeight - previewRef.current.clientHeight
-            setRatio(b / a)
+            // 计算两个窗口的高度的比例
+            let scrollInfo = inputRef.current.editor.getScrollInfo();
+            let a = scrollInfo.height - scrollInfo.clientHeight;
+            let b =
+                previewRef.current.scrollHeight -
+                previewRef.current.clientHeight;
+            setRatio(b / a);
         }, 200);
-    }, [exerciseInfo, inputRef]);
+    }, [exerciseInfo]);
 
     return (
         <div className="MarkdownEditor">
@@ -119,24 +115,26 @@ const MarkdownEditor = () => {
                 className="md-editor"
                 onKeyDown={handleKeyDown}
                 onKeyUp={handleKeyUp}
-                onWheel={debounce(handleScroll, 'input')}
+                onWheel={debounce(handleScroll, "input")}
+                onMouseUp={debounce(handleScroll, "input")}
             >
                 <CodeMirror
-                    value={mdContent}
                     ref={inputRef}
+                    value={mdContent}
                     options={{
                         mode: "markdown",
                         theme: "monokai",
                         lineNumbers: true,
-                        lineWrapping: true,
+                        lineWrapping: true
                     }}
-                    onChange={handleTextChange}
+                    onBeforeChange={handleTextChange}
                 />
             </div>
             {/* preview */}
             <div
                 className="preview"
-                onWheel={debounce(handleScroll, 'preview')}
+                onWheel={debounce(handleScroll, "preview")}
+                onMouseUp={debounce(handleScroll, "preview")}
                 ref={previewRef}
             >
                 <ReactMarkdown
