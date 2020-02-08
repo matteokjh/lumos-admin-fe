@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ChangeEvent, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { Button, Icon, message, Table, Radio, Modal, Input } from "antd";
+import { Button, Icon, message, Table, Radio, Modal, Input, Spin } from "antd";
 import "../styles/ExerciseList.sass";
 import { useHistory } from "react-router-dom";
 import { ExeProps, ModeType, testCaseType } from "../types/exercise";
@@ -16,6 +16,7 @@ const ExerciseList = () => {
     const [selectedExercise, setSelected] = useState(-1);
     const confirmInputRef = useRef(null as any);
     const [confirm, setConfirm] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     // column
     const columns = [
@@ -150,6 +151,7 @@ const ExerciseList = () => {
 
     // methods
     const refresh = async () => {
+        setLoading(true);
         try {
             let res = await getList();
             if (res.code === 200) {
@@ -160,6 +162,7 @@ const ExerciseList = () => {
         } catch (err) {
             message.error(err);
         }
+        setLoading(false);
     };
     // 显示/隐藏 题目
     const changeShow = async (id: number, e: RadioChangeEvent) => {
@@ -193,45 +196,51 @@ const ExerciseList = () => {
     }, []);
 
     return (
-        <div className="ExerciseList">
-            {/* 按钮组 */}
-            <div className="toolbar">
-                <Button onClick={refresh}>刷新</Button>
-                <Button
-                    type="primary"
-                    onClick={() => history.push("/exerciseList/new")}
+        <Spin spinning={loading}>
+            <div className="ExerciseList">
+                {/* 按钮组 */}
+                <div className="toolbar">
+                    <Button onClick={refresh}>刷新</Button>
+                    <Button
+                        type="primary"
+                        onClick={() => history.push("/exerciseList/new")}
+                    >
+                        <Icon type="plus" />
+                        <span>新增题目</span>
+                    </Button>
+                </div>
+                <div className="main">
+                    <Table
+                        dataSource={list}
+                        columns={columns}
+                        rowKey="id"
+                    ></Table>
+                </div>
+                {/* 确认删除 modal */}
+                <Modal
+                    title={
+                        <span style={{ color: "#ff4a4d" }}>
+                            <Icon type="warning" /> 注意
+                        </span>
+                    }
+                    okButtonProps={{
+                        disabled: !confirm,
+                        type: "danger"
+                    }}
+                    visible={deleteModalVisible}
+                    okText="确定"
+                    onOk={deleteExercise}
+                    cancelText="取消"
+                    onCancel={() => showDeleteModal(false)}
                 >
-                    <Icon type="plus" />
-                    <span>新增题目</span>
-                </Button>
+                    <p>
+                        确认要<b>删除</b>该题？此操作<b>不可逆</b>！输入该题{" "}
+                        <b>编号</b> 以确认：
+                    </p>
+                    <Input ref={confirmInputRef} onChange={handleInput}></Input>
+                </Modal>
             </div>
-            <div className="main">
-                <Table dataSource={list} columns={columns} rowKey="id"></Table>
-            </div>
-            {/* 确认删除 modal */}
-            <Modal
-                title={
-                    <span style={{ color: "#ff4a4d" }}>
-                        <Icon type="warning" /> 注意
-                    </span>
-                }
-                okButtonProps={{
-                    disabled: !confirm,
-                    type: "danger"
-                }}
-                visible={deleteModalVisible}
-                okText="确定"
-                onOk={deleteExercise}
-                cancelText="取消"
-                onCancel={() => showDeleteModal(false)}
-            >
-                <p>
-                    确认要<b>删除</b>该题？此操作<b>不可逆</b>！输入该题{" "}
-                    <b>编号</b> 以确认：
-                </p>
-                <Input ref={confirmInputRef} onChange={handleInput}></Input>
-            </Modal>
-        </div>
+        </Spin>
     );
 };
 
