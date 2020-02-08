@@ -15,9 +15,10 @@ import { store } from '../store/index'
 // 单个题目组件，适用 新增题目、题目详情（含编辑）
 const Exercise = (props: any) => {
     const history = useHistory();
-    const [Active, setActive] = useState("baseInfo");
+    const [Active, setActive] = useState("code");
     const location = useLocation();
     const { dispatch } = useContext(store)
+    const [opType, setOpType] = useState('new')
 
     useEffect(() => {
         (async () => {
@@ -41,11 +42,17 @@ const Exercise = (props: any) => {
                     type: 'SET_OPTYPE',
                     payload: 'detail'
                 })
+                setOpType('detail')
             } else {
                 dispatch({
                     type: 'SET_OPTYPE',
                     payload: 'new'
                 })
+                dispatch({
+                    type: 'SET_EXERCISE',
+                    payload: {}
+                })
+                setOpType('new')
             }
         })();
     }, [location.pathname, props.match.params, dispatch]);
@@ -75,13 +82,13 @@ const Exercise = (props: any) => {
                     <Menu.Item key="baseInfo">
                         <span>基本信息</span>
                     </Menu.Item>
-                    <Menu.Item key="markdown">
+                    <Menu.Item key="markdown" disabled={opType === 'new'}>
                         <span>题目介绍</span>
                     </Menu.Item>
-                    <Menu.Item key="code">
+                    <Menu.Item key="code" disabled={opType === 'new'}>
                         <span>代码</span>
                     </Menu.Item>
-                    <Menu.Item key="testCase">
+                    <Menu.Item key="testCase" disabled={opType === 'new'}>
                         <span>测试用例</span>
                     </Menu.Item>
                 </Menu>

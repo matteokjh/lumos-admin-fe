@@ -6,6 +6,8 @@ import { store } from "../store";
 import CodeBlock from "./code-block";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import { debounce } from "../utils/methods";
+import { ResizableBox } from "react-resizable";
+import "react-resizable/css/styles.css";
 
 import "../styles/MarkdownEditor.sass";
 import "../styles/markdown.sass";
@@ -18,6 +20,7 @@ const MarkdownEditor = () => {
     const [mdContent, setMdContent] = useState(""); // 右边的真实data
     const inputRef = useRef(null as any);
     const previewRef = useRef(null as any);
+    const mdWrapperRef = useRef(null as any)
     const [isCtrl, setIsCtrl] = useState(false);
     const { dispatch, state } = useContext(store);
     const { opType, exerciseInfo } = state;
@@ -33,10 +36,10 @@ const MarkdownEditor = () => {
     ) => {
         setMdContent(value);
         // 给markdown的链接加上跳转新页面
-        let aTag = window.document.querySelectorAll('.preview a')
+        let aTag = window.document.querySelectorAll(".preview a");
         aTag.forEach(e => {
-            e.setAttribute('target', '_blank')
-        })
+            e.setAttribute("target", "_blank");
+        });
     };
     // 阻止 ctrl s 默认事件
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -95,10 +98,12 @@ const MarkdownEditor = () => {
             previewRef.current.scrollTop =
                 inputRef.current.editor.getScrollInfo().top * ratio;
         } else {
-            inputRef.current.editor.scrollTo(0, previewRef.current.scrollTop);
+            inputRef.current.editor.scrollTo(
+                0,
+                previewRef.current.scrollTop / ratio
+            );
         }
     };
-
     // 默认值
     useEffect(() => {
         setMdContent(exerciseInfo.introduction || "");
@@ -114,27 +119,36 @@ const MarkdownEditor = () => {
     }, [exerciseInfo]);
 
     return (
-        <div className="MarkdownEditor">
+        <div className="MarkdownEditor" ref={mdWrapperRef}>
             {/* editor */}
-            <div
-                className="md-editor"
-                onKeyDown={handleKeyDown}
-                onKeyUp={handleKeyUp}
-                onWheel={debounce(handleScroll, "input")}
-                onMouseUp={debounce(handleScroll, "input")}
+            <ResizableBox
+                width={1300}
+                height={1}
+                minConstraints={[600, 0]}
+                maxConstraints={[1300, 0]}
+                axis="x"
             >
-                <CodeMirror
-                    ref={inputRef}
-                    value={mdContent}
-                    options={{
-                        mode: "markdown",
-                        theme: "monokai",
-                        lineNumbers: true,
-                        lineWrapping: true
-                    }}
-                    onBeforeChange={handleTextChange}
-                />
-            </div>
+                <div
+                    className="md-editor"
+                    onKeyDown={handleKeyDown}
+                    onKeyUp={handleKeyUp}
+                    onWheel={debounce(handleScroll, "input")}
+                    onMouseUp={debounce(handleScroll, "input")}
+                >
+                    <CodeMirror
+                        ref={inputRef}
+                        value={mdContent}
+                        options={{
+                            mode: "markdown",
+                            theme: "monokai",
+                            lineNumbers: true,
+                            lineWrapping: true,
+                            scrollbarStyle: 'null'
+                        }}
+                        onBeforeChange={handleTextChange}
+                    />
+                </div>
+            </ResizableBox>
             {/* preview */}
             <div
                 className="preview"
