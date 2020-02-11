@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { store } from "../store/index";
 import ReactMarkdown from "react-markdown/with-html";
 import CodeBlock from "./react-markdown-code-block";
@@ -18,6 +18,7 @@ const CodeView = () => {
         localStorage["lumos-language"] || "javascript"
     );
     const [code, setCode] = useState('')
+    const monacoRef = useRef(null as any)
 
     // methods
     // 初始化
@@ -26,7 +27,8 @@ const CodeView = () => {
     }
     // 代码编辑
     const codeChange = (code: string) => {
-        console.log(code);
+        console.log(code)
+        // setCode(code)
     };
     // 题目指定语言变更
     const handleChange = async (val: LangProps) => {
@@ -55,9 +57,20 @@ const CodeView = () => {
     const langChange = (val: string) => {
         console.log(val);
         setLumosLanguage(val)
-        localStorage["lumos-language"] = val
+        localStorage["lumos-language"] = val 
     };
 
+    // const autoResize = () => {
+    //     console.log(monacoRef.current.editor)
+    //     monacoRef.current.editor.layout()
+    // }
+
+    useEffect(() => {
+        // window.addEventListener('resize', autoResize)
+        // return () => {
+        //     window.removeEventListener('resize', autoResize)
+        // };
+    }, [])
 
     return (
         <div className="CodeView">
@@ -95,14 +108,15 @@ const CodeView = () => {
                     </Select>
                 </div>
                 <MonacoEditor
-                    language={LumosLanguage}
+                    ref={monacoRef}
                     value={code}
+                    language={LumosLanguage}
                     theme="vs-dark"
                     onChange={codeChange}
                     editorDidMount={editorDidMount}
                     options={{
                         selectOnLineNumbers: true,
-                        automaticLayout: true
+                        automaticLayout: false
                     }}
                 ></MonacoEditor>
             </div>

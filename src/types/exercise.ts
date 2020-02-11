@@ -13,10 +13,14 @@ export type testCaseType = {
     output: string
 }
 
-export type LangProps = Partial<['javascript', 'cpp', 'java']>
+const langArr = <const> ['javascript', 'cpp', 'java']
+
+export type LangProps = Partial<typeof langArr>
 
 export type ExeProps = ExeBaseInfo & {
-    code?: string,
+    code?: {
+        [key in typeof langArr[number]]: string
+    },
     introduction?: string,
     createTime: string,
     modifiedTime?: string,
