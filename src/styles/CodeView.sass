@@ -1,3 +1,5 @@
+$introWidth: 450px
+    
 .CodeView
     background-color: #eee
     padding: 10px
@@ -5,11 +7,19 @@
     display: inline-flex
     width: 100%
     .intro
-        width: 450px
+        width: $introWidth
         height: 100%
         overflow: auto
         background-color: #fff
         border-radius: 5px
         padding: 10px 20px
+        user-select: text
+        *
+            user-select: text
     .code-editor
-        width: calc(100% - 450px)
+        width: calc(100% - #{$introWidth})
+        height: 100%
+        overflow: hidden
+        .toolBar
+            padding-left: 10px
+            margin-bottom: 10px

@@ -23,3 +23,19 @@ export const TRANSFER_MODE = (mode: ModeType) => {
         default: return [MODE[mode], COLOR.DEFAULT]
     }
 }
+
+// 语言集合
+export const LANGS = [
+    {
+        val: 'javascript',
+        label: 'JavaScript'
+    },
+    {
+        val: 'cpp',
+        label: 'C++'
+    },
+    {
+        val: 'java',
+        label: 'Java'
+    },
+]

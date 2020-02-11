@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown from "react-markdown/with-html";
 import { message } from "antd";
 import { saveExercise } from "../api/exercise";
 import { store } from "../store";
-import CodeBlock from "./code-block";
+import CodeBlock from "./react-markdown-code-block";
 import { Controlled as CodeMirror } from "react-codemirror2";
 import { debounce } from "../utils/methods";
 import { ResizableBox } from "react-resizable";
@@ -13,6 +13,7 @@ import "../styles/MarkdownEditor.sass";
 import "../styles/markdown.sass";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/monokai.css";
+import ReactMarkdownLink from "./react-markdown-link";
 require("codemirror/mode/markdown/markdown");
 require("codemirror/mode/javascript/javascript");
 
@@ -34,12 +35,16 @@ const MarkdownEditor = () => {
         data: CodeMirror.EditorChange,
         value: string
     ) => {
-        setMdContent(value);
-        // 给markdown的链接加上跳转新页面
-        let aTag = window.document.querySelectorAll(".preview a");
-        aTag.forEach(e => {
-            e.setAttribute("target", "_blank");
-        });
+        try {
+            setMdContent(value);
+            // 给markdown的链接加上跳转新页面
+            let aTag = window.document.querySelectorAll(".preview a");
+            aTag.forEach(e => {
+                e.setAttribute("target", "_blank");
+            });
+        } catch(err) {
+            console.log(err)
+        }
     };
     // 阻止 ctrl s 默认事件
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -158,7 +163,8 @@ const MarkdownEditor = () => {
             >
                 <ReactMarkdown
                     source={mdContent}
-                    renderers={{ code: CodeBlock }}
+                    escapeHtml={false}
+                    renderers={{ code: CodeBlock, link: ReactMarkdownLink }}
                 ></ReactMarkdown>
             </div>
         </div>

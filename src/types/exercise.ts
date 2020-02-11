@@ -13,6 +13,8 @@ export type testCaseType = {
     output: string
 }
 
+export type LangProps = Partial<['javascript', 'cpp', 'java']>
+
 export type ExeProps = ExeBaseInfo & {
     code?: string,
     introduction?: string,
@@ -21,5 +23,6 @@ export type ExeProps = ExeBaseInfo & {
     submitTimes: number,
     passTimes: number,
     testCase: testCaseType[],
-    show: boolean
+    show: boolean,
+    lang: LangProps
 }
