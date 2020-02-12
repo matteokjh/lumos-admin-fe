@@ -1,27 +1,37 @@
-$introWidth: 450px
-    
 .CodeView
     background-color: #eee
     padding: 10px
     height: calc(100vh - 125px)
     display: inline-flex
     width: 100%
+    .title
+        display: inline-block
+        background-color: #872a97
+        padding: 5px 8px
+        border-radius: 3px
+        color: #f1f1f1
+        font-size: 13px
     .intro
-        width: $introWidth
+        width: 49%
         height: 100%
-        overflow: auto
-        background-color: #fff
-        border-radius: 5px
-        padding: 10px 20px
-        user-select: text
-        *
-            user-select: text
+        overflow: hidden
+        margin-right: 10px
+        p
+            padding-left: 10px
+            margin-bottom: 10px
+            height: 32px
     .code-editor
-        width: calc(100% - #{$introWidth})
+        width: 50%
         height: 100%
         overflow: hidden
         .toolBar
             padding-left: 10px
             margin-bottom: 10px
+            display: inline-flex
+            align-items: center
+            justify-content: space-between
+            width: 100%
+            white-space: nowrap
+
         
         
