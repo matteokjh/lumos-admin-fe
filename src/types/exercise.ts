@@ -23,7 +23,7 @@ export type CodeProps = {
 
 export type ExeProps = ExeBaseInfo & {
     code?: CodeProps,
-    preCode?: CodeProps,
+    TestCode?: CodeProps,
     introduction?: string,
     createTime: string,
     modifiedTime?: string,

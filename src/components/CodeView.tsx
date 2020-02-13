@@ -1,8 +1,5 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { store } from "../store/index";
-import ReactMarkdown from "react-markdown/with-html";
-import CodeBlock from "./react-markdown-code-block";
-import ReactMarkdownLink from "./react-markdown-link";
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 import ReactResizeDetector from "react-resize-detector";
 import "../styles/CodeView.sass";
@@ -20,23 +17,28 @@ const CodeView = () => {
             "javascript") as typeof LangArr[number]
     );
 
-    const [preCode, setPreCode] = useState(
-        (exerciseInfo.preCode || {}) as CodeProps
+    const [TestCode, setTestCode] = useState(
+        (exerciseInfo.TestCode || {}) as CodeProps
     );
     const [code, setCode] = useState((exerciseInfo.code || {}) as CodeProps);
     const monacoRef = useRef(null as any);
+    const testCodeRef = useRef(null as any);
     const [isCtrl, setIsCtrl] = useState(false);
 
     useEffect(() => {
         setCode(exerciseInfo.code as CodeProps);
-        setPreCode(exerciseInfo.preCode as CodeProps);
+        setTestCode(exerciseInfo.TestCode as CodeProps);
+        let m = monacoRef.current
+        let n = testCodeRef.current
+        return () => {
+            m.editor.dispose()
+            n.editor.dispose()
+        }
     }, [exerciseInfo]);
 
     // methods
     // 初始化
-    const editorDidMount: EditorDidMount = (editor, monaco) => {
-        // editor.focus();
-    };
+    const editorDidMount: EditorDidMount = (editor, monaco) => {};
     // 代码编辑
     const codeChange = (val: string) => {
         setCode({
@@ -44,9 +46,9 @@ const CodeView = () => {
             [LumosLanguage]: val
         });
     };
-    const preCodeChange = (val: string) => {
-        setPreCode({
-            ...preCode,
+    const TestCodeChange = (val: string) => {
+        setTestCode({
+            ...TestCode,
             [LumosLanguage]: val
         });
     };
@@ -114,7 +116,7 @@ const CodeView = () => {
                 data: {
                     id: exerciseInfo.id,
                     code: code,
-                    preCode: preCode
+                    TestCode: TestCode
                 },
                 type: opType
             });
@@ -140,29 +142,12 @@ const CodeView = () => {
         >
             {/* 测试代码 */}
             <div className="intro">
-                <p className="title">测试代码</p>
-                <ReactResizeDetector
-                    handleWidth
-                    refreshMode="throttle"
-                    refreshRate={100}
-                >
-                    <MonacoEditor
-                        value={preCode?.[LumosLanguage] || ""}
-                        language={LumosLanguage}
-                        theme="vs-dark"
-                        onChange={preCodeChange}
-                        editorDidMount={editorDidMount}
-                    ></MonacoEditor>
-                </ReactResizeDetector>
-            </div>
-            {/* 用户可见代码 */}
-            <div className="code-editor">
                 <div className="toolBar">
-                    <span className="title">用户可见代码</span>
+                    <span className="title">测试代码</span>
                     <div className="t-wrapper">
                         <span>当前语言：</span>
                         <Select
-                            defaultValue="javascript"
+                            defaultValue={LumosLanguage}
                             onChange={langChange}
                             style={{
                                 width: 120,
@@ -175,6 +160,28 @@ const CodeView = () => {
                                 </Option>
                             ))}
                         </Select>
+                    </div>
+                </div>
+                <ReactResizeDetector
+                    handleWidth
+                    refreshMode="throttle"
+                    refreshRate={100}
+                >
+                    <MonacoEditor
+                        ref={testCodeRef}
+                        value={TestCode?.[LumosLanguage] || ""}
+                        language={LumosLanguage}
+                        theme="vs-dark"
+                        onChange={TestCodeChange}
+                        editorDidMount={editorDidMount}
+                    ></MonacoEditor>
+                </ReactResizeDetector>
+            </div>
+            {/* 用户可见代码 */}
+            <div className="code-editor">
+                <div className="toolBar">
+                    <span className="title">用户可见代码</span>
+                    <div className="t-wrapper">
                         <span>题目指定语言：</span>
                         <Select
                             placeholder="请选择题目包含的语言"
@@ -206,7 +213,6 @@ const CodeView = () => {
                         theme="vs-dark"
                         onChange={codeChange}
                         editorDidMount={editorDidMount}
-                        options={{}}
                     ></MonacoEditor>
                 </ReactResizeDetector>
             </div>

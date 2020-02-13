@@ -15,7 +15,7 @@ import { store } from '../store/index'
 // 单个题目组件，适用 新增题目、题目详情（含编辑）
 const Exercise = (props: any) => {
     const history = useHistory();
-    const [Active, setActive] = useState("code");
+    const [Active, setActive] = useState("baseInfo");
     const location = useLocation();
     const { dispatch } = useContext(store)
     const [opType, setOpType] = useState('new')
