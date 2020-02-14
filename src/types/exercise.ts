@@ -10,7 +10,9 @@ export type opTypeProps = 'new' | 'detail'
 
 export type testCaseType = {
     input: string,
-    output: string
+    output: string,
+    show: boolean,
+    text?: string
 }
 
 export const LangArr = <const>['javascript', 'cpp', 'java']

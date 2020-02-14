@@ -1,2 +1,44 @@
 .TestCaseForm
-    
+    .btn
+        padding: 10px 30px
+        display: flex
+        justify-content: flex-end
+        border-bottom: 1px solid #eee
+    .dndContainer
+        display: flex
+        padding: 10px
+        flex-wrap: wrap
+        position: relative
+        .column
+            width: calc(50%)
+            margin-bottom: 10px
+            &:first-child
+                .card
+                    margin-right: 10px
+            .card
+                margin-bottom: 10px
+                box-shadow: 2px 2px 5px 1px #ddd
+                &:hover .toolbar i
+                    opacity: 1
+                .toolbar
+                    padding: 0
+                    border: none
+                    i
+                        opacity: 0
+                        transition: opacity .3s
+                        margin-left: 10px
+                        font-size: 16px
+                        cursor: pointer
+                .card-wrapper
+                    display: inline-flex
+                    width: 100%
+                    justify-content: space-around     
+                    .input,.output
+                        white-space: pre-wrap
+                        width: 50%
+                        display: inline-flex
+                    .title
+                        display: inline-block
+                        height: 100%
+                    .content
+                        margin-left: 10px
