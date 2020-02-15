@@ -28,12 +28,6 @@ const CodeView = () => {
     useEffect(() => {
         setCode(exerciseInfo.code as CodeProps);
         setTestCode(exerciseInfo.TestCode as CodeProps);
-        let m = monacoRef.current
-        let n = testCodeRef.current
-        return () => {
-            m.editor.dispose()
-            n.editor.dispose()
-        }
     }, [exerciseInfo]);
 
     // methods

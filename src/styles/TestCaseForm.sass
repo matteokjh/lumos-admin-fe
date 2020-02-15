@@ -1,23 +1,32 @@
 .TestCaseForm
+    overflow: hidden
     .btn
         padding: 10px 30px
         display: flex
-        justify-content: flex-end
+        justify-content: space-between
         border-bottom: 1px solid #eee
+        align-items: center
+        h1
+            margin: 0
+            font-size: 20px
     .dndContainer
         display: flex
         padding: 10px
         flex-wrap: wrap
-        position: relative
+        justify-content: center
         .column
-            width: calc(50%)
-            margin-bottom: 10px
-            &:first-child
-                .card
-                    margin-right: 10px
+            width: 80%
             .card
                 margin-bottom: 10px
                 box-shadow: 2px 2px 5px 1px #ddd
+                &-disabled
+                    background-color: #eee
+                    box-shadow: none
+                    border-color: #ddd
+                    color: #999
+                    .ant-card-head
+                        border-color: #ddd
+                        color: #999
                 &:hover .toolbar i
                     opacity: 1
                 .toolbar
@@ -26,9 +35,28 @@
                     i
                         opacity: 0
                         transition: opacity .3s
-                        margin-left: 10px
                         font-size: 16px
-                        cursor: pointer
+                        margin-left: 10px
+                        font-style: normal
+                        &:not(:first-child)
+                            cursor: pointer
+                    .showBtn
+                        *
+                            user-select: none
+                        .show
+                            border-color: #1890ff
+                            color: #1890ff
+                            &-active
+                                border-color: #1890ff
+                                background-color: #1890ff
+                                color: #fff
+                        .hide
+                            border-color: #ff4d4f
+                            color: #ff4d4f
+                            &-active
+                                border-color: #ff4d4f
+                                background-color: #ff4d4f
+                                color: #fff
                 .card-wrapper
                     display: inline-flex
                     width: 100%
@@ -40,5 +68,12 @@
                     .title
                         display: inline-block
                         height: 100%
+                        min-width: 50px
                     .content
-                        margin-left: 10px
+                        max-width: 300px
+                        max-height: 100px
+                        overflow: hidden
+                        display: -webkit-box
+                        text-overflow: ellipsis
+                        -webkit-line-clamp: 4
+                        -webkit-box-orient: vertical

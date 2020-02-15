@@ -7,37 +7,61 @@ const AddTestCaseModal = (props: any) => {
     const outRef = useRef(null as any);
     const textRef = useRef(null as any);
 
+    const { mode, activeItem, activeIdx } = props;
+
+
     return (
         <Modal
-            title="添加测试用例"
+            title={mode === "new" ? "添加测试用例" : "编辑测试用例"}
             okText="确定"
             cancelText="取消"
             visible={props.visible}
             onCancel={props.onCancel}
             maskClosable={false}
+            width={800}
+            style={{
+                height: 600
+            }}
             onOk={() =>
                 props.onOk({
-                    input: inRef.current.state.value,
-                    output: outRef.current.state.value,
-                    text: textRef.current.state.value
+                    type: mode,
+                    index: activeIdx,
+                    obj: {
+                        input: inRef.current.state.value,
+                        output: outRef.current.state.value,
+                        text: textRef.current.state.value,
+                        show: activeItem?.show || false
+                    }
                 })
             }
             className="AddTestCaseModal"
+            key={`add_testcase_modal_${activeIdx}`}
         >
             <div>
                 <div className="wrapper">
                     <div>
                         <b>输入</b>
-                        <Input.TextArea ref={inRef}></Input.TextArea>
+                        <Input.TextArea
+                            defaultValue={activeItem.input}
+                            ref={inRef}
+                        ></Input.TextArea>
                     </div>
                     <div>
                         <b>输出</b>
-                        <Input.TextArea ref={outRef}></Input.TextArea>
+                        <Input.TextArea
+                            defaultValue={activeItem.output}
+                            ref={outRef}
+                        ></Input.TextArea>
                     </div>
                 </div>
                 <p className="text">
                     <span>备注：</span>
-                    <Input ref={textRef}></Input>
+                    <Input
+                        spellCheck={false}
+                        allowClear
+                        defaultValue={activeItem.text}
+                        ref={textRef}
+                    ></Input>
                 </p>
             </div>
         </Modal>
