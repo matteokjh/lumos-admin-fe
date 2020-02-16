@@ -1,6 +1,6 @@
 .Execute
-    height: calc(100vh - 125px)
-    .title
+    // height: calc(100vh - 125px)
+    .exc_title
         border-bottom: 1px solid #eee
         box-shadow: 1px 1px 2px 1px #eee
         padding: 0 20px
@@ -8,31 +8,40 @@
         line-height: 50px
         h1
             font-size: 18px
-    .main
-        padding: 10px
-        height: calc(100% - 50px)
+    .exc_main
         width: 100%
+        height: calc(100vh - 172px)
         display: inline-flex
-        overflow: hidden
-        .info
+        padding: 10px
+        .exc_info
             display: inline-block
             height: 100%
             width: 400px
             border: 1px solid #eee
             border-radius: 5px
             padding: 10px
-        .exec-code
+        .exc_code
             width: calc(100% - 410px)
+            height: 100%
             margin-left: 10px
             position: relative
-            .code-wrapper
+            .exc_toolbar
+                margin-bottom: 10px
+            .exc_code_wrapper
                 width: 100%
-            .console
+            .exc_console
                 position: absolute
                 bottom: 0px
                 background-color: #ffffff
                 width: 100%
-                display: inline-flex
-                justify-content: space-between
-                align-items: center
-                padding-right: 20px
+                border: 1px solid #eee
+                border-radius: 5px
+                .bottom
+                    display: inline-flex
+                    justify-content: space-between
+                    align-items: center
+                    position: absolute
+                    bottom: 0px
+                    width: 100%
+                    padding: 8px
+                    border-top: 1px solid #eee

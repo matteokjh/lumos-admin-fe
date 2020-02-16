@@ -6,9 +6,9 @@ import ReactMarkdown from "react-markdown/with-html";
 import { ExeProps } from "../types/exercise";
 import CodeBlock from "./react-markdown-code-block";
 import ReactMarkdownLink from "./react-markdown-link";
+import { LangArr } from "../types/exercise";
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 import ReactResizeDetector from "react-resize-detector";
-import { LangArr } from "../types/exercise";
 import "../styles/Execute.sass";
 
 const { Option } = Select;
@@ -22,10 +22,13 @@ const Execute = () => {
         (localStorage["lumos-language"] ||
             "javascript") as typeof LangArr[number]
     );
+    const [isOpen, setIsOpen] = useState(false);
 
     // methods
     // 初始化
-    const editorDidMount: EditorDidMount = (editor, monaco) => {};
+    const editorDidMount: EditorDidMount = (editor, monaco) => {
+        // console.log(editor)
+    };
     // 代码编辑
     const codeChange = (val: string) => {
         setCode(val);
@@ -46,7 +49,9 @@ const Execute = () => {
     };
     const handleKeyUp = (e: React.KeyboardEvent<HTMLDivElement>) => {};
     // 控制台
-    const showConsole = () => {};
+    const showConsole = () => {
+        setIsOpen(!isOpen);
+    };
     // 运行
     const runCode = () => {
         console.log(code);
@@ -78,25 +83,28 @@ const Execute = () => {
 
     return (
         <div className="Execute">
-            <div className="title">
+            <div className="exc_title">
                 <h1>
                     {exercise.id}. {exercise.title}
                 </h1>
             </div>
             <div
-                className="main"
+                className="exc_main"
                 onKeyDown={handleKeyDown}
                 onKeyUp={handleKeyUp}
             >
-                <div className="info">
+                {/* 左边介绍 */}
+                <div className="exc_info">
                     <ReactMarkdown
                         source={exercise.introduction}
                         escapeHtml={false}
                         renderers={{ code: CodeBlock, link: ReactMarkdownLink }}
                     ></ReactMarkdown>
                 </div>
-                <div className="exec-code">
-                    <div className="toolbar">
+                {/* 右边代码编辑模块 */}
+                <div className="exc_code">
+                    {/* 语言选择 */}
+                    <div className="exc_toolbar">
                         <Select
                             style={{
                                 minWidth: 255
@@ -111,18 +119,18 @@ const Execute = () => {
                             ))}
                         </Select>
                     </div>
-
+                    {/* 代码编辑器 */}
                     <div
-                        className="code-wrapper"
+                        className="exc_code_wrapper"
                         style={{
-                            height: 440
+                            height: `calc(100vh - ${isOpen ? 485 : 285}px)`
                         }}
                     >
                         <ReactResizeDetector
                             handleWidth
+                            handleHeight
                             refreshMode="throttle"
                             refreshRate={100}
-                            handleHeight
                         >
                             <MonacoEditor
                                 ref={CodeRef}
@@ -132,17 +140,27 @@ const Execute = () => {
                                 theme="vs-dark"
                                 onChange={codeChange}
                                 editorDidMount={editorDidMount}
+                                height={isOpen ? 270 : 470}
                             ></MonacoEditor>
                         </ReactResizeDetector>
                     </div>
+                    {/* 控制台 */}
                     <div
-                        className="console"
+                        className="exc_console"
                         style={{
-                            height: 50
+                            height: isOpen ? 250 : 50
                         }}
                     >
-                        <Button onClick={showConsole} type="primary">控制台</Button>
-                        <Button onClick={runCode} type="primary">运行</Button>
+                        <div className="bottom">
+                            <div className="left">
+                                <Button onClick={showConsole}>控制台</Button>
+                            </div>
+                            <div className="right">
+                                <Button onClick={runCode} type="primary">
+                                    运行
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
