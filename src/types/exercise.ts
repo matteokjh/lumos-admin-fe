@@ -35,3 +35,5 @@ export type ExeProps = ExeBaseInfo & {
     show: boolean,
     lang: LangProps
 }
+
+export type ExecOpType = 'testRun' | 'submit'

@@ -2,17 +2,23 @@ import React, { useState, useContext } from "react";
 import { Form, Input, InputNumber, Button, Radio, message } from "antd";
 import "../styles/ExerciseForm.sass";
 import { COLOR } from "../utils/global_config";
-import { ExeBaseInfo } from "../types/exercise";
+import { ExeBaseInfo, opTypeProps } from "../types/exercise";
 import { saveExercise } from "../api/exercise";
 import { store } from "../store/index";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 const ExerciseForm = (props: any) => {
     const { getFieldDecorator, setFieldsValue } = props.form;
     const { state } = useContext(store);
-    const history = useHistory()
-    const { exerciseInfo, opType } = state;
+    const history = useHistory();
+    const { exerciseInfo } = state;
     const [isEdit, setIsEdit] = useState(false);
+    const location = useLocation();
+    const [opType] = useState(
+        (location.pathname.indexOf("detail") > -1
+            ? "detail"
+            : "new") as opTypeProps
+    );
 
     // methods
 
@@ -31,10 +37,10 @@ const ExerciseForm = (props: any) => {
                     });
                     if (res.code === 200) {
                         message.success(res.msg);
-                        if(opType === 'new') {
-                            history.push(`/exerciseList/detail/${res.data.id}`)
+                        if (opType === "new") {
+                            history.push(`/exerciseList/detail/${res.data.id}`);
                         } else {
-                            setIsEdit(false)
+                            setIsEdit(false);
                         }
                     } else {
                         message.error(res.msg);
@@ -47,15 +53,15 @@ const ExerciseForm = (props: any) => {
     };
     // 取消
     const handleCancel = () => {
-        let { id, title, mode, contributor } = exerciseInfo
-        setIsEdit(false)
+        let { id, title, mode, contributor } = exerciseInfo;
+        setIsEdit(false);
         setFieldsValue({
             id,
             title,
             mode,
             contributor
-        })
-    }
+        });
+    };
     return (
         <div className="ExerciseForm">
             <Form onSubmit={save} className="exercise-form">
@@ -131,7 +137,12 @@ const ExerciseForm = (props: any) => {
                     {getFieldDecorator("contributor", {
                         initialValue: exerciseInfo.contributor
                     })(
-                        <Input disabled={!canEdit()} spellCheck="false" allowClear autoComplete="off" />
+                        <Input
+                            disabled={!canEdit()}
+                            spellCheck="false"
+                            allowClear
+                            autoComplete="off"
+                        />
                     )}
                 </Form.Item>
                 {/* 按钮 */}

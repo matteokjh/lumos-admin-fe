@@ -7,9 +7,9 @@ let fetch = axios.create({
 })
 // 请求拦截
 fetch.interceptors.request.use((config: AxiosRequestConfig)=>{
-    // if(config.url && config.url.indexOf('clouddn') === -1) {
-    //     config.withCredentials = true
-    // }
+    if(config.url && config.url.indexOf('login') < 0) {
+        config.withCredentials = true
+    }
     return config
 })
 // 响应拦截

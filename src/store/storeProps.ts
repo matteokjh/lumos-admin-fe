@@ -4,7 +4,6 @@ import { ExeProps, opTypeProps } from "../types/exercise";
 export interface stateProps {
     userInfo: UserProps;
     exerciseInfo: ExeProps;
-    opType: opTypeProps
 }
 
 export interface contextProps {

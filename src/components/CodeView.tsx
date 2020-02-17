@@ -11,7 +11,7 @@ const { Option } = Select;
 
 const CodeView = () => {
     const { state, dispatch } = useContext(store);
-    const { exerciseInfo, opType } = state;
+    const { exerciseInfo } = state;
     const [LumosLanguage, setLumosLanguage] = useState(
         (localStorage["lumos-language"] ||
             "javascript") as typeof LangArr[number]
@@ -112,7 +112,7 @@ const CodeView = () => {
                     code: code,
                     TestCode: TestCode
                 },
-                type: opType
+                type: 'detail'
             });
             if (res.code === 200) {
                 message.success("保存成功");

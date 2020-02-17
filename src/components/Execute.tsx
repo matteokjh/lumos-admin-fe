@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { getExeInfo } from "../api/exercise";
+import { getExeInfo, execute } from "../api/exercise";
 import { message, Select, Button } from "antd";
 import { useLocation } from "react-router-dom";
 import ReactMarkdown from "react-markdown/with-html";
@@ -53,8 +53,23 @@ const Execute = () => {
         setIsOpen(!isOpen);
     };
     // 运行
-    const runCode = () => {
-        console.log(code);
+    const runCode = async () => {
+        try {
+            let res = await execute({
+                opType: 'testRun',
+                exerciseId: exercise.id,
+                code: code,
+                lang: LumosLanguage,
+                username: '429797371@qq.com'
+            })
+            console.log(res)
+            if(res.code === 200) {
+            } else {
+
+            }
+        } catch(err) {
+            message.error(err)
+        }
     };
 
     useEffect(() => {

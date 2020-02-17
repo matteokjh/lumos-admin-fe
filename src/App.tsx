@@ -1,17 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./App.sass";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import Nav from "./components/Nav";
 import Navigate from "./components/Navigate";
+import { store } from "./store";
+import Login from "./pages/Login";
+import { getToken } from "./api/user";
+import { message } from "antd";
+import Waiting from "./pages/Waiting";
 
 const App = () => {
-    const [collapsed, setCollapsed] = useState(false)
+    const [collapsed, setCollapsed] = useState(false);
+    const { dispatch } = useContext(store);
+    const [isLogged, setisLogged] = useState("waiting");
+
+    useEffect(() => {
+        (async () => {
+            try {
+                let res = await getToken();
+                if (res.code === 200) {
+                    dispatch({
+                        type: "SET_USER",
+                        payload: res.data
+                    });
+                    setisLogged("yes");
+                } else {
+                    message.error(res.msg);
+                    setisLogged("no");
+                }
+            } catch (err) {
+                message.error(err);
+            }
+        })();
+    }, [dispatch]);
 
     return (
         <div className="App">
             <Router>
-                <Nav collapsed={collapsed} setCollapsed={setCollapsed}></Nav>
-                <Navigate collapsed={collapsed}></Navigate>
+                {(isLogged === "waiting" && <Waiting></Waiting>) ||
+                    (isLogged === "yes" && (
+                        <>
+                            <Nav
+                                collapsed={collapsed}
+                                setCollapsed={setCollapsed}
+                            ></Nav>
+                            <Navigate collapsed={collapsed}></Navigate>
+                        </>
+                    )) ||
+                    (isLogged === "no" && (
+                        <Route>
+                            <Login></Login>
+                        </Route>
+                    ))}
             </Router>
         </div>
     );

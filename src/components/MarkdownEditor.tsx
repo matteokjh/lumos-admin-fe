@@ -24,7 +24,7 @@ const MarkdownEditor = () => {
     const mdWrapperRef = useRef(null as any)
     const [isCtrl, setIsCtrl] = useState(false);
     const { dispatch, state } = useContext(store);
-    const { opType, exerciseInfo } = state;
+    const { exerciseInfo } = state;
     const [ratio, setRatio] = useState(0);
 
     // methods
@@ -82,7 +82,7 @@ const MarkdownEditor = () => {
                     id: exerciseInfo.id,
                     introduction: mdContent
                 },
-                type: opType
+                type: 'detail'
             });
             if (res.code === 200) {
                 message.success("保存成功");

@@ -5,7 +5,7 @@ import MarkdownEditor from "../components/MarkdownEditor";
 import ExerciseForm from "../components/ExerciseForm";
 import CodeView from "../components/CodeView";
 import TestCaseForm from "../components/TestCaseForm";
-import Execute from '../components/Execute'
+import Execute from "../components/Execute";
 
 import { getExeInfo } from "../api/exercise";
 
@@ -22,10 +22,10 @@ const Exercise = (props: any) => {
     const [opType, setOpType] = useState("new");
 
     useEffect(() => {
+        let id = props.match.params["id"];
         (async () => {
             // 题目详情
             if (location.pathname.indexOf("detail") >= 0) {
-                let id = props.match.params["id"];
                 try {
                     let r = await getExeInfo(id);
                     if (r.code === 200) {
@@ -39,16 +39,8 @@ const Exercise = (props: any) => {
                 } catch (err) {
                     message.error(err);
                 }
-                dispatch({
-                    type: "SET_OPTYPE",
-                    payload: "detail"
-                });
                 setOpType("detail");
             } else {
-                dispatch({
-                    type: "SET_OPTYPE",
-                    payload: "new"
-                });
                 dispatch({
                     type: "SET_EXERCISE",
                     payload: {}
@@ -56,7 +48,8 @@ const Exercise = (props: any) => {
                 setOpType("new");
             }
         })();
-    }, [location.pathname, props.match.params, dispatch]);
+        // eslint-disable-next-line
+    }, [location.pathname, dispatch]);
 
     // methods
     const back = () => {

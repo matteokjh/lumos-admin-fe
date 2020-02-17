@@ -24,3 +24,12 @@ export interface SchoolProps {
     name: string,
     time: string
 }
+
+export interface LoginProps {
+    username: string,
+    password: string
+}
+
+export interface UserSearchProps {
+    
+}
