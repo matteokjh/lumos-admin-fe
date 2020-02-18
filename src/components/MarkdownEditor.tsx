@@ -4,46 +4,31 @@ import { message } from "antd";
 import { saveExercise } from "../api/exercise";
 import { store } from "../store";
 import CodeBlock from "./react-markdown-code-block";
-import { Controlled as CodeMirror } from "react-codemirror2";
 import { debounce } from "../utils/methods";
-import { ResizableBox } from "react-resizable";
-import "react-resizable/css/styles.css";
 
 import "../styles/MarkdownEditor.sass";
 import "../styles/markdown.sass";
-import "codemirror/lib/codemirror.css";
-import "codemirror/theme/monokai.css";
 import ReactMarkdownLink from "./react-markdown-link";
-require("codemirror/mode/markdown/markdown");
-require("codemirror/mode/javascript/javascript");
+import ReactResizeDetector from "react-resize-detector";
+import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 
 const MarkdownEditor = () => {
     const [mdContent, setMdContent] = useState(""); // 右边的真实data
     const inputRef = useRef(null as any);
     const previewRef = useRef(null as any);
-    const mdWrapperRef = useRef(null as any)
+    const mdWrapperRef = useRef(null as any);
     const [isCtrl, setIsCtrl] = useState(false);
     const { dispatch, state } = useContext(store);
     const { exerciseInfo } = state;
-    const [ratio, setRatio] = useState(0);
 
     // methods
 
     // 文本变化
-    const handleTextChange = (
-        editor: CodeMirror.Editor,
-        data: CodeMirror.EditorChange,
-        value: string
-    ) => {
+    const handleTextChange = (value: string) => {
         try {
             setMdContent(value);
-            // 给markdown的链接加上跳转新页面
-            let aTag = window.document.querySelectorAll(".preview a");
-            aTag.forEach(e => {
-                e.setAttribute("target", "_blank");
-            });
-        } catch(err) {
-            console.log(err)
+        } catch (err) {
+            console.log(err);
         }
     };
     // 阻止 ctrl s 默认事件
@@ -82,7 +67,7 @@ const MarkdownEditor = () => {
                     id: exerciseInfo.id,
                     introduction: mdContent
                 },
-                type: 'detail'
+                type: "detail"
             });
             if (res.code === 200) {
                 message.success("保存成功");
@@ -99,61 +84,60 @@ const MarkdownEditor = () => {
     };
     // 滚动矫正（右 => 左）
     const handleScroll = (type: "input" | "preview") => {
+        let editor = inputRef.current.editor;
+        let leftHeight = editor.getScrollHeight();
+        let rightHeight =
+            previewRef.current.scrollHeight + previewRef.current.clientHeight;
+        let ratio = rightHeight / leftHeight;
         if (type === "input") {
-            previewRef.current.scrollTop =
-                inputRef.current.editor.getScrollInfo().top * ratio;
+            previewRef.current.scrollTop = editor.getScrollTop() * ratio;
         } else {
-            inputRef.current.editor.scrollTo(
-                0,
-                previewRef.current.scrollTop / ratio
-            );
+            editor.setScrollTop(previewRef.current.scrollTop / ratio);
         }
+    };
+    // monaco editor 鼠标滚轮滚动矫正
+    const editorDidMount: EditorDidMount = (editor, monaco) => {
+        // @ts-ignore
+        editor.onMouseWheel(debounce(handleScroll, "input"));
     };
     // 默认值
     useEffect(() => {
         setMdContent(exerciseInfo.introduction || "");
-        setTimeout(() => {
-            // 计算两个窗口的高度的比例
-            let scrollInfo = inputRef.current.editor.getScrollInfo();
-            let a = scrollInfo.height - scrollInfo.clientHeight;
-            let b =
-                previewRef.current.scrollHeight -
-                previewRef.current.clientHeight;
-            setRatio(b / a);
-        }, 200);
     }, [exerciseInfo]);
 
     return (
         <div className="MarkdownEditor" ref={mdWrapperRef}>
             {/* editor */}
-            <ResizableBox
-                width={1300}
-                height={1}
-                minConstraints={[600, 0]}
-                maxConstraints={[1300, 0]}
-                axis="x"
+            <div
+                className="md-editor"
+                onKeyDown={handleKeyDown}
+                onKeyUp={handleKeyUp}
+                onWheel={debounce(handleScroll, "input")}
+                onMouseUp={debounce(handleScroll, "input")}
             >
-                <div
-                    className="md-editor"
-                    onKeyDown={handleKeyDown}
-                    onKeyUp={handleKeyUp}
-                    onWheel={debounce(handleScroll, "input")}
-                    onMouseUp={debounce(handleScroll, "input")}
+                <ReactResizeDetector
+                    handleWidth
+                    handleHeight
+                    refreshMode="throttle"
+                    refreshRate={100}
                 >
-                    <CodeMirror
+                    <MonacoEditor
                         ref={inputRef}
                         value={mdContent}
+                        theme="vs-dark"
+                        onChange={handleTextChange}
+                        editorDidMount={editorDidMount}
+                        language="markdown"
                         options={{
-                            mode: "markdown",
-                            theme: "monokai",
-                            lineNumbers: true,
-                            lineWrapping: true,
-                            scrollbarStyle: 'null'
+                            scrollBeyondLastLine: false,
+                            wordWrap: "bounded",
+                            minimap: {
+                                enabled: false
+                            },
                         }}
-                        onBeforeChange={handleTextChange}
-                    />
-                </div>
-            </ResizableBox>
+                    ></MonacoEditor>
+                </ReactResizeDetector>
+            </div>
             {/* preview */}
             <div
                 className="preview"

@@ -112,7 +112,7 @@ const CodeView = () => {
                     code: code,
                     TestCode: TestCode
                 },
-                type: 'detail'
+                type: "detail"
             });
             if (res.code === 200) {
                 message.success("保存成功");
@@ -168,6 +168,9 @@ const CodeView = () => {
                         theme="vs-dark"
                         onChange={TestCodeChange}
                         editorDidMount={editorDidMount}
+                        options={{
+                            scrollBeyondLastLine: false
+                        }}
                     ></MonacoEditor>
                 </ReactResizeDetector>
             </div>
@@ -207,6 +210,9 @@ const CodeView = () => {
                         theme="vs-dark"
                         onChange={codeChange}
                         editorDidMount={editorDidMount}
+                        options={{
+                            scrollBeyondLastLine: false
+                        }}
                     ></MonacoEditor>
                 </ReactResizeDetector>
             </div>
