@@ -1,5 +1,11 @@
 import fetch from "./index";
-import { opTypeProps, ExeProps, ExecOpType, LangArr } from "../types/exercise";
+import {
+    opTypeProps,
+    ExeProps,
+    ExecOpType,
+    LangArr,
+    testCaseType
+} from "../types/exercise";
 
 const PREFIX = "admin/exercise";
 
@@ -39,6 +45,8 @@ export const execute = (obj: {
     exerciseId: number;
     lang: typeof LangArr[number];
     code: string;
+    testcase?: testCaseType;
+    singleCaseInput?: string;
 }) => {
     return fetch.post(`${PREFIX}/execute`, obj);
 };

@@ -13,7 +13,7 @@ import "../styles/Exercise.sass";
 import { SelectParam } from "antd/lib/menu";
 import { store } from "../store/index";
 
-// 单个题目组件，适用 新增题目、题目详情（含编辑）
+// 题目详情页，适用 新增题目、题目详情（含编辑）
 const Exercise = (props: any) => {
     const history = useHistory();
     const [Active, setActive] = useState("baseInfo");

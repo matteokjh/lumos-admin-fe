@@ -36,7 +36,45 @@
                 width: 100%
                 border: 1px solid #eee
                 border-radius: 5px
-                .bottom
+                .console_top
+                    display: inline-flex
+                    justify-content: space-between
+                    align-items: center
+                    position: absolute
+                    top: 0
+                    left: 0
+                    width: 100%
+                    border-bottom: 1px solid #eee
+                    .console_icon
+                        margin-right: 20px
+                        font-size: 13px
+                        cursor: pointer
+                    .console_menu
+                        display: inline-flex
+                        ul
+                            line-height: 35px
+                            .ant-menu-item
+                                &-selected
+                                    border-color: #1890ff!important
+                                &-active
+                                    border-color: transparent
+                            li
+                                font-size: 12px
+                                padding: 0 10px
+                .console_mid
+                    position: absolute
+                    top: 35px
+                    width: 100%
+                    height: 164px
+                    overflow: hidden
+                    padding: 10px
+                    .testcaseBox
+                        height: 100%
+                        textarea
+                            height: 100%
+                    textarea
+                        resize: none
+                .console_bottom
                     display: inline-flex
                     justify-content: space-between
                     align-items: center
@@ -45,3 +83,8 @@
                     width: 100%
                     padding: 8px
                     border-top: 1px solid #eee
+                    z-index: 9
+                    background-color: #fff
+                    .right
+                        button
+                            margin-right: 10px

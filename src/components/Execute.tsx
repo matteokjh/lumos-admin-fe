@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getExeInfo, execute } from "../api/exercise";
-import { message, Select, Button } from "antd";
+import { message, Select, Button, Menu, Icon, Input, Empty } from "antd";
 import { useLocation } from "react-router-dom";
 import ReactMarkdown from "react-markdown/with-html";
-import { ExeProps } from "../types/exercise";
+import { ExeProps, testCaseType } from "../types/exercise";
 import CodeBlock from "./react-markdown-code-block";
 import ReactMarkdownLink from "./react-markdown-link";
 import { LangArr } from "../types/exercise";
@@ -12,6 +12,15 @@ import ReactResizeDetector from "react-resize-detector";
 import "../styles/Execute.sass";
 
 const { Option } = Select;
+
+type consoleBoxType = "result" | "testcase";
+
+type resultType = {
+    input: string;
+    output: string;
+    correctOutput: string;
+    type: "succeed" | "error";
+};
 
 const Execute = () => {
     const location = useLocation();
@@ -23,6 +32,16 @@ const Execute = () => {
             "javascript") as typeof LangArr[number]
     );
     const [isOpen, setIsOpen] = useState(false);
+    // 用户自定的一个测试用例，默认为所有测试用例的第一个
+    const [singleCaseInput, setSingleCaseInput] = useState("");
+    // 控制台
+    const [consoleActive, setConsoleActive] = useState(
+        "result" as consoleBoxType
+    );
+    // 输出
+    const [result, setResult] = useState({} as resultType);
+    // 正在运行
+    const [isRunning, setIsRunning] = useState(false);
 
     // methods
     // 初始化
@@ -52,28 +71,58 @@ const Execute = () => {
     const showConsole = () => {
         setIsOpen(!isOpen);
     };
-    // 运行
-    const runCode = async () => {
+    // 测试运行
+    const testRun = async () => {
+        setIsRunning(true);
+        setConsoleActive('result')
         try {
             let res = await execute({
-                opType: 'testRun',
+                opType: "testRun",
                 exerciseId: exercise.id,
                 code: code,
                 lang: LumosLanguage,
-                username: '429797371@qq.com'
-            })
-            console.log(res)
-            if(res.code === 200) {
+                username: "429797371@qq.com",
+                singleCaseInput: singleCaseInput
+            });
+            console.log(res);
+            if (res.code === 200) {
             } else {
-
             }
-        } catch(err) {
-            message.error(err)
+        } catch (err) {
+            message.error(err);
         }
+        setIsRunning(false);
+    };
+    // 运行
+    const submitRun = async () => {
+        setIsRunning(true);
+        setConsoleActive('result')
+        try {
+            let res = await execute({
+                opType: "submit",
+                exerciseId: exercise.id,
+                code: code,
+                lang: LumosLanguage,
+                username: "429797371@qq.com"
+            });
+            console.log(res);
+            if (res.code === 200) {
+            } else {
+            }
+        } catch (err) {
+            message.error(err);
+        }
+        setIsRunning(false);
+    };
+
+    const test = (e: any) => {
+        setSingleCaseInput(e.target.value);
     };
 
     useEffect(() => {
         setCode(exercise?.code?.[LumosLanguage] || "");
+        exercise.defaultTestCase &&
+            setSingleCaseInput(exercise.defaultTestCase.input);
     }, [exercise, LumosLanguage]);
 
     useEffect(() => {
@@ -156,6 +205,9 @@ const Execute = () => {
                                 onChange={codeChange}
                                 editorDidMount={editorDidMount}
                                 height={isOpen ? 270 : 470}
+                                options={{
+                                    scrollBeyondLastLine: false
+                                }}
                             ></MonacoEditor>
                         </ReactResizeDetector>
                     </div>
@@ -166,13 +218,103 @@ const Execute = () => {
                             height: isOpen ? 250 : 50
                         }}
                     >
-                        <div className="bottom">
+                        {/* 顶部 menu */}
+                        <div className="console_top">
+                            <div className="console_menu">
+                                <Menu
+                                    onClick={e =>
+                                        setConsoleActive(
+                                            e.key as consoleBoxType
+                                        )
+                                    }
+                                    mode="horizontal"
+                                    selectedKeys={[consoleActive]}
+                                >
+                                    <Menu.Item key="testcase">
+                                        测试用例
+                                    </Menu.Item>
+                                    <Menu.Item key="result">运行结果</Menu.Item>
+                                </Menu>
+                            </div>
+                            <Icon
+                                onClick={showConsole}
+                                className="console_icon"
+                                type={isOpen ? "down" : "up"}
+                            ></Icon>
+                        </div>
+                        {/* 中间主体 */}
+                        <div className="console_mid" style={{
+                            height: isOpen ? '164px' : 0
+                        }}>
+                            {/* 测试用例 */}
+                            {consoleActive === "testcase" ? (
+                                <div className="testcaseBox">
+                                    <Input.TextArea
+                                        defaultValue={
+                                            exercise.defaultTestCase?.input ||
+                                            ""
+                                        }
+                                        onChange={test}
+                                    ></Input.TextArea>
+                                </div>
+                            ) : (
+                                // 运行结果
+                                <div className="result">
+                                    {/* 如果成功运行，渲染：输入，输出，期望输出 */}
+                                    {(result.type === "succeed" && (
+                                        <div className="res_wrapper">
+                                            <p>输入：</p>
+                                            <Input.TextArea
+                                                defaultValue={result.input}
+                                            ></Input.TextArea>
+                                            <p>输出：</p>
+                                            <Input.TextArea
+                                                defaultValue={result.output}
+                                            ></Input.TextArea>
+                                            <p>期望输出：</p>
+                                            <Input.TextArea
+                                                defaultValue={
+                                                    result.correctOutput
+                                                }
+                                            ></Input.TextArea>
+                                        </div>
+                                    )) ||
+                                        // 报错，渲染错误信息
+                                        (result.type === "error" && (
+                                            <div className="res_err">error</div>
+                                        )) || (
+                                            // 未运行，空
+                                            <Empty
+                                                description="暂无数据"
+                                                image={
+                                                    Empty.PRESENTED_IMAGE_SIMPLE
+                                                }
+                                            ></Empty>
+                                        )}
+                                </div>
+                            )}
+                        </div>
+                        {/* 底部按钮 */}
+                        <div className="console_bottom">
                             <div className="left">
-                                <Button onClick={showConsole}>控制台</Button>
+                                <Button
+                                    size="small"
+                                    onClick={showConsole}
+                                    disabled={isRunning}
+                                >
+                                    控制台
+                                </Button>
                             </div>
                             <div className="right">
-                                <Button onClick={runCode} type="primary">
-                                    运行
+                                <Button onClick={testRun} disabled={isRunning}>
+                                    测试运行
+                                </Button>
+                                <Button
+                                    onClick={submitRun}
+                                    type="primary"
+                                    disabled={isRunning}
+                                >
+                                    提交
                                 </Button>
                             </div>
                         </div>

@@ -84,6 +84,7 @@ const MarkdownEditor = () => {
     };
     // 滚动矫正（右 => 左）
     const handleScroll = (type: "input" | "preview") => {
+        if(!inputRef.current) return
         let editor = inputRef.current.editor;
         let leftHeight = editor.getScrollHeight();
         let rightHeight =
