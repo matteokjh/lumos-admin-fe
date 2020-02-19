@@ -1,6 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getExeInfo, execute } from "../api/exercise";
-import { message, Select, Button, Menu, Icon, Input, Empty } from "antd";
+import {
+    message,
+    Select,
+    Button,
+    Menu,
+    Icon,
+    Input,
+    Empty,
+    Skeleton
+} from "antd";
 import { useLocation } from "react-router-dom";
 import ReactMarkdown from "react-markdown/with-html";
 import { ExeProps } from "../types/exercise";
@@ -74,7 +83,8 @@ const Execute = () => {
     // 测试运行
     const testRun = async () => {
         setIsRunning(true);
-        setConsoleActive('result')
+        setConsoleActive("result");
+        setIsOpen(true);
         try {
             let res = await execute({
                 opType: "testRun",
@@ -96,7 +106,8 @@ const Execute = () => {
     // 运行
     const submitRun = async () => {
         setIsRunning(true);
-        setConsoleActive('result')
+        setConsoleActive("result");
+        setIsOpen(true);
         try {
             let res = await execute({
                 opType: "submit",
@@ -230,10 +241,10 @@ const Execute = () => {
                                     mode="horizontal"
                                     selectedKeys={[consoleActive]}
                                 >
-                                    <Menu.Item key="testcase">
+                                    <Menu.Item key="testcase" disabled={isRunning}>
                                         测试用例
                                     </Menu.Item>
-                                    <Menu.Item key="result">运行结果</Menu.Item>
+                                    <Menu.Item key="result" disabled={isRunning}>运行结果</Menu.Item>
                                 </Menu>
                             </div>
                             <Icon
@@ -243,9 +254,12 @@ const Execute = () => {
                             ></Icon>
                         </div>
                         {/* 中间主体 */}
-                        <div className="console_mid" style={{
-                            height: isOpen ? '164px' : 0
-                        }}>
+                        <div
+                            className="console_mid"
+                            style={{
+                                height: isOpen ? "164px" : 0
+                            }}
+                        >
                             {/* 测试用例 */}
                             {consoleActive === "testcase" ? (
                                 <div className="testcaseBox">
@@ -261,24 +275,27 @@ const Execute = () => {
                                 // 运行结果
                                 <div className="result">
                                     {/* 如果成功运行，渲染：输入，输出，期望输出 */}
-                                    {(result.type === "succeed" && (
-                                        <div className="res_wrapper">
-                                            <p>输入：</p>
-                                            <Input.TextArea
-                                                defaultValue={result.input}
-                                            ></Input.TextArea>
-                                            <p>输出：</p>
-                                            <Input.TextArea
-                                                defaultValue={result.output}
-                                            ></Input.TextArea>
-                                            <p>期望输出：</p>
-                                            <Input.TextArea
-                                                defaultValue={
-                                                    result.correctOutput
-                                                }
-                                            ></Input.TextArea>
-                                        </div>
-                                    )) ||
+                                    {isRunning ? (
+                                        <Skeleton active></Skeleton>
+                                    ) : (
+                                        (result.type === "succeed" && (
+                                            <div className="res_wrapper">
+                                                <p>输入：</p>
+                                                <Input.TextArea
+                                                    defaultValue={result.input}
+                                                ></Input.TextArea>
+                                                <p>输出：</p>
+                                                <Input.TextArea
+                                                    defaultValue={result.output}
+                                                ></Input.TextArea>
+                                                <p>期望输出：</p>
+                                                <Input.TextArea
+                                                    defaultValue={
+                                                        result.correctOutput
+                                                    }
+                                                ></Input.TextArea>
+                                            </div>
+                                        )) ||
                                         // 报错，渲染错误信息
                                         (result.type === "error" && (
                                             <div className="res_err">error</div>
@@ -290,7 +307,8 @@ const Execute = () => {
                                                     Empty.PRESENTED_IMAGE_SIMPLE
                                                 }
                                             ></Empty>
-                                        )}
+                                        )
+                                    )}
                                 </div>
                             )}
                         </div>
