@@ -96,7 +96,7 @@ const ExerciseList = () => {
             dataIndex: "testCase",
             key: "testCase",
             render: (val?: testCaseType[]) => {
-                return val?.length || 0;
+                return val?.filter(e => e.show).length || 0;
             }
         },
         {

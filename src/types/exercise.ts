@@ -34,7 +34,8 @@ export type ExeProps = ExeBaseInfo & {
     testCase: testCaseType[],
     show: boolean,
     lang: LangProps,
-    defaultTestCase?: testCaseType
+    defaultTestCase?: testCaseType,
+    tags: string[]
 }
 
 export type ExecOpType = 'testRun' | 'submit'

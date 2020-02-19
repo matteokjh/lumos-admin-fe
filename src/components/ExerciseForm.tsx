@@ -1,15 +1,27 @@
-import React, { useState, useContext } from "react";
-import { Form, Input, InputNumber, Button, Radio, message } from "antd";
+import React, { useState, useContext,useEffect } from "react";
+import {
+    Form,
+    Input,
+    InputNumber,
+    Button,
+    Radio,
+    message,
+    Tag,
+    Tooltip,
+    Icon,
+    AutoComplete
+} from "antd";
 import "../styles/ExerciseForm.sass";
-import { COLOR } from "../utils/global_config";
+import { COLOR, DEFAULT_TAGS } from "../utils/global_config";
 import { ExeBaseInfo, opTypeProps } from "../types/exercise";
 import { saveExercise } from "../api/exercise";
 import { store } from "../store/index";
 import { useHistory, useLocation } from "react-router-dom";
+import { SelectValue } from "antd/lib/select";
 
 const ExerciseForm = (props: any) => {
     const { getFieldDecorator, setFieldsValue } = props.form;
-    const { state } = useContext(store);
+    const { state, dispatch } = useContext(store);
     const history = useHistory();
     const { exerciseInfo } = state;
     const [isEdit, setIsEdit] = useState(false);
@@ -19,6 +31,9 @@ const ExerciseForm = (props: any) => {
             ? "detail"
             : "new") as opTypeProps
     );
+    const [tags, setTags] = useState((exerciseInfo.tags || []) as string[]);
+    const [tagInputVisible, setTagInputVisible] = useState(false);
+    const [inputValue, setInputValue] = useState("");
 
     // methods
 
@@ -30,9 +45,13 @@ const ExerciseForm = (props: any) => {
     const save = () => {
         props.form.validateFields(async (err: Error, values: ExeBaseInfo) => {
             if (!err) {
+                let obj = {
+                    ...values,
+                    tags
+                }
                 try {
                     let res = await saveExercise({
-                        data: values,
+                        data: obj,
                         type: opType
                     });
                     if (res.code === 200) {
@@ -42,6 +61,10 @@ const ExerciseForm = (props: any) => {
                         } else {
                             setIsEdit(false);
                         }
+                        dispatch({
+                            type: 'SET_EXERCISE',
+                            payload: res.data
+                        })
                     } else {
                         message.error(res.msg);
                     }
@@ -61,7 +84,45 @@ const ExerciseForm = (props: any) => {
             mode,
             contributor
         });
+        setTags(exerciseInfo?.tags || [])
     };
+
+    // 标签相关
+
+    // 删除标签
+    const handleClose = (tag: string) => {
+        setTags(tags.filter(e => e !== tag));
+    };
+    // 编辑标签
+    const showInput = () => {
+        setTagInputVisible(true);
+    };
+    // 文字变更
+    const handleInputChange = (e: any) => {
+        setInputValue(e);
+    };
+    const handleSelect = (e: SelectValue) => {
+        let str = e.toString()
+        setInputValue(str);
+        if (str && tags.indexOf(str) === -1) {
+            setTags([...tags, str]);
+        }
+        setTagInputVisible(false);
+        setInputValue("");
+    }
+    // 确认标签变更
+    const handleInputConfirm = () => {
+        if (inputValue && tags.indexOf(inputValue) === -1) {
+            setTags([...tags, inputValue]);
+        }
+        setTagInputVisible(false);
+        setInputValue("");
+    };
+
+    useEffect(() => {
+        setTags(exerciseInfo.tags || [])
+    }, [exerciseInfo])
+
     return (
         <div className="ExerciseForm">
             <Form onSubmit={save} className="exercise-form">
@@ -144,6 +205,55 @@ const ExerciseForm = (props: any) => {
                             autoComplete="off"
                         />
                     )}
+                </Form.Item>
+                <Form.Item label="标签">
+                    <div className="tags">
+                        {tags?.map(tag => {
+                            const isLongTag = tag.length > 10;
+                            const tagElem = (
+                                <Tag
+                                    key={tag}
+                                    closable={isEdit}
+                                    onClose={() => handleClose(tag)}
+                                >
+                                    {isLongTag ? `${tag.slice(0, 10)}...` : tag}
+                                </Tag>
+                            );
+                            return isLongTag ? (
+                                <Tooltip title={tag} key={tag}>
+                                    {tagElem}
+                                </Tooltip>
+                            ) : (
+                                tagElem
+                            );
+                        })}
+                        {tagInputVisible ? (
+                            <AutoComplete
+                                size="small"
+                                style={{ width: 100 }}
+                                value={inputValue}
+                                onChange={handleInputChange}
+                                onSelect={handleSelect}
+                                onBlur={handleInputConfirm}
+                                disabled={!isEdit}
+                                dataSource={DEFAULT_TAGS}
+                                autoFocus
+                                open
+                            />
+                        ) : (
+                            isEdit && (
+                                <Tag
+                                    onClick={showInput}
+                                    style={{
+                                        background: "#fff",
+                                        borderStyle: "dashed"
+                                    }}
+                                >
+                                    <Icon type="plus" /> 新增标签
+                                </Tag>
+                            )
+                        )}
+                    </div>
                 </Form.Item>
                 {/* 按钮 */}
                 <Form.Item className="btn-group">

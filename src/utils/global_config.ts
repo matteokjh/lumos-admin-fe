@@ -39,3 +39,7 @@ export const LANGS = [
         label: 'Java'
     },
 ]
+
+
+// 默认标签
+export const DEFAULT_TAGS = ['二叉树','链表','动态规划','回溯','位运算']

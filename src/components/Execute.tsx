@@ -3,7 +3,7 @@ import { getExeInfo, execute } from "../api/exercise";
 import { message, Select, Button, Menu, Icon, Input, Empty } from "antd";
 import { useLocation } from "react-router-dom";
 import ReactMarkdown from "react-markdown/with-html";
-import { ExeProps, testCaseType } from "../types/exercise";
+import { ExeProps } from "../types/exercise";
 import CodeBlock from "./react-markdown-code-block";
 import ReactMarkdownLink from "./react-markdown-link";
 import { LangArr } from "../types/exercise";
