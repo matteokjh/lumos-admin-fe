@@ -158,6 +158,7 @@ const CodeView = () => {
                 </div>
                 <ReactResizeDetector
                     handleWidth
+                    handleHeight
                     refreshMode="throttle"
                     refreshRate={100}
                 >
@@ -171,6 +172,7 @@ const CodeView = () => {
                         options={{
                             scrollBeyondLastLine: false
                         }}
+                        height={444}
                     ></MonacoEditor>
                 </ReactResizeDetector>
             </div>
@@ -200,6 +202,7 @@ const CodeView = () => {
                 {/* 代码编辑器，套上自适应组件 */}
                 <ReactResizeDetector
                     handleWidth
+                    handleHeight
                     refreshMode="throttle"
                     refreshRate={100}
                 >
