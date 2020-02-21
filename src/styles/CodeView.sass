@@ -2,15 +2,9 @@
     background-color: #eee
     padding: 10px
     height: calc(100vh - 125px)
-    display: inline-flex
+    display: flex
+    flex-wrap: wrap
     width: 100%
-    .title
-        display: inline-block
-        background-color: #872a97
-        padding: 5px 8px
-        border-radius: 3px
-        color: #f1f1f1
-        font-size: 13px
     .toolBar
         padding-left: 10px
         margin-bottom: 10px
@@ -19,13 +13,31 @@
         justify-content: space-between
         width: 100%
         white-space: nowrap
-    .intro
-        width: 49%
-        height: calc(100% - 40px)
-        margin-right: 10px
-    .code-editor
-        width: 50%
-        height: calc(100% - 40px)
+        .t-wrapper
+            display: inline-flex
+            align-items: center
+            justify-content: space-between
+            &:first-child
+                width: 32%
+            &:last-child
+                width: 66.8%
+        .title
+            display: inline-block
+            background-color: #872a97
+            padding: 5px 8px
+            border-radius: 3px
+            color: #f1f1f1
+            font-size: 13px
+    .code-wrapper
+        display: inline-flex
+        width: 100%
+        height: calc(100% - 42px)
+        .main-code,.pre-code,.last-code
+            width: calc(33% - 3px)
+            height: 100%
+            overflow: hidden
+            &:not(:last-child)
+                margin-right: 10px
 
         
         

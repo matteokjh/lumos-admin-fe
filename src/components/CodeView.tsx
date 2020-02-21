@@ -16,18 +16,20 @@ const CodeView = () => {
         (localStorage["lumos-language"] ||
             "javascript") as typeof LangArr[number]
     );
-
-    const [TestCode, setTestCode] = useState(
-        (exerciseInfo.TestCode || {}) as CodeProps
-    );
     const [code, setCode] = useState((exerciseInfo.code || {}) as CodeProps);
+    const [preCode, setPreCode] = useState(
+        (exerciseInfo.preCode || {}) as CodeProps
+    );
+    const [lastCode, setLastCode] = useState(
+        (exerciseInfo.lastCode || {}) as CodeProps
+    );
     const monacoRef = useRef(null as any);
-    const testCodeRef = useRef(null as any);
     const [isCtrl, setIsCtrl] = useState(false);
 
     useEffect(() => {
         setCode(exerciseInfo.code as CodeProps);
-        setTestCode(exerciseInfo.TestCode as CodeProps);
+        setPreCode(exerciseInfo.preCode as CodeProps);
+        setLastCode(exerciseInfo.lastCode as CodeProps);
     }, [exerciseInfo]);
 
     // methods
@@ -40,12 +42,19 @@ const CodeView = () => {
             [LumosLanguage]: val
         });
     };
-    const TestCodeChange = (val: string) => {
-        setTestCode({
-            ...TestCode,
+    const preCodeChange = (val: string) => {
+        setPreCode({
+            ...preCode,
             [LumosLanguage]: val
         });
     };
+    const lastCodeChange = (val: string) => {
+        setLastCode({
+            ...lastCode,
+            [LumosLanguage]: val
+        });
+    };
+
     // 题目指定语言变更
     const handleChange = async (val: LangProps) => {
         try {
@@ -109,8 +118,9 @@ const CodeView = () => {
             let res = await saveExercise({
                 data: {
                     id: exerciseInfo.id,
-                    code: code,
-                    TestCode: TestCode
+                    code,
+                    preCode,
+                    lastCode
                 },
                 type: "detail"
             });
@@ -134,11 +144,9 @@ const CodeView = () => {
             onKeyDown={handleKeyDown}
             onKeyUp={handleKeyUp}
         >
-            {/* 测试代码 */}
-            <div className="intro">
-                <div className="toolBar">
-                    <span className="title">测试代码</span>
-                    <div className="t-wrapper">
+            <div className="toolBar">
+                <div className="t-wrapper">
+                    <div>
                         <span>当前语言：</span>
                         <Select
                             defaultValue={LumosLanguage}
@@ -155,32 +163,11 @@ const CodeView = () => {
                             ))}
                         </Select>
                     </div>
+                    <span className="title">前置代码</span>
                 </div>
-                <ReactResizeDetector
-                    handleWidth
-                    handleHeight
-                    refreshMode="throttle"
-                    refreshRate={100}
-                >
-                    <MonacoEditor
-                        ref={testCodeRef}
-                        value={TestCode?.[LumosLanguage] || ""}
-                        language={LumosLanguage}
-                        theme="vs-dark"
-                        onChange={TestCodeChange}
-                        editorDidMount={editorDidMount}
-                        options={{
-                            scrollBeyondLastLine: false
-                        }}
-                        height={444}
-                    ></MonacoEditor>
-                </ReactResizeDetector>
-            </div>
-            {/* 用户可见代码 */}
-            <div className="code-editor">
-                <div className="toolBar">
-                    <span className="title">用户可见代码</span>
-                    <div className="t-wrapper">
+                <div className="t-wrapper">
+                    <span className="title">后置代码</span>
+                    <div>
                         <span>题目指定语言：</span>
                         <Select
                             placeholder="请选择题目包含的语言"
@@ -198,26 +185,81 @@ const CodeView = () => {
                             ))}
                         </Select>
                     </div>
+                    <span className="title">用户可见代码</span>
                 </div>
-                {/* 代码编辑器，套上自适应组件 */}
-                <ReactResizeDetector
-                    handleWidth
-                    handleHeight
-                    refreshMode="throttle"
-                    refreshRate={100}
-                >
-                    <MonacoEditor
-                        ref={monacoRef}
-                        value={code?.[LumosLanguage] || ""}
-                        language={LumosLanguage}
-                        theme="vs-dark"
-                        onChange={codeChange}
-                        editorDidMount={editorDidMount}
-                        options={{
-                            scrollBeyondLastLine: false
-                        }}
-                    ></MonacoEditor>
-                </ReactResizeDetector>
+            </div>
+            <div className="code-wrapper">
+                {/* 前置代码 */}
+                <div className="pre-code">
+                    <ReactResizeDetector
+                        handleWidth
+                        handleHeight
+                        refreshMode="throttle"
+                        refreshRate={100}
+                    >
+                        <MonacoEditor
+                            value={preCode?.[LumosLanguage] || ""}
+                            language={LumosLanguage}
+                            theme="vs-dark"
+                            onChange={preCodeChange}
+                            editorDidMount={editorDidMount}
+                            options={{
+                                scrollBeyondLastLine: false,
+                                minimap: {
+                                    enabled: false
+                                }
+                            }}
+                        ></MonacoEditor>
+                    </ReactResizeDetector>
+                </div>
+                {/* 后置代码 */}
+                <div className="last-code">
+                    <ReactResizeDetector
+                        handleWidth
+                        handleHeight
+                        refreshMode="throttle"
+                        refreshRate={100}
+                    >
+                        <MonacoEditor
+                            value={lastCode?.[LumosLanguage] || ""}
+                            language={LumosLanguage}
+                            theme="vs-dark"
+                            onChange={lastCodeChange}
+                            editorDidMount={editorDidMount}
+                            options={{
+                                scrollBeyondLastLine: false,
+                                minimap: {
+                                    enabled: false
+                                }
+                            }}
+                        ></MonacoEditor>
+                    </ReactResizeDetector>
+                </div>
+                {/* 用户可见代码 */}
+                <div className="main-code">
+                    {/* 代码编辑器，套上自适应组件 */}
+                    <ReactResizeDetector
+                        handleWidth
+                        handleHeight
+                        refreshMode="throttle"
+                        refreshRate={100}
+                    >
+                        <MonacoEditor
+                            ref={monacoRef}
+                            value={code?.[LumosLanguage] || ""}
+                            language={LumosLanguage}
+                            theme="vs-dark"
+                            onChange={codeChange}
+                            editorDidMount={editorDidMount}
+                            options={{
+                                scrollBeyondLastLine: false,
+                                minimap: {
+                                    enabled: false
+                                }
+                            }}
+                        ></MonacoEditor>
+                    </ReactResizeDetector>
+                </div>
             </div>
         </div>
     );

@@ -26,6 +26,8 @@ export type CodeProps = {
 export type ExeProps = ExeBaseInfo & {
     code?: CodeProps,
     TestCode?: CodeProps,
+    preCode?: CodeProps,
+    lastCode?: CodeProps,
     introduction?: string,
     createTime: string,
     modifiedTime?: string,
