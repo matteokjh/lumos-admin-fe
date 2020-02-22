@@ -3,7 +3,8 @@ import { Button, Icon, Menu, message } from "antd";
 import { useHistory, useLocation } from "react-router-dom";
 import MarkdownEditor from "../components/MarkdownEditor";
 import ExerciseForm from "../components/ExerciseForm";
-import CodeView from "../components/CodeView";
+import CodeViewOne from "../components/CodeViewOne";
+import CodeViewTwo from "../components/CodeViewTwo";
 import TestCaseForm from "../components/TestCaseForm";
 import Execute from "@/components/Execute";
 
@@ -79,8 +80,11 @@ const Exercise = (props: any) => {
                     <Menu.Item key="markdown" disabled={opType === "new"}>
                         <span>题目介绍</span>
                     </Menu.Item>
-                    <Menu.Item key="code" disabled={opType === "new"}>
-                        <span>代码</span>
+                    <Menu.Item key="code1" disabled={opType === "new"}>
+                        <span>代码 I</span>
+                    </Menu.Item>
+                    <Menu.Item key="code2" disabled={opType === "new"}>
+                        <span>代码 II</span>
                     </Menu.Item>
                     <Menu.Item key="testCase" disabled={opType === "new"}>
                         <span>测试用例</span>
@@ -95,8 +99,10 @@ const Exercise = (props: any) => {
                     (Active === "markdown" && (
                         <MarkdownEditor></MarkdownEditor>
                     )) ||
-                    // 代码
-                    (Active === "code" && <CodeView></CodeView>) ||
+                    // 代码 I
+                    (Active === "code1" && <CodeViewOne></CodeViewOne>) ||
+                    // 代码 II
+                    (Active === "code2" && <CodeViewTwo></CodeViewTwo>) ||
                     // 测试用例
                     (Active === "testCase" && <TestCaseForm></TestCaseForm>) ||
                     // 运行

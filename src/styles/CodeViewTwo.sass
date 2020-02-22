@@ -1,0 +1,40 @@
+.CodeViewTwo
+    background-color: #eee
+    padding: 10px
+    height: calc(100vh - 125px)
+    display: flex
+    flex-wrap: wrap
+    width: 100%
+    .toolBar
+        margin-bottom: 10px
+        display: inline-flex
+        align-items: center
+        width: 100%
+        white-space: nowrap
+        .t-wrapper
+            display: inline-flex
+            width: 50%
+            align-items: center
+            justify-content: space-between
+            &:not(:last-child)
+                margin-right: 10px
+        .title
+            display: inline-block
+            background-color: #872a97
+            padding: 5px 8px
+            border-radius: 3px
+            color: #f1f1f1
+            font-size: 13px
+    .code-wrapper
+        display: inline-flex
+        width: 100%
+        height: calc(100% - 42px)
+        .main-code
+            width: calc(50% - 5px)
+            height: 100%
+            overflow: hidden
+            &:not(:last-child)
+                margin-right: 10px
+
+        
+        

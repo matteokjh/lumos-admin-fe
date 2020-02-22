@@ -2,14 +2,14 @@ import React, { useContext, useState, useRef, useEffect } from "react";
 import { store } from "../store/index";
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 import ReactResizeDetector from "react-resize-detector";
-import "../styles/CodeView.sass";
+import "../styles/CodeViewOne.sass";
 import { LANGS } from "../utils/global_config";
 import { Select, message } from "antd";
 import { saveExercise } from "../api/exercise";
 import { LangProps, CodeProps, LangArr } from "../types/exercise";
 const { Option } = Select;
 
-const CodeView = () => {
+const CodeViewOne = () => {
     const { state, dispatch } = useContext(store);
     const { exerciseInfo } = state;
     const [LumosLanguage, setLumosLanguage] = useState(
@@ -23,7 +23,6 @@ const CodeView = () => {
     const [lastCode, setLastCode] = useState(
         (exerciseInfo.lastCode || {}) as CodeProps
     );
-    const monacoRef = useRef(null as any);
     const [isCtrl, setIsCtrl] = useState(false);
 
     useEffect(() => {
@@ -118,7 +117,6 @@ const CodeView = () => {
             let res = await saveExercise({
                 data: {
                     id: exerciseInfo.id,
-                    code,
                     preCode,
                     lastCode
                 },
@@ -140,12 +138,13 @@ const CodeView = () => {
 
     return (
         <div
-            className="CodeView"
+            className="CodeViewOne"
             onKeyDown={handleKeyDown}
             onKeyUp={handleKeyUp}
         >
             <div className="toolBar">
                 <div className="t-wrapper">
+                    <span className="title">前置代码</span>
                     <div>
                         <span>当前语言：</span>
                         <Select
@@ -153,7 +152,6 @@ const CodeView = () => {
                             onChange={langChange}
                             style={{
                                 width: 120,
-                                marginRight: 10
                             }}
                         >
                             {LANGS.map(e => (
@@ -163,7 +161,6 @@ const CodeView = () => {
                             ))}
                         </Select>
                     </div>
-                    <span className="title">前置代码</span>
                 </div>
                 <div className="t-wrapper">
                     <span className="title">后置代码</span>
@@ -185,7 +182,6 @@ const CodeView = () => {
                             ))}
                         </Select>
                     </div>
-                    <span className="title">用户可见代码</span>
                 </div>
             </div>
             <div className="code-wrapper">
@@ -235,34 +231,9 @@ const CodeView = () => {
                         ></MonacoEditor>
                     </ReactResizeDetector>
                 </div>
-                {/* 用户可见代码 */}
-                <div className="main-code">
-                    {/* 代码编辑器，套上自适应组件 */}
-                    <ReactResizeDetector
-                        handleWidth
-                        handleHeight
-                        refreshMode="throttle"
-                        refreshRate={100}
-                    >
-                        <MonacoEditor
-                            ref={monacoRef}
-                            value={code?.[LumosLanguage] || ""}
-                            language={LumosLanguage}
-                            theme="vs-dark"
-                            onChange={codeChange}
-                            editorDidMount={editorDidMount}
-                            options={{
-                                scrollBeyondLastLine: false,
-                                minimap: {
-                                    enabled: false
-                                }
-                            }}
-                        ></MonacoEditor>
-                    </ReactResizeDetector>
-                </div>
             </div>
         </div>
     );
 };
 
-export default CodeView;
+export default CodeViewOne;

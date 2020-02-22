@@ -1,4 +1,4 @@
-.CodeView
+.CodeViewOne
     background-color: #eee
     padding: 10px
     height: calc(100vh - 125px)
@@ -6,21 +6,18 @@
     flex-wrap: wrap
     width: 100%
     .toolBar
-        padding-left: 10px
         margin-bottom: 10px
         display: inline-flex
         align-items: center
-        justify-content: space-between
         width: 100%
         white-space: nowrap
         .t-wrapper
             display: inline-flex
+            width: calc(50% - 5px)
             align-items: center
             justify-content: space-between
-            &:first-child
-                width: 32%
-            &:last-child
-                width: 66.8%
+            &:not(:last-child)
+                margin-right: 10px
         .title
             display: inline-block
             background-color: #872a97
@@ -32,8 +29,8 @@
         display: inline-flex
         width: 100%
         height: calc(100% - 42px)
-        .main-code,.pre-code,.last-code
-            width: calc(33% - 3px)
+        .pre-code,.last-code
+            width: calc(50% - 5px)
             height: 100%
             overflow: hidden
             &:not(:last-child)

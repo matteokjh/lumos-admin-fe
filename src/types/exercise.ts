@@ -1,43 +1,48 @@
-export type ModeType = 'Easy' | 'Medium' | 'Hard' | ''
+export type ModeType = "Easy" | "Medium" | "Hard" | "";
 export interface ExeBaseInfo {
-    id: number,
-    title: string,
-    mode: ModeType,
-    contributor: string
+    id: number;
+    title: string;
+    mode: ModeType;
+    contributor: string;
 }
 
-export type opTypeProps = 'new' | 'detail'
+export type opTypeProps = "new" | "detail";
 
 export type testCaseType = {
-    input: string,
-    output: string,
-    show: boolean,
-    text?: string
-}
+    input: string;
+    output: string;
+    show: boolean;
+    text?: string;
+};
 
-export const LangArr = <const>['javascript', 'cpp', 'java']
+export const LangArr = <const>["javascript", "cpp", "java"];
 
-export type LangProps = Partial<typeof LangArr>
+export type LangProps = Partial<typeof LangArr>;
 
 export type CodeProps = {
-    [key in typeof LangArr[number]]?: string
-}
+    [key in typeof LangArr[number]]?: string;
+};
+
+export type answerProps = {
+    code: string;
+    lang: typeof LangArr[number];
+};
 
 export type ExeProps = ExeBaseInfo & {
-    code?: CodeProps,
-    TestCode?: CodeProps,
-    preCode?: CodeProps,
-    lastCode?: CodeProps,
-    introduction?: string,
-    createTime: string,
-    modifiedTime?: string,
-    submitTimes: number,
-    passTimes: number,
-    testCase: testCaseType[],
-    show: boolean,
-    lang: LangProps,
-    defaultTestCase?: testCaseType,
-    tags: string[]
-}
+    code?: CodeProps;
+    answer: answerProps;
+    preCode?: CodeProps;
+    lastCode?: CodeProps;
+    introduction?: string;
+    createTime: string;
+    modifiedTime?: string;
+    submitTimes: number;
+    passTimes: number;
+    testCase: testCaseType[];
+    show: boolean;
+    lang: LangProps;
+    defaultTestCase?: testCaseType;
+    tags: string[];
+};
 
-export type ExecOpType = 'testRun' | 'submit'
+export type ExecOpType = "testRun" | "submit";
