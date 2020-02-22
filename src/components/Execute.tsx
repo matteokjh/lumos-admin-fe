@@ -24,11 +24,14 @@ const { Option } = Select;
 
 type consoleBoxType = "result" | "testcase";
 
+type outputType = {
+    stdout_output: string;
+    result_output: string;
+};
+
 type resultType = {
-    input: string;
-    output: string;
-    correctOutput: string;
-    type: "succeed" | "error";
+    state: "true" | "error" | "false";
+    output: outputType[];
 };
 
 const Execute = () => {
@@ -96,7 +99,9 @@ const Execute = () => {
             });
             console.log(res);
             if (res.code === 200) {
+                setResult(res.data);
             } else {
+                message.error("未知错误，请联系管理员");
             }
         } catch (err) {
             message.error(err);
@@ -241,10 +246,18 @@ const Execute = () => {
                                     mode="horizontal"
                                     selectedKeys={[consoleActive]}
                                 >
-                                    <Menu.Item key="testcase" disabled={isRunning}>
+                                    <Menu.Item
+                                        key="testcase"
+                                        disabled={isRunning}
+                                    >
                                         测试用例
                                     </Menu.Item>
-                                    <Menu.Item key="result" disabled={isRunning}>运行结果</Menu.Item>
+                                    <Menu.Item
+                                        key="result"
+                                        disabled={isRunning}
+                                    >
+                                        运行结果
+                                    </Menu.Item>
                                 </Menu>
                             </div>
                             <Icon
@@ -278,27 +291,54 @@ const Execute = () => {
                                     {isRunning ? (
                                         <Skeleton active></Skeleton>
                                     ) : (
-                                        (result.type === "succeed" && (
+                                        ((result.state === "true" ||
+                                            result.state === "false") && (
                                             <div className="res_wrapper">
                                                 <p>输入：</p>
                                                 <Input.TextArea
-                                                    defaultValue={result.input}
+                                                    value={singleCaseInput}
+                                                    disabled
                                                 ></Input.TextArea>
                                                 <p>输出：</p>
                                                 <Input.TextArea
-                                                    defaultValue={result.output}
+                                                    value={
+                                                        result.output[1]
+                                                            .result_output
+                                                    }
+                                                    disabled
                                                 ></Input.TextArea>
                                                 <p>期望输出：</p>
                                                 <Input.TextArea
-                                                    defaultValue={
-                                                        result.correctOutput
+                                                    value={
+                                                        result.output[0]
+                                                            .result_output
                                                     }
+                                                    disabled
                                                 ></Input.TextArea>
+                                                {/* stdout */}
+                                                {result.output[1]
+                                                    .stdout_output && (
+                                                    <>
+                                                        <p>stdout：</p>
+                                                        <Input.TextArea
+                                                            value={
+                                                                result.output[1]
+                                                                    .stdout_output
+                                                            }
+                                                            disabled
+                                                        ></Input.TextArea>
+                                                    </>
+                                                )}
                                             </div>
                                         )) ||
                                         // 报错，渲染错误信息
-                                        (result.type === "error" && (
-                                            <div className="res_err">error</div>
+                                        (result.state === "error" && (
+                                            <div className="res_err">
+                                                <Input.TextArea
+                                                    value={result.output[1].toString()}
+                                                    disabled
+                                                ></Input.TextArea>
+                                            </div>
                                         )) || (
                                             // 未运行，空
                                             <Empty

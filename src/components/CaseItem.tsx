@@ -19,9 +19,7 @@ const CaseItem = (props: any) => {
                                         value={caseInfo.show || 0}
                                         className="showBtn"
                                         size="small"
-                                        onChange={e =>
-                                            props.changeShow(index, e)
-                                        }
+                                        onChange={e => props.changeShow(index, e)}
                                     >
                                         <Radio.Button
                                             value={1}
