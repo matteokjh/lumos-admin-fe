@@ -78,7 +78,7 @@ const ExerciseList = () => {
             dataIndex: "modifiedTime",
             key: "modifiedTime",
             render: (val: string) => {
-                return val ? new Date(val).toLocaleString() : "-";
+                return new Date(val).toLocaleString()
             }
         },
         {

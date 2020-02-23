@@ -1,4 +1,4 @@
-import React, { useState, useContext,useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
     Form,
     Input,
@@ -26,7 +26,7 @@ const ExerciseForm = (props: any) => {
     const { exerciseInfo } = state;
     const [isEdit, setIsEdit] = useState(false);
     const location = useLocation();
-    const [opType] = useState(
+    const [opType, setOpType] = useState(
         (location.pathname.indexOf("detail") > -1
             ? "detail"
             : "new") as opTypeProps
@@ -48,7 +48,7 @@ const ExerciseForm = (props: any) => {
                 let obj = {
                     ...values,
                     tags
-                }
+                };
                 try {
                     let res = await saveExercise({
                         data: obj,
@@ -58,13 +58,14 @@ const ExerciseForm = (props: any) => {
                         message.success(res.msg);
                         if (opType === "new") {
                             history.push(`/exerciseList/detail/${res.data.id}`);
+                            setOpType('detail')
                         } else {
                             setIsEdit(false);
                         }
                         dispatch({
-                            type: 'SET_EXERCISE',
+                            type: "SET_EXERCISE",
                             payload: res.data
-                        })
+                        });
                     } else {
                         message.error(res.msg);
                     }
@@ -84,7 +85,7 @@ const ExerciseForm = (props: any) => {
             mode,
             contributor
         });
-        setTags(exerciseInfo?.tags || [])
+        setTags(exerciseInfo?.tags || []);
     };
 
     // 标签相关
@@ -102,14 +103,14 @@ const ExerciseForm = (props: any) => {
         setInputValue(e);
     };
     const handleSelect = (e: SelectValue) => {
-        let str = e.toString()
+        let str = e.toString();
         setInputValue(str);
         if (str && tags.indexOf(str) === -1) {
             setTags([...tags, str]);
         }
         setTagInputVisible(false);
         setInputValue("");
-    }
+    };
     // 确认标签变更
     const handleInputConfirm = () => {
         if (inputValue && tags.indexOf(inputValue) === -1) {
@@ -120,8 +121,8 @@ const ExerciseForm = (props: any) => {
     };
 
     useEffect(() => {
-        setTags(exerciseInfo.tags || [])
-    }, [exerciseInfo])
+        setTags(exerciseInfo.tags || []);
+    }, [exerciseInfo]);
 
     return (
         <div className="ExerciseForm">
@@ -160,7 +161,7 @@ const ExerciseForm = (props: any) => {
                 </Form.Item>
                 <Form.Item label="难度">
                     {getFieldDecorator("mode", {
-                        initialValue: exerciseInfo.mode
+                        initialValue: exerciseInfo.mode || ''
                     })(
                         <Radio.Group disabled={!canEdit()}>
                             <Radio value="Easy">
@@ -235,13 +236,14 @@ const ExerciseForm = (props: any) => {
                                 onChange={handleInputChange}
                                 onSelect={handleSelect}
                                 onBlur={handleInputConfirm}
-                                disabled={!isEdit}
+                                disabled={opType === "detail" && !isEdit}
                                 dataSource={DEFAULT_TAGS}
                                 autoFocus
                                 open
                             />
                         ) : (
-                            isEdit && (
+                            ((opType === "detail" && isEdit) ||
+                                opType === "new") && (
                                 <Tag
                                     onClick={showInput}
                                     style={{
