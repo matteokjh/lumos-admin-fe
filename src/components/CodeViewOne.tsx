@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { store } from "../store/index";
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 import ReactResizeDetector from "react-resize-detector";
@@ -16,7 +16,6 @@ const CodeViewOne = () => {
         (localStorage["lumos-language"] ||
             "javascript") as typeof LangArr[number]
     );
-    const [code, setCode] = useState((exerciseInfo.code || {}) as CodeProps);
     const [preCode, setPreCode] = useState(
         (exerciseInfo.preCode || {}) as CodeProps
     );
@@ -26,7 +25,6 @@ const CodeViewOne = () => {
     const [isCtrl, setIsCtrl] = useState(false);
 
     useEffect(() => {
-        setCode(exerciseInfo.code as CodeProps);
         setPreCode(exerciseInfo.preCode as CodeProps);
         setLastCode(exerciseInfo.lastCode as CodeProps);
     }, [exerciseInfo]);
@@ -34,13 +32,6 @@ const CodeViewOne = () => {
     // methods
     // 初始化
     const editorDidMount: EditorDidMount = (editor, monaco) => {};
-    // 代码编辑
-    const codeChange = (val: string) => {
-        setCode({
-            ...code,
-            [LumosLanguage]: val
-        });
-    };
     const preCodeChange = (val: string) => {
         setPreCode({
             ...preCode,

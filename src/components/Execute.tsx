@@ -1,15 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getExeInfo, execute } from "../api/exercise";
-import {
-    message,
-    Select,
-    Button,
-    Menu,
-    Icon,
-    Input,
-    Empty,
-    Skeleton
-} from "antd";
+import { message, Select } from "antd";
 import { useLocation } from "react-router-dom";
 import ReactMarkdown from "react-markdown/with-html";
 import { ExeProps } from "../types/exercise";
@@ -18,6 +9,7 @@ import ReactMarkdownLink from "./react-markdown-link";
 import { LangArr } from "../types/exercise";
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 import ReactResizeDetector from "react-resize-detector";
+import ConsoleBox from "./ConsoleBox";
 import "../styles/Execute.sass";
 
 const { Option } = Select;
@@ -130,8 +122,8 @@ const Execute = () => {
         }
         setIsRunning(false);
     };
-
-    const test = (e: any) => {
+    // 更改测试用例
+    const changeSingleCase = (e: any) => {
         setSingleCaseInput(e.target.value);
     };
 
@@ -200,12 +192,7 @@ const Execute = () => {
                         </Select>
                     </div>
                     {/* 代码编辑器 */}
-                    <div
-                        className="exc_code_wrapper"
-                        style={{
-                            height: `calc(100vh - ${isOpen ? 485 : 285}px)`
-                        }}
-                    >
+                    <div className="exc_code_wrapper">
                         <ReactResizeDetector
                             handleWidth
                             handleHeight
@@ -220,7 +207,6 @@ const Execute = () => {
                                 theme="vs-dark"
                                 onChange={codeChange}
                                 editorDidMount={editorDidMount}
-                                height={isOpen ? 270 : 470}
                                 options={{
                                     scrollBeyondLastLine: false
                                 }}
@@ -228,155 +214,19 @@ const Execute = () => {
                         </ReactResizeDetector>
                     </div>
                     {/* 控制台 */}
-                    <div
-                        className="exc_console"
-                        style={{
-                            height: isOpen ? 250 : 50
-                        }}
-                    >
-                        {/* 顶部 menu */}
-                        <div className="console_top">
-                            <div className="console_menu">
-                                <Menu
-                                    onClick={e =>
-                                        setConsoleActive(
-                                            e.key as consoleBoxType
-                                        )
-                                    }
-                                    mode="horizontal"
-                                    selectedKeys={[consoleActive]}
-                                >
-                                    <Menu.Item
-                                        key="testcase"
-                                        disabled={isRunning}
-                                    >
-                                        测试用例
-                                    </Menu.Item>
-                                    <Menu.Item
-                                        key="result"
-                                        disabled={isRunning}
-                                    >
-                                        运行结果
-                                    </Menu.Item>
-                                </Menu>
-                            </div>
-                            <Icon
-                                onClick={showConsole}
-                                className="console_icon"
-                                type={isOpen ? "down" : "up"}
-                            ></Icon>
-                        </div>
-                        {/* 中间主体 */}
-                        <div
-                            className="console_mid"
-                            style={{
-                                height: isOpen ? "164px" : 0
-                            }}
-                        >
-                            {/* 测试用例 */}
-                            {consoleActive === "testcase" ? (
-                                <div className="testcaseBox">
-                                    <Input.TextArea
-                                        defaultValue={
-                                            exercise.defaultTestCase?.input ||
-                                            ""
-                                        }
-                                        onChange={test}
-                                    ></Input.TextArea>
-                                </div>
-                            ) : (
-                                // 运行结果
-                                <div className="result">
-                                    {/* 如果成功运行，渲染：输入，输出，期望输出 */}
-                                    {isRunning ? (
-                                        <Skeleton active></Skeleton>
-                                    ) : (
-                                        ((result.state === "true" ||
-                                            result.state === "false") && (
-                                            <div className="res_wrapper">
-                                                <p>输入：</p>
-                                                <Input.TextArea
-                                                    value={singleCaseInput}
-                                                    disabled
-                                                ></Input.TextArea>
-                                                <p>输出：</p>
-                                                <Input.TextArea
-                                                    value={
-                                                        result.output[1]
-                                                            .result_output
-                                                    }
-                                                    disabled
-                                                ></Input.TextArea>
-                                                <p>期望输出：</p>
-                                                <Input.TextArea
-                                                    value={
-                                                        result.output[0]
-                                                            .result_output
-                                                    }
-                                                    disabled
-                                                ></Input.TextArea>
-                                                {/* stdout */}
-                                                {result.output[1]
-                                                    .stdout_output && (
-                                                    <>
-                                                        <p>stdout：</p>
-                                                        <Input.TextArea
-                                                            value={
-                                                                result.output[1]
-                                                                    .stdout_output
-                                                            }
-                                                            disabled
-                                                        ></Input.TextArea>
-                                                    </>
-                                                )}
-                                            </div>
-                                        )) ||
-                                        // 报错，渲染错误信息
-                                        (result.state === "error" && (
-                                            <div className="res_err">
-                                                <Input.TextArea
-                                                    value={result.output[1].toString()}
-                                                    disabled
-                                                ></Input.TextArea>
-                                            </div>
-                                        )) || (
-                                            // 未运行，空
-                                            <Empty
-                                                description="暂无数据"
-                                                image={
-                                                    Empty.PRESENTED_IMAGE_SIMPLE
-                                                }
-                                            ></Empty>
-                                        )
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                        {/* 底部按钮 */}
-                        <div className="console_bottom">
-                            <div className="left">
-                                <Button
-                                    size="small"
-                                    onClick={showConsole}
-                                    disabled={isRunning}
-                                >
-                                    控制台
-                                </Button>
-                            </div>
-                            <div className="right">
-                                <Button onClick={testRun} disabled={isRunning}>
-                                    测试运行
-                                </Button>
-                                <Button
-                                    onClick={submitRun}
-                                    type="primary"
-                                    disabled={isRunning}
-                                >
-                                    提交
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
+                    <ConsoleBox
+                        showConsole={showConsole}
+                        consoleActive={consoleActive}
+                        setConsoleActive={setConsoleActive}
+                        result={result}
+                        isRunning={isRunning}
+                        testRun={testRun}
+                        submitRun={submitRun}
+                        changeSingleCase={changeSingleCase}
+                        isOpen={isOpen}
+                        exercise={exercise}
+                        singleCaseInput={singleCaseInput}
+                    ></ConsoleBox>
                 </div>
             </div>
         </div>
