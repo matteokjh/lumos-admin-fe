@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Modal, Input } from "antd";
+import { Modal, Input, Form } from "antd";
 import "./styles/AddTestCaseModal.sass";
 
 const AddTestCaseModal = (props: any) => {
@@ -7,23 +7,23 @@ const AddTestCaseModal = (props: any) => {
     const outRef = useRef(null as any);
     const textRef = useRef(null as any);
 
-    const { mode, activeItem, activeIdx } = props;
-
+    const { mode, activeItem, activeIdx, visible, onCancel, onOk } = props;
 
     return (
         <Modal
             title={mode === "new" ? "添加测试用例" : "编辑测试用例"}
             okText="确定"
             cancelText="取消"
-            visible={props.visible}
-            onCancel={props.onCancel}
+            visible={visible}
+            onCancel={onCancel}
             maskClosable={false}
             width={800}
             style={{
                 height: 600
             }}
+            destroyOnClose
             onOk={() =>
-                props.onOk({
+                onOk({
                     type: mode,
                     index: activeIdx,
                     obj: {
@@ -37,13 +37,14 @@ const AddTestCaseModal = (props: any) => {
             className="AddTestCaseModal"
             key={`add_testcase_modal_${activeIdx}`}
         >
-            <div>
+            <Form>
                 <div className="wrapper">
                     <div>
                         <b>输入</b>
                         <Input.TextArea
                             defaultValue={activeItem.input}
                             ref={inRef}
+                            spellCheck={false}
                         ></Input.TextArea>
                     </div>
                     <div>
@@ -51,6 +52,7 @@ const AddTestCaseModal = (props: any) => {
                         <Input.TextArea
                             defaultValue={activeItem.output}
                             ref={outRef}
+                            spellCheck={false}
                         ></Input.TextArea>
                     </div>
                 </div>
@@ -63,7 +65,7 @@ const AddTestCaseModal = (props: any) => {
                         ref={textRef}
                     ></Input>
                 </p>
-            </div>
+            </Form>
         </Modal>
     );
 };

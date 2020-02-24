@@ -93,7 +93,7 @@ const Execute = () => {
             if (res.code === 200) {
                 setResult(res.data);
             } else {
-                message.error("未知错误，请联系管理员");
+                message.error(res.msg);
             }
         } catch (err) {
             message.error(err);
@@ -125,7 +125,6 @@ const Execute = () => {
     // 更改测试用例
     const changeSingleCase = (e: any) => {
         setSingleCaseInput(e.target.value);
-        sessionStorage['lumos_testcaseInput'] = e.target.value
     };
 
     useEffect(() => {

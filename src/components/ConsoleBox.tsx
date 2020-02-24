@@ -79,9 +79,10 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                             <div className="testcaseBox">
                                 <Input.TextArea
                                     defaultValue={
-                                        sessionStorage['lumos_testcaseInput'] || exercise.defaultTestCase?.input
+                                        singleCaseInput || exercise.defaultTestCase?.input
                                     }
                                     onChange={changeSingleCase}
+                                    spellCheck={false}
                                 ></Input.TextArea>
                             </div>
                         ) : (
@@ -136,7 +137,7 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                                             <Input.TextArea
                                                 value={
                                                     result.output[0]
-                                                        .stdout_output
+                                                        .stdout_output !== undefined
                                                         ? result.output[1].toString()
                                                         : "执行出错"
                                                 }
