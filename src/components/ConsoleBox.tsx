@@ -79,7 +79,7 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                             <div className="testcaseBox">
                                 <Input.TextArea
                                     defaultValue={
-                                        exercise.defaultTestCase?.input || ""
+                                        sessionStorage['lumos_testcaseInput'] || exercise.defaultTestCase?.input
                                     }
                                     onChange={changeSingleCase}
                                 ></Input.TextArea>

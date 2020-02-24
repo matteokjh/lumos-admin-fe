@@ -125,6 +125,7 @@ const Execute = () => {
     // 更改测试用例
     const changeSingleCase = (e: any) => {
         setSingleCaseInput(e.target.value);
+        sessionStorage['lumos_testcaseInput'] = e.target.value
     };
 
     useEffect(() => {
