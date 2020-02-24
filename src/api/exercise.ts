@@ -50,3 +50,11 @@ export const execute = (obj: {
 }) => {
     return fetch.post(`${PREFIX}/execute`, obj);
 };
+
+export const deleteExercise = (id: number) => {
+    return fetch.delete(`${PREFIX}/delexercise`, {
+        params: {
+            id
+        }
+    })
+}

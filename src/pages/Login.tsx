@@ -1,13 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Form, Icon, Input, Button, message } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import "../styles/Login.sass";
 import { login } from "../api/user";
-import { store } from '../store'
 
 const Login = (props: FormComponentProps) => {
     const { getFieldDecorator } = props.form;
-    const { dispatch } = useContext(store)
 
     // methods
     const handleSubmit = () => {
@@ -16,10 +14,6 @@ const Login = (props: FormComponentProps) => {
                 try {
                     let res = await login(val)
                     if(res.code === 200) {
-                        dispatch({
-                            type: 'SET_USER',
-                            payload: res.data
-                        })
                         message.success(`欢迎回来！`)
                         window.location.reload()
                     } else {

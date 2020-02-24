@@ -7,7 +7,7 @@ import { ExeProps, ModeType, testCaseType } from "../types/exercise";
 import { getList } from "../api/exercise";
 import { TRANSFER_MODE } from "../utils/global_config";
 import { RadioChangeEvent } from "antd/lib/radio";
-import { exerciseShow } from "../api/exercise";
+import { exerciseShow, deleteExercise } from "../api/exercise";
 
 const ExerciseList = () => {
     const history = useHistory();
@@ -178,8 +178,20 @@ const ExerciseList = () => {
         }
     };
     // 删除题目
-    const deleteExercise = () => {
-        console.log(selectedExercise);
+    const handleDelelte = async () => {
+        try {
+            let res = await deleteExercise(selectedExercise)
+            if(res.code === 200) {
+                message.success('删除成功')
+                refresh()
+            } else {
+                message.error(res.msg)
+            }
+        } catch(err) {
+            message.error(err)
+        }
+        confirmInputRef.current.state.value = ''
+        showDeleteModal(false)
     };
     // 确认删除
     const handleInput = (e: ChangeEvent) => {
@@ -229,9 +241,12 @@ const ExerciseList = () => {
                     }}
                     visible={deleteModalVisible}
                     okText="确定"
-                    onOk={deleteExercise}
+                    onOk={handleDelelte}
                     cancelText="取消"
-                    onCancel={() => showDeleteModal(false)}
+                    onCancel={() => {
+                        confirmInputRef.current.state.value = ''
+                        showDeleteModal(false)
+                    }}
                 >
                     <p>
                         确认要<b>删除</b>该题？此操作<b>不可逆</b>！输入该题{" "}
