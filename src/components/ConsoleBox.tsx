@@ -134,7 +134,12 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                                     (result.state === "error" && (
                                         <div className="res_err">
                                             <Input.TextArea
-                                                value={result.output[1].toString()}
+                                                value={
+                                                    result.output[0]
+                                                        .stdout_output
+                                                        ? result.output[1].toString()
+                                                        : "执行出错"
+                                                }
                                                 disabled
                                             ></Input.TextArea>
                                         </div>
