@@ -145,9 +145,9 @@ const CodeViewOne = () => {
                                 width: 120,
                             }}
                         >
-                            {LANGS.map(e => (
-                                <Option value={e.val} key={e.val}>
-                                    {e.label}
+                            {LangArr.map(e => (
+                                <Option value={LANGS(e).val} key={LANGS(e).val}>
+                                    {LANGS(e).label}
                                 </Option>
                             ))}
                         </Select>
@@ -166,9 +166,9 @@ const CodeViewOne = () => {
                             onChange={handleChange}
                             mode="multiple"
                         >
-                            {LANGS.map(e => (
-                                <Option value={e.val} key={e.val}>
-                                    {e.label}
+                            {LangArr.map(e => (
+                                <Option value={LANGS(e).val} key={LANGS(e).val}>
+                                    {LANGS(e).label}
                                 </Option>
                             ))}
                         </Select>

@@ -6,7 +6,7 @@ import "../styles/CodeViewTwo.sass";
 import { LANGS } from "../utils/global_config";
 import { Select, message } from "antd";
 import { saveExercise } from "../api/exercise";
-import { CodeProps, LangArr, answerProps } from "../types/exercise";
+import { CodeProps, LangArr } from "../types/exercise";
 const { Option } = Select;
 
 const CodeViewTwo = () => {
@@ -18,17 +18,14 @@ const CodeViewTwo = () => {
     );
     const [code, setCode] = useState((exerciseInfo.code || {}) as CodeProps);
     const [answer, setAnswer] = useState(
-        (exerciseInfo.answer || {}) as answerProps
-    );
-    const [answerLang, setAnswerLang] = useState(
-        exerciseInfo?.answer?.lang || "javascript"
+        (exerciseInfo.answer || {}) as CodeProps
     );
     const monacoRef = useRef(null as any);
     const [isCtrl, setIsCtrl] = useState(false);
 
     useEffect(() => {
         setCode(exerciseInfo.code as CodeProps);
-        setAnswer(exerciseInfo.answer);
+        setAnswer(exerciseInfo.answer as CodeProps);
     }, [exerciseInfo]);
 
     // methods
@@ -44,13 +41,8 @@ const CodeViewTwo = () => {
     const answerCodeChange = (val: string) => {
         setAnswer({
             ...answer,
-            code: val
+            [LumosLanguage]: val
         });
-    };
-
-    // 答案语言变更
-    const answerLangChange = (val: typeof LangArr[number]) => {
-        setAnswerLang(val);
     };
     // 用户可见语言变更
     const langChange = (val: typeof LangArr[number]) => {
@@ -93,10 +85,7 @@ const CodeViewTwo = () => {
                 data: {
                     id: exerciseInfo.id,
                     code,
-                    answer: {
-                        ...answer,
-                        lang: answerLang
-                    }
+                    answer
                 },
                 type: "detail"
             });
@@ -124,17 +113,17 @@ const CodeViewTwo = () => {
                 <div className="t-wrapper">
                     <span className="title">答案</span>
                     <div>
-                        <span>答案语言：</span>
+                        <span>当前语言：</span>
                         <Select
+                            defaultValue={LumosLanguage}
+                            onChange={langChange}
                             style={{
-                                width: 120
+                                width: 120,
                             }}
-                            value={answerLang}
-                            onChange={answerLangChange}
                         >
-                            {LANGS.map(e => (
-                                <Option value={e.val} key={e.val}>
-                                    {e.label}
+                            {LangArr.map(e => (
+                                <Option value={LANGS(e).val} key={LANGS(e).val}>
+                                    {LANGS(e).label}
                                 </Option>
                             ))}
                         </Select>
@@ -142,23 +131,6 @@ const CodeViewTwo = () => {
                 </div>
                 <div className="t-wrapper">
                     <span className="title">用户可见代码</span>
-                    <div>
-                        <span>当前语言：</span>
-                        <Select
-                            defaultValue={LumosLanguage}
-                            onChange={langChange}
-                            style={{
-                                width: 120,
-                                marginRight: 10
-                            }}
-                        >
-                            {LANGS.map(e => (
-                                <Option value={e.val} key={e.val}>
-                                    {e.label}
-                                </Option>
-                            ))}
-                        </Select>
-                    </div>
                 </div>
             </div>
             <div className="code-wrapper">
@@ -171,8 +143,8 @@ const CodeViewTwo = () => {
                         refreshRate={100}
                     >
                         <MonacoEditor
-                            value={answer?.code || ""}
-                            language={answerLang}
+                            value={answer[LumosLanguage] || ""}
+                            language={LumosLanguage}
                             theme="vs-dark"
                             onChange={answerCodeChange}
                             editorDidMount={editorDidMount}

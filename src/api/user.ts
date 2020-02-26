@@ -16,3 +16,7 @@ export const userList = (obj: UserSearchProps) => {
         params: obj
     })
 }
+
+export const logout = () => {
+    return fetch.post(`${PREFIX}/logout`)
+}

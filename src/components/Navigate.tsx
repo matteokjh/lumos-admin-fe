@@ -6,17 +6,36 @@ import Exercise from '../pages/Exercise'
 import FilterGroup from '../pages/FilterGroup'
 import User from '../pages/User'
 import My404Component from './My404Component'
+import { Icon, Popconfirm, message } from 'antd'
+import { logout } from '@/api/user'
 import '../styles/Navigate.sass'
 
 
 const Navigate = (props: { collapsed: boolean }) => {
     const { collapsed } = props
 
+    // methods
+    const handlelogout = async () => {
+        try {
+            let res = await logout()
+            if(res.code === 200) {
+                window.location.reload()
+            } else {
+                message.error(res.msg)
+            }
+        } catch(err) {
+            message.error(err)
+        }
+    }
+
     return (
         <div className="Navigate" style={{
             width: `calc(100vw - ${collapsed ? '80px' : '250px'})`
         }}>
             <div className="top">
+                <Popconfirm placement="bottomLeft" title="确定要登出？" onConfirm={handlelogout} okText="确定" cancelText="取消">
+                    <Icon type="logout" className="logout-icon" />
+                </Popconfirm>
             </div>
             <Switch>
                 {/* 主页 */}

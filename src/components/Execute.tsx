@@ -10,6 +10,7 @@ import { LangArr } from "../types/exercise";
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 import ReactResizeDetector from "react-resize-detector";
 import ConsoleBox from "./ConsoleBox";
+import { LANGS } from '@/utils/global_config'
 import "../styles/Execute.sass";
 
 const { Option } = Select;
@@ -186,7 +187,7 @@ const Execute = () => {
                         >
                             {exercise.lang?.map(e => (
                                 <Option value={e} key={e}>
-                                    {e}
+                                    {LANGS(e).label}
                                 </Option>
                             ))}
                         </Select>

@@ -168,7 +168,7 @@ const TestCaseForm = () => {
         <Spin spinning={loading}>
             <div className="TestCaseForm">
                 <div className="btn">
-                    <h1>{exerciseInfo.id} - {exerciseInfo.title}</h1>
+                    <h1>{exerciseInfo.id}. {exerciseInfo.title}</h1>
                     <Button
                         type="primary"
                         onClick={() => {
