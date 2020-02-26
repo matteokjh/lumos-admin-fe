@@ -1,3 +1,7 @@
 ### Lumos-admin
 
-manage system for my graduation design：lumos (WIP)
+fe
+
+---
+
+manage system for lumos （WIP）
