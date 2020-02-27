@@ -43,9 +43,11 @@ const TestCaseForm = () => {
                 input: obj.input,
                 output: obj.output,
                 show: false,
-                text: obj.text || ""
+                text: obj.text || "",
+                uuid: obj.uuid
             });
         }
+        console.log(arr.map(e=>e.uuid))
         try {
             let res = await saveExercise({
                 data: {
@@ -137,7 +139,9 @@ const TestCaseForm = () => {
     };
     // 删除
     const deleteItem = async (idx: number) => {
-        let arr = testCaseList.slice(0,idx).concat(testCaseList.slice(idx+1))
+        let arr = testCaseList
+            .slice(0, idx)
+            .concat(testCaseList.slice(idx + 1));
         try {
             let res = await saveExercise({
                 type: "detail",
@@ -168,13 +172,15 @@ const TestCaseForm = () => {
         <Spin spinning={loading}>
             <div className="TestCaseForm">
                 <div className="btn">
-                    <h1>{exerciseInfo.id}. {exerciseInfo.title}</h1>
+                    <h1>
+                        {exerciseInfo.id}. {exerciseInfo.title}
+                    </h1>
                     <Button
                         type="primary"
                         onClick={() => {
                             setMode("new");
-                            setActiveIdx(-1)
-                            setActiveItem({} as testCaseType)
+                            setActiveIdx(-1);
+                            setActiveItem({} as testCaseType);
                             setShowModal(true);
                         }}
                     >

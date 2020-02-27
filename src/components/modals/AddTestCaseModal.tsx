@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Modal, Input, Form } from "antd";
 import "./styles/AddTestCaseModal.sass";
+import { v4 } from "uuid";
 
 const AddTestCaseModal = (props: any) => {
     const inRef = useRef(null as any);
@@ -30,7 +31,8 @@ const AddTestCaseModal = (props: any) => {
                         input: inRef.current.state.value,
                         output: outRef.current.state.value,
                         text: textRef.current.state.value,
-                        show: activeItem?.show || false
+                        show: activeItem?.show || false,
+                        uuid: activeItem.uuid ? activeItem.uuid : v4()
                     }
                 })
             }

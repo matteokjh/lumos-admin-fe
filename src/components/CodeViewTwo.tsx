@@ -6,7 +6,7 @@ import "../styles/CodeViewTwo.sass";
 import { LANGS } from "../utils/global_config";
 import { Select, message } from "antd";
 import { saveExercise } from "../api/exercise";
-import { CodeProps, LangArr } from "../types/exercise";
+import { CodeProps, LangArr, AnswerProps } from "../types/exercise";
 const { Option } = Select;
 
 const CodeViewTwo = () => {
@@ -16,16 +16,16 @@ const CodeViewTwo = () => {
         (localStorage["lumos-language"] ||
             "javascript") as typeof LangArr[number]
     );
-    const [code, setCode] = useState((exerciseInfo.code || {}) as CodeProps);
+    const [code, setCode] = useState((exerciseInfo?.code || {}) as CodeProps);
     const [answer, setAnswer] = useState(
-        (exerciseInfo.answer || {}) as CodeProps
+        (exerciseInfo.answer || {}) as AnswerProps
     );
     const monacoRef = useRef(null as any);
     const [isCtrl, setIsCtrl] = useState(false);
 
     useEffect(() => {
-        setCode(exerciseInfo.code as CodeProps);
-        setAnswer(exerciseInfo.answer as CodeProps);
+        setCode(exerciseInfo?.code as CodeProps);
+        setAnswer(exerciseInfo?.answer as AnswerProps);
     }, [exerciseInfo]);
 
     // methods
@@ -40,8 +40,14 @@ const CodeViewTwo = () => {
     };
     const answerCodeChange = (val: string) => {
         setAnswer({
-            ...answer,
-            [LumosLanguage]: val
+            code: val,
+            lang: answer?.lang || 'javascript'
+        });
+    };
+    const answerLangChange = (val: typeof LangArr[number]) => {
+        setAnswer({
+            code: answer?.code,
+            lang: val
         });
     };
     // 用户可见语言变更
@@ -113,16 +119,18 @@ const CodeViewTwo = () => {
                 <div className="t-wrapper">
                     <span className="title">答案</span>
                     <div>
-                        <span>当前语言：</span>
+                        <span>答案语言：</span>
                         <Select
-                            defaultValue={LumosLanguage}
-                            onChange={langChange}
+                            defaultValue={
+                                exerciseInfo?.answer?.lang || "javascript"
+                            }
+                            onChange={answerLangChange}
                             style={{
-                                width: 120,
+                                width: 120
                             }}
                         >
                             {LangArr.map(e => (
-                                <Option value={LANGS(e).val} key={LANGS(e).val}>
+                                <Option value={e} key={e}>
                                     {LANGS(e).label}
                                 </Option>
                             ))}
@@ -131,6 +139,22 @@ const CodeViewTwo = () => {
                 </div>
                 <div className="t-wrapper">
                     <span className="title">用户可见代码</span>
+                    <div>
+                        <span>当前语言：</span>
+                        <Select
+                            defaultValue={LumosLanguage}
+                            onChange={langChange}
+                            style={{
+                                width: 120
+                            }}
+                        >
+                            {LangArr.map(e => (
+                                <Option value={e} key={e}>
+                                    {LANGS(e).label}
+                                </Option>
+                            ))}
+                        </Select>
+                    </div>
                 </div>
             </div>
             <div className="code-wrapper">
@@ -143,8 +167,8 @@ const CodeViewTwo = () => {
                         refreshRate={100}
                     >
                         <MonacoEditor
-                            value={answer[LumosLanguage] || ""}
-                            language={LumosLanguage}
+                            value={answer?.code || ""}
+                            language={answer?.lang || "javascript"}
                             theme="vs-dark"
                             onChange={answerCodeChange}
                             editorDidMount={editorDidMount}

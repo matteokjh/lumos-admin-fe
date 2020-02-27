@@ -33,27 +33,27 @@ export const LANGS = (lang?: typeof LangArr[number]) => {
     switch (lang) {
         case "javascript":
             return {
-                val: "javascript",
+                val: 4,
                 label: "JavaScript"
             };
         case "cpp":
             return {
-                val: "cpp",
+                val: 2,
                 label: "C++"
             };
         case "c":
             return {
-                val: "c",
+                val: 1,
                 label: "C"
             };
         case "java":
             return {
-                val: "java",
+                val: 3,
                 label: "Java"
             };
         default:
             return {
-                val: "unknown",
+                val: 0,
                 label: "unknown"
             };
     }

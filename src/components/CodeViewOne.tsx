@@ -146,7 +146,7 @@ const CodeViewOne = () => {
                             }}
                         >
                             {LangArr.map(e => (
-                                <Option value={LANGS(e).val} key={LANGS(e).val}>
+                                <Option value={e} key={e}>
                                     {LANGS(e).label}
                                 </Option>
                             ))}
@@ -167,7 +167,7 @@ const CodeViewOne = () => {
                             mode="multiple"
                         >
                             {LangArr.map(e => (
-                                <Option value={LANGS(e).val} key={LANGS(e).val}>
+                                <Option value={e} key={e}>
                                     {LANGS(e).label}
                                 </Option>
                             ))}
