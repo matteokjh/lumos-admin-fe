@@ -1,4 +1,4 @@
-import { ModeType, LangArr } from "../types/exercise";
+import { ModeType, LangArr } from "@/types/exercise";
 
 export const COLOR = {
     EASY_MODE: "#4caf50",

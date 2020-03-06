@@ -1,5 +1,5 @@
 import fetch from "./index";
-import { UserSearchProps, LoginProps } from "../types/user";
+import { UserSearchProps, LoginProps } from "@/types/user";
 
 const PREFIX = "admin/user";
 

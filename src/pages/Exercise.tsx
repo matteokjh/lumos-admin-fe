@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Button, Icon, Menu, message } from "antd";
+import { Button, Menu, message } from "antd";
 import { useHistory, useLocation } from "react-router-dom";
-import MarkdownEditor from "../components/MarkdownEditor";
-import ExerciseForm from "../components/ExerciseForm";
-import CodeViewOne from "../components/CodeViewOne";
-import CodeViewTwo from "../components/CodeViewTwo";
-import TestCaseForm from "../components/TestCaseForm";
-import Execute from "@/components/Execute";
+import MarkdownEditor from "@/components/Exercise/MarkdownEditor";
+import ExerciseForm from "@/components/Exercise/ExerciseForm";
+import CodeViewOne from "@/components/Exercise/CodeViewOne";
+import CodeViewTwo from "@/components/Exercise/CodeViewTwo";
+import TestCaseForm from "@/components/Testcase/TestCaseForm";
+import Execute from "@/components/Exercise/Execute";
 
-import { getExeInfo } from "../api/exercise";
+import { getExeInfo } from "@/api/exercise";
 
-import "../styles/Exercise.sass";
-import { SelectParam } from "antd/lib/menu";
-import { store } from "../store/index";
+import "@/styles/Exercise.sass";
+import { store } from "@/store/index";
+import { ArrowLeftOutlined } from '@ant-design/icons'
 
 // 题目详情页，适用 新增题目、题目详情（含编辑）
 const Exercise = (props: any) => {
@@ -56,7 +56,7 @@ const Exercise = (props: any) => {
     const back = () => {
         history.goBack();
     };
-    const handleSelect = (obj: SelectParam) => {
+    const handleSelect = (obj: any) => {
         setActive(obj.key);
     };
 
@@ -65,7 +65,7 @@ const Exercise = (props: any) => {
             {/* 主体 */}
             <div className="main">
                 <Button onClick={back} className="back-btn">
-                    <Icon type="arrow-left" />
+                    <ArrowLeftOutlined />
                     <span>返回</span>
                 </Button>
                 <Menu

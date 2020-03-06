@@ -3,8 +3,8 @@ import React, { createContext, useReducer } from 'react'
 import { contextProps } from './storeProps'
 import { stateProps } from './storeProps'
 import { actionProps, Reducer } from './storeProps'
-import { ExeProps } from '../types/exercise'
-import { UserProps } from '../types/user'
+import { ExeProps } from '@/types/exercise'
+import { UserProps } from '@/types/user'
 
 const initialContext = {
   state: {

@@ -1,5 +1,5 @@
 import React from 'react'
-import '../styles/My404Component.sass'
+import '@/styles/My404Component.sass'
 
 const My404Component = () => {
     return (

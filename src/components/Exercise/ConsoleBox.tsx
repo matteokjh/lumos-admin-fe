@@ -1,7 +1,8 @@
 import React from "react";
-import { Button, Menu, Icon, Input, Empty, Skeleton } from "antd";
+import { Button, Menu, Input, Empty, Skeleton } from "antd";
 import "@/styles/ConsoleBox.sass";
 import { ExeProps } from "@/types/exercise";
+import { DownOutlined, UpOutlined, LoadingOutlined } from "@ant-design/icons";
 
 type consoleBoxType = "result" | "testcase";
 
@@ -52,7 +53,7 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                     <div className="console_top">
                         <div className="console_menu">
                             <Menu
-                                onClick={e =>
+                                onClick={(e: any) =>
                                     setConsoleActive(e.key as consoleBoxType)
                                 }
                                 mode="horizontal"
@@ -66,11 +67,9 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                                 </Menu.Item>
                             </Menu>
                         </div>
-                        <Icon
-                            onClick={showConsole}
-                            className="console_icon"
-                            type={isOpen ? "down" : "up"}
-                        ></Icon>
+                        <span onClick={showConsole} className="console_icon">
+                            {isOpen ? <DownOutlined /> : <UpOutlined />}
+                        </span>
                     </div>
                     {/* 中间主体 */}
                     <div className="console_mid">
@@ -79,7 +78,8 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                             <div className="testcaseBox">
                                 <Input.TextArea
                                     defaultValue={
-                                        singleCaseInput || exercise.defaultTestCase?.input
+                                        singleCaseInput ||
+                                        exercise.defaultTestCase?.input
                                     }
                                     onChange={changeSingleCase}
                                     spellCheck={false}
@@ -137,7 +137,8 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                                             <Input.TextArea
                                                 value={
                                                     result.output[0]
-                                                        .stdout_output !== undefined
+                                                        .stdout_output !==
+                                                    undefined
                                                         ? result.output[1].toString()
                                                         : "执行出错"
                                                 }
@@ -166,7 +167,7 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                 {isRunning && (
                     <span className="waiting">
                         <span>等待中</span>
-                        <Icon type="loading" />
+                        <LoadingOutlined />
                     </span>
                 )}
                 <div className="left">

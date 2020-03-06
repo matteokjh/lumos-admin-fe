@@ -1,14 +1,17 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Index from '../pages/Index'
-import ExerciseList from '../pages/ExerciseList'
-import Exercise from '../pages/Exercise'
-import FilterGroup from '../pages/FilterGroup'
-import User from '../pages/User'
-import My404Component from './My404Component'
-import { Icon, Popconfirm, message } from 'antd'
+import Index from '@/pages/Index'
+import ExerciseList from '@/pages/ExerciseList'
+import Exercise from '@/pages/Exercise'
+import FilterGroup from '@/pages/FilterGroup'
+import User from '@/pages/User'
+import Article from '@/pages/Article'
+import My404Component from './base/My404Component'
+import { Popconfirm, message } from 'antd'
 import { logout } from '@/api/user'
-import '../styles/Navigate.sass'
+import '@/styles/Navigate.sass'
+import { LogoutOutlined } from '@ant-design/icons'
+import ArticleDetail from '@/pages/ArticleDetail'
 
 
 const Navigate = (props: { collapsed: boolean }) => {
@@ -34,7 +37,7 @@ const Navigate = (props: { collapsed: boolean }) => {
         }}>
             <div className="top">
                 <Popconfirm placement="bottomLeft" title="确定要登出？" onConfirm={handlelogout} okText="确定" cancelText="取消">
-                    <Icon type="logout" className="logout-icon" />
+                    <LogoutOutlined className="logout-icon" />
                 </Popconfirm>
             </div>
             <Switch>
@@ -48,6 +51,10 @@ const Navigate = (props: { collapsed: boolean }) => {
                 <Route exact path='/exerciseList/detail/:id' component={Exercise}></Route>
                 {/* 题集管理 */}
                 <Route exact path='/filterGroup' component={FilterGroup}></Route>
+                {/* 文章管理 */}
+                <Route exact path='/article' component={Article}></Route>
+                {/* 文章详情 */}
+                <Route exact path='/article/detail/:aid' component={ArticleDetail}></Route>
                 {/* 用户管理 */}
                 <Route exact path='/user' component={User}></Route>
                 {/* 404 */}

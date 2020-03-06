@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import ReactMarkdown from "react-markdown/with-html";
 import { message } from "antd";
-import { saveExercise } from "../api/exercise";
-import { store } from "../store";
-import CodeBlock from "./react-markdown-code-block";
-import { debounce } from "../utils/methods";
+import { saveExercise } from "@/api/exercise";
+import { store } from "@/store";
+import CodeBlock from "@/components/reactMd/react-markdown-code-block";
+import { debounce } from "@/utils/methods";
 
-import "../styles/MarkdownEditor.sass";
-import "../styles/markdown.sass";
-import ReactMarkdownLink from "./react-markdown-link";
+import "@/styles/MarkdownEditor.sass";
+import "@/styles/markdown.sass";
+import ReactMarkdownLink from "@/components/reactMd/react-markdown-link";
 import ReactResizeDetector from "react-resize-detector";
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 

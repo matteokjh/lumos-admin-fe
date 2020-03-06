@@ -5,7 +5,7 @@ import {
     ExecOpType,
     LangArr,
     testCaseType
-} from "../types/exercise";
+} from "@/types/exercise";
 
 const PREFIX = "admin/exercise";
 

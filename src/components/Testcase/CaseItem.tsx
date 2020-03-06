@@ -1,5 +1,6 @@
 import React from "react";
-import { Card, Icon, Radio, Popconfirm } from "antd";
+import { Card, Radio, Popconfirm } from "antd";
+import { MenuOutlined, EditOutlined, CloseOutlined } from "@ant-design/icons";
 import { Draggable } from "react-beautiful-dnd";
 
 const CaseItem = (props: any) => {
@@ -19,7 +20,9 @@ const CaseItem = (props: any) => {
                                         value={caseInfo.show || 0}
                                         className="showBtn"
                                         size="small"
-                                        onChange={e => props.changeShow(index, e)}
+                                        onChange={(e: any) =>
+                                            props.changeShow(index, e)
+                                        }
                                     >
                                         <Radio.Button
                                             value={1}
@@ -38,17 +41,18 @@ const CaseItem = (props: any) => {
                                     </Radio.Group>
                                 </i>
                                 <span {...provided.dragHandleProps}>
-                                    <Icon type="menu" />
+                                    <MenuOutlined />
                                 </span>
-                                <Icon type="edit" onClick={() => props.editItem(index)} />
+                                <EditOutlined
+                                    onClick={() => props.editItem(index)}
+                                />
                                 <Popconfirm
                                     title="确定要删除此用例？"
                                     onConfirm={() => props.deleteItem(index)}
                                     okText="确定"
                                     cancelText="取消"
                                 >
-                                    <Icon
-                                        type="close"
+                                    <CloseOutlined
                                         style={{
                                             color: "#F44336"
                                         }}

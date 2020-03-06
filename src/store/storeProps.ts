@@ -1,5 +1,5 @@
-import { UserProps } from "../types/user";
-import { ExeProps, opTypeProps } from "../types/exercise";
+import { UserProps } from "@/types/user";
+import { ExeProps, opTypeProps } from "@/types/exercise";
 
 export interface stateProps {
     userInfo: UserProps;

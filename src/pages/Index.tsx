@@ -1,5 +1,5 @@
 import React from 'react'
-import '../styles/Index.sass'
+import '@/styles/Index.sass'
 
 const Index = () => {
     return (

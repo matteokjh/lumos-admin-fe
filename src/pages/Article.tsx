@@ -1,19 +1,16 @@
 import React, { useEffect, useState, ChangeEvent, useRef } from "react";
-import { NavLink } from "react-router-dom";
-import { Button, message, Table, Radio, Modal, Input, Spin } from "antd";
-import "@/styles/ExerciseList.sass";
-import { useHistory } from "react-router-dom";
-import { ExeProps, ModeType, testCaseType } from "@/types/exercise";
-import { getList } from "@/api/exercise";
-import { TRANSFER_MODE } from "@/utils/global_config";
-import { exerciseShow, deleteExercise } from "@/api/exercise";
-import { WarningOutlined, PlusOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import { Button, message, Table, Radio, Modal, Input, Spin, Empty } from "antd";
+import "@/styles/Article.sass";
+import { WarningOutlined, SearchOutlined } from "@ant-design/icons";
+import { ArticleProps } from "@/types/article";
+import { UserProps } from "@/types/user";
+import { articleShow, deleteArticle, getList } from "@/api/article";
 
-const ExerciseList = () => {
-    const history = useHistory();
-    const [list, setList] = useState([] as ExeProps[]);
+const Article = () => {
+    const [list, setList] = useState([] as ArticleProps[]);
     const [deleteModalVisible, showDeleteModal] = useState(false);
-    const [selectedExercise, setSelected] = useState(-1);
+    const [selectedArticle, setSelected] = useState({} as ArticleProps);
     const confirmInputRef = useRef(null as any);
     const [confirm, setConfirm] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -21,49 +18,40 @@ const ExerciseList = () => {
     // column
     const columns = [
         {
-            title: "编号",
-            dataIndex: "id",
-            key: "id",
-            width: 80
+            title: "aid",
+            dataIndex: "aid",
+            key: "aid",
+            width: 200
         },
         {
             title: "标题",
             dataIndex: "title",
             key: "title",
-            render: (val: string, row: ExeProps) => (
-                <NavLink to={`/exerciseList/detail/${row.id}`}>
+            render: (data: string, row: ArticleProps) => (
+                <Link to={`/article/detail/${row.aid}`}>
                     <span>{row.title}</span>
-                </NavLink>
+                </Link>
             ),
-            width: 150
+            minWidth: 250
         },
         {
-            title: "贡献者",
-            dataIndex: "contributor",
-            key: "contributor",
-            width: 100
-        },
-        {
-            title: "难度",
-            dataIndex: "mode",
-            render: (val: ModeType) => {
+            title: "作者",
+            dataIndex: "author",
+            key: "author",
+            minWidth: 100,
+            render: (data: UserProps) => {
                 return (
-                    <span
-                        style={{
-                            backgroundColor: TRANSFER_MODE(val)[1],
-                            padding: "5px 8px",
-                            fontSize: 13,
-                            color: "#fefefe",
-                            borderRadius: 3,
-                            userSelect: "none"
-                        }}
-                    >
-                        {TRANSFER_MODE(val)[0]}
-                    </span>
+                    <Link to={`/user/detail/${data.username}`} target="_blank">
+                        <span
+                            style={{
+                                color: "#ff8822"
+                            }}
+                        >
+                            {data.name}
+                        </span>
+                    </Link>
                 );
-            },
-            key: "mode",
-            width: 80
+            }
         },
         {
             title: "创建时间",
@@ -82,33 +70,15 @@ const ExerciseList = () => {
             }
         },
         {
-            title: "提交次数",
-            dataIndex: "submitTimes",
-            key: "submitTimes"
-        },
-        {
-            title: "通过次数",
-            dataIndex: "passTimes",
-            key: "passTimes"
-        },
-        {
-            title: "测试用例数",
-            dataIndex: "testCase",
-            key: "testCase",
-            render: (val?: testCaseType[]) => {
-                return val?.filter(e => e.show).length || 0;
-            }
-        },
-        {
             title: "是否显示",
             key: "show",
-            render: (row: ExeProps) => {
+            render: (row: ArticleProps) => {
                 return (
                     <Radio.Group
                         defaultValue={row.show || 0}
                         className="showBtn"
                         size="small"
-                        onChange={e => changeShow(row.id, e)}
+                        onChange={e => changeShow(row.aid, e)}
                     >
                         <Radio.Button
                             value={1}
@@ -130,13 +100,13 @@ const ExerciseList = () => {
         {
             title: "操作",
             key: "operation",
-            render: (row: ExeProps) => {
+            render: (row: ArticleProps) => {
                 return (
                     <div className="btn-group">
                         <Button
                             onClick={() => {
                                 showDeleteModal(true);
-                                setSelected(row.id);
+                                setSelected(row);
                             }}
                             size="small"
                             type="danger"
@@ -164,9 +134,9 @@ const ExerciseList = () => {
         }
         setLoading(false);
     };
-    // 显示/隐藏 题目
-    const changeShow = async (id: number, e: any) => {
-        let res = await exerciseShow(id, e.target.value);
+    // 显示/隐藏 文章
+    const changeShow = async (id: string, e: any) => {
+        let res = await articleShow(id, e.target.value);
         try {
             if (res.code === 200) {
                 refresh();
@@ -180,7 +150,7 @@ const ExerciseList = () => {
     // 删除题目
     const handleDelelte = async () => {
         try {
-            let res = await deleteExercise(selectedExercise);
+            let res = await deleteArticle(selectedArticle.aid);
             if (res.code === 200) {
                 message.success("删除成功");
                 refresh();
@@ -190,17 +160,22 @@ const ExerciseList = () => {
         } catch (err) {
             message.error(err);
         }
-        confirmInputRef.current.state.value = "";
-        showDeleteModal(false);
+        handleCancel();
     };
     // 确认删除
     const handleInput = (e: ChangeEvent) => {
         e.stopPropagation();
         setTimeout(() => {
             setConfirm(
-                +confirmInputRef.current.state.value === selectedExercise
+                confirmInputRef.current.state.value === selectedArticle.aid
             );
         }, 200);
+    };
+    const handleCancel = () => {
+        confirmInputRef.current.state.value = "";
+        setSelected({} as ArticleProps);
+        setConfirm(false);
+        showDeleteModal(false);
     };
 
     useEffect(() => {
@@ -209,24 +184,26 @@ const ExerciseList = () => {
 
     return (
         <Spin spinning={loading}>
-            <div className="ExerciseList">
+            <div className="Article">
                 {/* 按钮组 */}
                 <div className="toolbar">
                     <Button onClick={refresh}>刷新</Button>
-                    <Button
-                        type="primary"
-                        onClick={() => history.push("/exerciseList/new")}
-                    >
-                        <PlusOutlined />
-                        <span>新增题目</span>
-                    </Button>
+                    <Input placeholder="搜索文章" spellCheck="false"></Input>
+                    <SearchOutlined className="search" />
                 </div>
                 <div className="main">
                     <Table
                         dataSource={list}
                         columns={columns}
-                        rowKey="id"
-                        emptyText="暂无数据"
+                        rowKey="aid"
+                        locale={{
+                            emptyText: (
+                                <Empty
+                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                    description="暂无数据"
+                                ></Empty>
+                            )
+                        }}
                     ></Table>
                 </div>
                 {/* 确认删除 modal */}
@@ -244,14 +221,11 @@ const ExerciseList = () => {
                     okText="确定"
                     onOk={handleDelelte}
                     cancelText="取消"
-                    onCancel={() => {
-                        confirmInputRef.current.state.value = "";
-                        showDeleteModal(false);
-                    }}
+                    onCancel={handleCancel}
                 >
                     <p>
-                        确认要<b>删除</b>该题？此操作<b>不可逆</b>！输入该题{" "}
-                        <b>编号</b> 以确认：
+                        确认要<b>删除</b>该文章？此操作<b>不可逆</b>！输入该文章{" "}
+                        <b>aid</b> 以确认：
                     </p>
                     <Input ref={confirmInputRef} onChange={handleInput}></Input>
                 </Modal>
@@ -260,4 +234,4 @@ const ExerciseList = () => {
     );
 };
 
-export default ExerciseList;
+export default Article;

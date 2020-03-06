@@ -1,5 +1,5 @@
 import React from 'react'
-import '../styles/FilterGroup.sass'
+import '@/styles/FilterGroup.sass'
 
 const FilterGroup = () => {
     return (

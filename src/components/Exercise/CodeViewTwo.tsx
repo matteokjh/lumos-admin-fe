@@ -1,74 +1,56 @@
-import React, { useContext, useState, useEffect } from "react";
-import { store } from "../store/index";
+import React, { useContext, useState, useRef, useEffect } from "react";
+import { store } from "@/store/index";
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 import ReactResizeDetector from "react-resize-detector";
-import "../styles/CodeViewOne.sass";
-import { LANGS } from "../utils/global_config";
+import "@/styles/CodeViewTwo.sass";
+import { LANGS } from "@/utils/global_config";
 import { Select, message } from "antd";
-import { saveExercise } from "../api/exercise";
-import { LangProps, CodeProps, LangArr } from "../types/exercise";
+import { saveExercise } from "@/api/exercise";
+import { CodeProps, LangArr, AnswerProps } from "@/types/exercise";
 const { Option } = Select;
 
-const CodeViewOne = () => {
+const CodeViewTwo = () => {
     const { state, dispatch } = useContext(store);
     const { exerciseInfo } = state;
     const [LumosLanguage, setLumosLanguage] = useState(
         (localStorage["lumos-language"] ||
             "javascript") as typeof LangArr[number]
     );
-    const [preCode, setPreCode] = useState(
-        (exerciseInfo.preCode || {}) as CodeProps
+    const [code, setCode] = useState((exerciseInfo?.code || {}) as CodeProps);
+    const [answer, setAnswer] = useState(
+        (exerciseInfo.answer || {}) as AnswerProps
     );
-    const [lastCode, setLastCode] = useState(
-        (exerciseInfo.lastCode || {}) as CodeProps
-    );
+    const monacoRef = useRef(null as any);
     const [isCtrl, setIsCtrl] = useState(false);
 
     useEffect(() => {
-        setPreCode(exerciseInfo.preCode as CodeProps);
-        setLastCode(exerciseInfo.lastCode as CodeProps);
+        setCode(exerciseInfo?.code as CodeProps);
+        setAnswer(exerciseInfo?.answer as AnswerProps);
     }, [exerciseInfo]);
 
     // methods
     // 初始化
     const editorDidMount: EditorDidMount = (editor, monaco) => {};
-    const preCodeChange = (val: string) => {
-        setPreCode({
-            ...preCode,
+    // 代码编辑
+    const codeChange = (val: string) => {
+        setCode({
+            ...code,
             [LumosLanguage]: val
         });
     };
-    const lastCodeChange = (val: string) => {
-        setLastCode({
-            ...lastCode,
-            [LumosLanguage]: val
+    const answerCodeChange = (val: string) => {
+        setAnswer({
+            code: val,
+            lang: answer?.lang || 'javascript'
         });
     };
-
-    // 题目指定语言变更
-    const handleChange = async (val: LangProps) => {
-        try {
-            let res = await saveExercise({
-                type: "detail",
-                data: {
-                    id: exerciseInfo.id,
-                    lang: val
-                }
-            });
-            if (res.code === 200) {
-                message.success(res.msg);
-                dispatch({
-                    type: "SET_EXERCISE",
-                    payload: res.data
-                });
-            } else {
-                message.error(res.msg);
-            }
-        } catch (err) {
-            message.error(err);
-        }
+    const answerLangChange = (val: typeof LangArr[number]) => {
+        setAnswer({
+            code: answer?.code,
+            lang: val
+        });
     };
-    // 当前语言变更
+    // 用户可见语言变更
     const langChange = (val: typeof LangArr[number]) => {
         // console.log(val);
         setLumosLanguage(val);
@@ -108,8 +90,8 @@ const CodeViewOne = () => {
             let res = await saveExercise({
                 data: {
                     id: exerciseInfo.id,
-                    preCode,
-                    lastCode
+                    code,
+                    answer
                 },
                 type: "detail"
             });
@@ -129,20 +111,22 @@ const CodeViewOne = () => {
 
     return (
         <div
-            className="CodeViewOne"
+            className="CodeViewTwo"
             onKeyDown={handleKeyDown}
             onKeyUp={handleKeyUp}
         >
             <div className="toolBar">
                 <div className="t-wrapper">
-                    <span className="title">前置代码</span>
+                    <span className="title">答案</span>
                     <div>
-                        <span>当前语言：</span>
+                        <span>答案语言：</span>
                         <Select
-                            defaultValue={LumosLanguage}
-                            onChange={langChange}
+                            defaultValue={
+                                exerciseInfo?.answer?.lang || "javascript"
+                            }
+                            onChange={answerLangChange}
                             style={{
-                                width: 120,
+                                width: 120
                             }}
                         >
                             {LangArr.map(e => (
@@ -154,17 +138,15 @@ const CodeViewOne = () => {
                     </div>
                 </div>
                 <div className="t-wrapper">
-                    <span className="title">后置代码</span>
+                    <span className="title">用户可见代码</span>
                     <div>
-                        <span>题目指定语言：</span>
+                        <span>当前语言：</span>
                         <Select
-                            placeholder="请选择题目包含的语言"
+                            defaultValue={LumosLanguage}
+                            onChange={langChange}
                             style={{
-                                minWidth: 255
+                                width: 120
                             }}
-                            value={exerciseInfo.lang}
-                            onChange={handleChange}
-                            mode="multiple"
                         >
                             {LangArr.map(e => (
                                 <Option value={e} key={e}>
@@ -176,8 +158,8 @@ const CodeViewOne = () => {
                 </div>
             </div>
             <div className="code-wrapper">
-                {/* 前置代码 */}
-                <div className="pre-code">
+                {/* 答案 */}
+                <div className="main-code">
                     <ReactResizeDetector
                         handleWidth
                         handleHeight
@@ -185,10 +167,10 @@ const CodeViewOne = () => {
                         refreshRate={100}
                     >
                         <MonacoEditor
-                            value={preCode?.[LumosLanguage] || ""}
-                            language={LumosLanguage}
+                            value={answer?.code || ""}
+                            language={answer?.lang || "javascript"}
                             theme="vs-dark"
-                            onChange={preCodeChange}
+                            onChange={answerCodeChange}
                             editorDidMount={editorDidMount}
                             options={{
                                 scrollBeyondLastLine: false,
@@ -199,8 +181,9 @@ const CodeViewOne = () => {
                         ></MonacoEditor>
                     </ReactResizeDetector>
                 </div>
-                {/* 后置代码 */}
-                <div className="last-code">
+                {/* 用户可见代码 */}
+                <div className="main-code">
+                    {/* 代码编辑器，套上自适应组件 */}
                     <ReactResizeDetector
                         handleWidth
                         handleHeight
@@ -208,10 +191,11 @@ const CodeViewOne = () => {
                         refreshRate={100}
                     >
                         <MonacoEditor
-                            value={lastCode?.[LumosLanguage] || ""}
+                            ref={monacoRef}
+                            value={code?.[LumosLanguage] || ""}
                             language={LumosLanguage}
                             theme="vs-dark"
-                            onChange={lastCodeChange}
+                            onChange={codeChange}
                             editorDidMount={editorDidMount}
                             options={{
                                 scrollBeyondLastLine: false,
@@ -227,4 +211,4 @@ const CodeViewOne = () => {
     );
 };
 
-export default CodeViewOne;
+export default CodeViewTwo;

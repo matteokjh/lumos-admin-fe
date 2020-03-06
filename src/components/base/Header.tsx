@@ -1,5 +1,5 @@
 import React from 'react'
-import '../styles/Header.sass'
+import '@/styles/Header.sass'
 import { useHistory } from 'react-router-dom'
 
 const Header = (props: { collapsed: boolean }) => {

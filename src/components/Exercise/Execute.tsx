@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
-import { getExeInfo, execute } from "../api/exercise";
+import { getExeInfo, execute } from "@/api/exercise";
 import { message, Select } from "antd";
 import { useLocation } from "react-router-dom";
 import ReactMarkdown from "react-markdown/with-html";
-import { ExeProps } from "../types/exercise";
-import CodeBlock from "./react-markdown-code-block";
-import ReactMarkdownLink from "./react-markdown-link";
-import { LangArr } from "../types/exercise";
+import { ExeProps } from "@/types/exercise";
+import CodeBlock from "@/components/reactMd/react-markdown-code-block";
+import ReactMarkdownLink from "@/components/reactMd/react-markdown-link";
+import { LangArr } from "@/types/exercise";
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 import ReactResizeDetector from "react-resize-detector";
 import ConsoleBox from "./ConsoleBox";
 import { LANGS } from '@/utils/global_config'
-import "../styles/Execute.sass";
+import "@/styles/Execute.sass";
 
 const { Option } = Select;
 
@@ -185,7 +185,7 @@ const Execute = () => {
                             value={LumosLanguage}
                             onChange={handleChange}
                         >
-                            {exercise.lang?.map(e => (
+                            {exercise.lang?.map((e: any) => (
                                 <Option value={e} key={e}>
                                     {LANGS(e).label}
                                 </Option>

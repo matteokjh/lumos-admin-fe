@@ -27,19 +27,22 @@
                     .ant-card-head
                         border-color: #ddd
                         color: #999
+                &:hover .toolbar > span
+                    opacity: 1
                 &:hover .toolbar i
                     opacity: 1
                 .toolbar
                     padding: 0
                     border: none
-                    i
+                    > span, i
                         opacity: 0
                         transition: opacity .3s
                         font-size: 16px
                         margin-left: 10px
                         font-style: normal
-                        &:not(:first-child)
-                            cursor: pointer
+                        cursor: pointer
+                        &:first-child
+                            cursor: grab
                     .showBtn
                         *
                             user-select: none

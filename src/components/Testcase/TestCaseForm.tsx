@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
-import { store } from "../store";
+import { store } from "@/store";
 import { Button, message, Spin } from "antd";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
-import AddTestCaseModal from "./modals/AddTestCaseModal";
-import { testCaseType } from "../types/exercise";
+import AddTestCaseModal from "../modals/AddTestCaseModal";
+import { testCaseType } from "@/types/exercise";
 import CaseItem from "./CaseItem";
 
-import "../styles/TestCaseForm.sass";
-import { saveExercise } from "../api/exercise";
+import "@/styles/TestCaseForm.sass";
+import { saveExercise } from "@/api/exercise";
 
 type modeType = "new" | "edit";
 

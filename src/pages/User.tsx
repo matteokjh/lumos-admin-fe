@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import '../styles/User.sass'
-import { userList } from '../api/user'
+import '@/styles/User.sass'
+import { userList } from '@/api/user'
 import { message } from 'antd'
 
 const User = () => {
