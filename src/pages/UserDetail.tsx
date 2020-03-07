@@ -3,7 +3,7 @@ import { UserProps } from "@/types/user";
 import { message, Button } from "antd";
 import { getUser } from "@/api/user";
 import { useHistory } from "react-router-dom";
-import { formatSex, formatWebsite } from "@/utils/methods";
+import { formatSex, formatWebsite, formatPermission } from "@/utils/methods";
 import "@/styles/UserDetail.sass";
 
 const UserDetail = (props: any) => {
@@ -78,6 +78,10 @@ const UserDetail = (props: any) => {
                             <div className="item">
                                 <p>激活</p>
                                 <span>{userInfo.initialize ? "是" : "否"}</span>
+                            </div>
+                            <div className="item">
+                                <p>权限</p>
+                                <span>{formatPermission(userInfo.permission)}</span>
                             </div>
                         </div>
                         <div className="row">

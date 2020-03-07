@@ -36,3 +36,10 @@ export const getUser = (username: string) => {
         }
     })
 }
+
+export const changePermission = (username: string, p: number) => {
+    return fetch.put(`${PREFIX}/permission`, {
+        username,
+        permission: p
+    })
+}

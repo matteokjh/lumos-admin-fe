@@ -85,3 +85,15 @@ export const formatSex = (s?: 'male' | 'female' | "") => {
 export const formatWebsite = (w: string) => {
     return w?.match(/(http|https):\/\//g) ? w : `http://${w}`
 }
+// 权限
+export const formatPermission = (num: number) => {
+    switch(num) {
+        case 0: return '超级管理员'
+        case 1: return '高级管理员'
+        case 2: return '管理员'
+        case 3: return '普通用户'
+        case 4: return '普通用户'
+        case 5: return '普通用户'
+        case 6: return '违规用户'
+    }
+}

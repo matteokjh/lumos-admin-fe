@@ -19,6 +19,7 @@ const App = () => {
             try {
                 let res = await getToken();
                 if (res.code === 200) {
+                    console.log(res.data)
                     dispatch({
                         type: "SET_USER",
                         payload: res.data

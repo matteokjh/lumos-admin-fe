@@ -61,3 +61,6 @@ export const LANGS = (lang?: typeof LangArr[number]) => {
 
 // 默认标签
 export const DEFAULT_TAGS = ["二叉树", "链表", "动态规划", "回溯", "位运算"];
+
+// 权限
+export const PERMISSION_GROUP = [0,1,2,3,4,5,6]

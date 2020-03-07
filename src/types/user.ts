@@ -18,6 +18,7 @@ export interface UserProps {
     starsTotal: number,
     work: string
     initialize: boolean
+    permission: number
 }
 
 export interface CompanyProps {

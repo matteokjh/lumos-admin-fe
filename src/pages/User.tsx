@@ -1,10 +1,33 @@
-import React, { useEffect, useState, ChangeEvent, useRef } from "react";
+import React, {
+    useEffect,
+    useState,
+    ChangeEvent,
+    useRef,
+    useContext
+} from "react";
 import "@/styles/User.sass";
 import { Link } from "react-router-dom";
-import { Button, message, Table, Modal, Input, Spin, Empty } from "antd";
-import { WarningOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+    Button,
+    message,
+    Table,
+    Modal,
+    Input,
+    Spin,
+    Empty,
+    Radio,
+    Popover
+} from "antd";
+import {
+    WarningOutlined,
+    SearchOutlined,
+    ExclamationCircleFilled
+} from "@ant-design/icons";
 import { UserProps } from "@/types/user";
-import { userList, deleteUser } from "@/api/user";
+import { userList, deleteUser, changePermission } from "@/api/user";
+import { PERMISSION_GROUP } from "@/utils/global_config";
+import { store } from "@/store";
+import { formatPermission } from "@/utils/methods";
 
 const User = () => {
     const [list, setList] = useState([] as UserProps[]);
@@ -13,6 +36,7 @@ const User = () => {
     const confirmInputRef = useRef(null as any);
     const [confirm, setConfirm] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { userInfo } = useContext(store).state;
 
     // column
     const columns = [
@@ -42,6 +66,56 @@ const User = () => {
             }
         },
         {
+            title: () => (
+                <span>
+                    <Popover
+                        content={
+                            <>
+                                {PERMISSION_GROUP.map(e => (
+                                    <p key={e}>
+                                        <span>
+                                            {e} --- {formatPermission(e)}
+                                        </span>
+                                    </p>
+                                ))}
+                            </>
+                        }
+                        title="权限对照表"
+                    >
+                        <ExclamationCircleFilled
+                            style={{
+                                color: "#999",
+                                marginRight: 5
+                            }}
+                        />
+                    </Popover>
+                    权限
+                </span>
+            ),
+            key: "permission",
+            dataIndex: "permission",
+            render: (data: number, row: UserProps) => {
+                return (
+                    <Radio.Group
+                        onChange={e => handleChangePermission(e, row)}
+                        disabled={row.username === userInfo?.username}
+                        defaultValue={data}
+                        buttonStyle="solid"
+                    >
+                        {PERMISSION_GROUP.map(e => (
+                            <Radio.Button
+                                key={e}
+                                value={e}
+                                className={`radioItem`}
+                            >
+                                {e}
+                            </Radio.Button>
+                        ))}
+                    </Radio.Group>
+                );
+            }
+        },
+        {
             title: "操作",
             key: "operation",
             render: (row: UserProps) => {
@@ -64,6 +138,19 @@ const User = () => {
     ];
 
     // methods
+    // 修改权限
+    const handleChangePermission = async (e: any, userInfo: UserProps) => {
+        try {
+            let res = await changePermission(userInfo.username, e.target.value);
+            if (res.code === 200) {
+                message.success(res.msg);
+            } else {
+                message.error(res.msg);
+            }
+        } catch (err) {
+            message.error(err);
+        }
+    };
     const refresh = async () => {
         setLoading(true);
         try {
@@ -169,8 +256,8 @@ const User = () => {
                     onCancel={handleCancel}
                 >
                     <p>
-                        确认要<b>删除</b>该用户？此操作<b>不可逆</b>！输入该用户的{" "}
-                        <b>用户名</b> 以确认：
+                        确认要<b>删除</b>该用户？此操作<b>不可逆</b>
+                        ！输入该用户的 <b>用户名</b> 以确认：
                     </p>
                     <Input ref={confirmInputRef} onChange={handleInput}></Input>
                 </Modal>

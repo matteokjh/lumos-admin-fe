@@ -13,6 +13,18 @@
             cursor: pointer
     .main
         padding: 10px
+        .ant-radio-group
+            .radioItem
+                &.ant-radio-button-wrapper-disabled
+                    color: #d9d9d9!important
+                &:last-child
+                    color: #ff4d4f
+                    &.ant-radio-button-wrapper-checked
+                        border-color: #ff4d4f
+                        background-color: #ff4d4f
+                        color: #fff
+            *
+                user-select: none
     .ant-table-tbody
         *
             user-select: text
@@ -34,4 +46,3 @@
                 background-color: #ff4d4f
                 color: #fff
 
-    
