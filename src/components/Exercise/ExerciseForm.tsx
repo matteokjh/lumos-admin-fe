@@ -120,7 +120,13 @@ const ExerciseForm = (props: any) => {
 
     useEffect(() => {
         setTags(exerciseInfo.tags || []);
-    }, [exerciseInfo]);
+        form.setFieldsValue({
+            id: exerciseInfo.id,
+            title: exerciseInfo.title,
+            mode: exerciseInfo.mode,
+            contributor: exerciseInfo.contributor
+        })
+    }, [exerciseInfo, form]);
 
     return (
         <div className="ExerciseForm">
@@ -239,7 +245,7 @@ const ExerciseForm = (props: any) => {
                                 onSelect={handleSelect}
                                 onBlur={handleInputConfirm}
                                 disabled={opType === "detail" && !isEdit}
-                                dataSource={DEFAULT_TAGS}
+                                options={DEFAULT_TAGS.map(e => ({value: e}))}
                                 autoFocus
                                 open
                             />
