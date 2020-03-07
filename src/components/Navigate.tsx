@@ -12,6 +12,7 @@ import { logout } from '@/api/user'
 import '@/styles/Navigate.sass'
 import { LogoutOutlined } from '@ant-design/icons'
 import ArticleDetail from '@/pages/ArticleDetail'
+import UserDetail from '@/pages/UserDetail'
 
 
 const Navigate = (props: { collapsed: boolean }) => {
@@ -57,6 +58,8 @@ const Navigate = (props: { collapsed: boolean }) => {
                 <Route exact path='/article/detail/:aid' component={ArticleDetail}></Route>
                 {/* 用户管理 */}
                 <Route exact path='/user' component={User}></Route>
+                {/* 用户详情 */}
+                <Route exact path='/user/detail/:username' component={UserDetail}></Route>
                 {/* 404 */}
                 <Route component={My404Component}></Route>
             </Switch>

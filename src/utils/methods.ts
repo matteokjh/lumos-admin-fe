@@ -74,3 +74,14 @@ export const convertComment = (commentList: CommentProps[]) => {
     }
     return [...map.values()]
 }
+
+// 处理性别
+export const formatSex = (s?: 'male' | 'female' | "") => {
+    if(!s) return '未知'
+    return s === 'male' ? '男' : '女'
+}
+
+// 处理网站
+export const formatWebsite = (w: string) => {
+    return w?.match(/(http|https):\/\//g) ? w : `http://${w}`
+}

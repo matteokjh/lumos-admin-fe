@@ -20,3 +20,19 @@ export const userList = (obj: UserSearchProps) => {
 export const logout = () => {
     return fetch.post(`${PREFIX}/logout`)
 }
+
+export const deleteUser = (username: string) => {
+    return fetch.delete(`${PREFIX}/deleteuser`, {
+        params: {
+            username
+        }
+    })
+}
+
+export const getUser = (username: string) => {
+    return fetch.get(`${PREFIX}/`, {
+        params: {
+            username
+        }
+    })
+}

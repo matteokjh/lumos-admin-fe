@@ -17,6 +17,7 @@ export interface UserProps {
     likesTotal: number,
     starsTotal: number,
     work: string
+    initialize: boolean
 }
 
 export interface CompanyProps {
