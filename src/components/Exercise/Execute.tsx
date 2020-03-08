@@ -10,7 +10,8 @@ import { LangArr } from "@/types/exercise";
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 import ReactResizeDetector from "react-resize-detector";
 import ConsoleBox from "./ConsoleBox";
-import { LANGS } from '@/utils/global_config'
+import { LANGS } from "@/utils/global_config";
+import { getSolution } from "@/api/solution";
 import "@/styles/Execute.sass";
 
 const { Option } = Select;
@@ -92,14 +93,14 @@ const Execute = () => {
             });
             console.log(res);
             if (res.code === 200) {
-                setResult(res.data);
+                getRes(res.data);
             } else {
                 message.error(res.msg);
             }
         } catch (err) {
             message.error(err);
+            setIsRunning(false);
         }
-        setIsRunning(false);
     };
     // 运行
     const submitRun = async () => {
@@ -114,14 +115,43 @@ const Execute = () => {
                 lang: LumosLanguage,
                 username: "429797371@qq.com"
             });
-            console.log(res);
             if (res.code === 200) {
+                getRes(res.data);
             } else {
+                message.error(res.msg);
             }
         } catch (err) {
             message.error(err);
         }
         setIsRunning(false);
+    };
+    // 获取运行结果
+    const getRes = (sid: string) => {
+        let t = 10; // 最多连续获取 10 次
+        return (async function() {
+            try {
+                let res = await getSolution(sid);
+                if (res.code === 200) {
+                    console.log(res);
+                    if (res.data.state === "pending" && t) {
+                        t--;
+                        setTimeout(() => {
+                            getRes(sid);
+                        }, 3000);
+                    } else {
+                        setResult(res.data);
+                        t = 10;
+                        setIsRunning(false);
+                    }
+                } else {
+                    message.error(res.msg);
+                    setIsRunning(false);
+                }
+            } catch (err) {
+                message.error(err);
+                setIsRunning(false);
+            }
+        })();
     };
     // 更改测试用例
     const changeSingleCase = (e: any) => {

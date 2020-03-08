@@ -44,6 +44,8 @@ export type ExeProps = ExeBaseInfo & {
     lang: LangProps;
     defaultTestCase?: testCaseType;
     tags: string[];
+    timeLimit: number, // 时间限制
+    memoryLimit: number, // 内存限制
 };
 
 export type ExecOpType = "testRun" | "submit";

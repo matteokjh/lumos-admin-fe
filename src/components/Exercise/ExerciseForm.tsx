@@ -124,7 +124,9 @@ const ExerciseForm = (props: any) => {
             id: exerciseInfo.id,
             title: exerciseInfo.title,
             mode: exerciseInfo.mode,
-            contributor: exerciseInfo.contributor
+            contributor: exerciseInfo.contributor,
+            timeLimit: exerciseInfo.timeLimit || 200,
+            memoryLimit: exerciseInfo.memoryLimit || 65535
         })
     }, [exerciseInfo, form]);
 
@@ -137,7 +139,9 @@ const ExerciseForm = (props: any) => {
                     id: exerciseInfo.id,
                     title: exerciseInfo.title,
                     mode: exerciseInfo.mode,
-                    contributor: exerciseInfo.contributor
+                    contributor: exerciseInfo.contributor,
+                    timeLimit: exerciseInfo.timeLimit,
+                    memoryLimit: exerciseInfo.memoryLimit
                 }}
             >
                 {/* id */}
@@ -204,6 +208,24 @@ const ExerciseForm = (props: any) => {
                         </Radio>
                         <Radio value="">未知</Radio>
                     </Radio.Group>
+                </Form.Item>
+                {/* 时间限制(ms) */}
+                <Form.Item label="时间限制(ms)" name="timeLimit">
+                    <InputNumber
+                        placeholder="时间限制"
+                        min={200}
+                        max={10000}
+                        disabled={!canEdit()}
+                    />  
+                </Form.Item>
+                {/* 内存限制(KB) */}
+                <Form.Item label="空间限制(KB)" name="memoryLimit">
+                    <InputNumber
+                        placeholder="内存大小"
+                        min={65535}
+                        max={262144}
+                        disabled={!canEdit()}
+                    />  
                 </Form.Item>
                 {/* contributor */}
                 <Form.Item label="贡献者" name="contributor">
