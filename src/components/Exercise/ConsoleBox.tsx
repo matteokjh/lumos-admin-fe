@@ -3,18 +3,8 @@ import { Button, Menu, Input, Empty, Skeleton } from "antd";
 import "@/styles/ConsoleBox.sass";
 import { ExeProps } from "@/types/exercise";
 import { DownOutlined, UpOutlined, LoadingOutlined } from "@ant-design/icons";
-
-type consoleBoxType = "result" | "testcase";
-
-type outputType = {
-    stdout_output: string;
-    result_output: string;
-};
-
-type resultType = {
-    state: "true" | "error" | "false";
-    output: outputType[];
-};
+import { consoleBoxType, resultType } from "@/types/solution";
+import { formatMemory, formatJudgeResult } from "@/utils/methods";
 
 interface ConsoleBoxProps {
     consoleActive: consoleBoxType;
@@ -92,42 +82,72 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                                 {isRunning ? (
                                     <Skeleton active></Skeleton>
                                 ) : (
-                                    ((result.state === "true" ||
-                                        result.state === "false") && (
+                                    (result.state === "success" && (
                                         <div className="res_wrapper">
-                                            <p>输入：</p>
-                                            <Input.TextArea
-                                                value={singleCaseInput}
-                                                disabled
-                                            ></Input.TextArea>
-                                            <p>输出：</p>
-                                            <Input.TextArea
-                                                value={
-                                                    result.output[1]
-                                                        .result_output
-                                                }
-                                                disabled
-                                            ></Input.TextArea>
-                                            <p>期望输出：</p>
-                                            <Input.TextArea
-                                                value={
-                                                    result.output[0]
-                                                        .result_output
-                                                }
-                                                disabled
-                                            ></Input.TextArea>
+                                            <div
+                                                className="res_info"
+                                                style={{
+                                                    backgroundColor: formatJudgeResult(
+                                                        result.result[0].judge
+                                                    )[3]
+                                                }}
+                                            >
+                                                <span
+                                                    className="res_done"
+                                                    style={{
+                                                        color: formatJudgeResult(
+                                                            result.result[0]
+                                                                .judge
+                                                        )[2]
+                                                    }}
+                                                >
+                                                    {
+                                                        formatJudgeResult(
+                                                            result.result[0]
+                                                                .judge
+                                                        )[1]
+                                                    }
+                                                </span>
+                                                <span>
+                                                    执行用时：
+                                                    {result.result[0].time} ms
+                                                </span>
+                                                <span>
+                                                    内存消耗：
+                                                    {formatMemory(
+                                                        result.result[0].memory
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <p>输入：</p>
+                                                <div className="valueBox">
+                                                    {singleCaseInput}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p>输出：</p>
+                                                <div className="valueBox">
+                                                    {result.result[0].output}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p>预期结果：</p>
+                                                <div className="valueBox">
+                                                    {result.testdata[0].output}
+                                                </div>
+                                            </div>
                                             {/* stdout */}
-                                            {result.output[1].stdout_output && (
-                                                <>
+                                            {result.result[0].stdout && (
+                                                <div>
                                                     <p>stdout：</p>
-                                                    <Input.TextArea
-                                                        value={
-                                                            result.output[1]
-                                                                .stdout_output
+                                                    <div className="valueBox">
+                                                        {
+                                                            result.result[0]
+                                                                .stdout
                                                         }
-                                                        disabled
-                                                    ></Input.TextArea>
-                                                </>
+                                                    </div>
+                                                </div>
                                             )}
                                         </div>
                                     )) ||
@@ -136,11 +156,7 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                                         <div className="res_err">
                                             <Input.TextArea
                                                 value={
-                                                    result.output[0]
-                                                        .stdout_output !==
-                                                    undefined
-                                                        ? result.output[1].toString()
-                                                        : "执行出错"
+                                                    result.error || "执行出错"
                                                 }
                                                 disabled
                                             ></Input.TextArea>

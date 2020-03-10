@@ -13,20 +13,11 @@ import ConsoleBox from "./ConsoleBox";
 import { LANGS } from "@/utils/global_config";
 import { getSolution } from "@/api/solution";
 import "@/styles/Execute.sass";
+import { resultType } from "@/types/solution";
 
 const { Option } = Select;
 
 type consoleBoxType = "result" | "testcase";
-
-type outputType = {
-    stdout_output: string;
-    result_output: string;
-};
-
-type resultType = {
-    state: "true" | "error" | "false";
-    output: outputType[];
-};
 
 const Execute = () => {
     const location = useLocation();
@@ -34,8 +25,7 @@ const Execute = () => {
     const CodeRef = useRef(null as any);
     const [code, setCode] = useState("");
     const [LumosLanguage, setLumosLanguage] = useState(
-        (localStorage["lumos-language"] ||
-            "javascript") as typeof LangArr[number]
+        (localStorage["lumos-language"] || "js") as typeof LangArr[number]
     );
     const [isOpen, setIsOpen] = useState(false);
     // 用户自定的一个测试用例，默认为所有测试用例的第一个
@@ -48,6 +38,9 @@ const Execute = () => {
     const [result, setResult] = useState({} as resultType);
     // 正在运行
     const [isRunning, setIsRunning] = useState(false);
+    // t
+    let T = 5;
+    const [timer, setTimer] = useState([] as any);
 
     // methods
     // 初始化
@@ -57,6 +50,16 @@ const Execute = () => {
     // 代码编辑
     const codeChange = (val: string) => {
         setCode(val);
+        saveStorage(val);
+    };
+    // 存 localStorage
+    const saveStorage = (val: string) => {
+        if (!localStorage["lumos_code"]) {
+            localStorage["lumos_code"] = JSON.stringify({});
+        }
+        let obj = JSON.parse(localStorage["lumos_code"]);
+        obj[LumosLanguage] = val;
+        localStorage["lumos_code"] = JSON.stringify(obj);
     };
     // 变更语言
     const handleChange = (value: typeof LangArr[number]) => {
@@ -96,6 +99,7 @@ const Execute = () => {
                 getRes(res.data);
             } else {
                 message.error(res.msg);
+                setIsRunning(false);
             }
         } catch (err) {
             message.error(err);
@@ -126,32 +130,33 @@ const Execute = () => {
         setIsRunning(false);
     };
     // 获取运行结果
-    const getRes = (sid: string) => {
-        let t = 10; // 最多连续获取 10 次
-        return (async function() {
-            try {
-                let res = await getSolution(sid);
-                if (res.code === 200) {
-                    console.log(res);
-                    if (res.data.state === "pending" && t) {
-                        t--;
-                        setTimeout(() => {
-                            getRes(sid);
-                        }, 3000);
-                    } else {
-                        setResult(res.data);
-                        t = 10;
-                        setIsRunning(false);
-                    }
+    const getRes = async (sid: string) => {
+        try {
+            let res = await getSolution(sid);
+            if (res.code === 200) {
+                console.log(res);
+                if (res.data.state === "pending" && T) {
+                    let t = setTimeout(() => {
+                        T--;
+                        getRes(sid);
+                    }, 3000);
+                    setTimer(timer.concat(t));
                 } else {
-                    message.error(res.msg);
+                    if (T === 0) {
+                        message.error("执行出错");
+                    }
+                    setResult(res.data);
                     setIsRunning(false);
+                    T = 5;
                 }
-            } catch (err) {
-                message.error(err);
+            } else {
+                message.error(res.msg);
                 setIsRunning(false);
             }
-        })();
+        } catch (err) {
+            message.error(err);
+            setIsRunning(false);
+        }
     };
     // 更改测试用例
     const changeSingleCase = (e: any) => {
@@ -159,7 +164,21 @@ const Execute = () => {
     };
 
     useEffect(() => {
-        setCode(exercise?.code?.[LumosLanguage] || "");
+        return () => {
+            for (let t of timer) {
+                clearTimeout(t);
+            }
+        };
+    }, [timer]);
+
+    useEffect(() => {
+        let obj = null;
+        if (localStorage["lumos_code"]) {
+            obj = JSON.parse(localStorage["lumos_code"]);
+        }
+        setCode(
+            obj[LumosLanguage] ? obj[LumosLanguage] : exercise?.code?.[LumosLanguage] || ""
+        );
         exercise.defaultTestCase &&
             setSingleCaseInput(exercise.defaultTestCase.input);
     }, [exercise, LumosLanguage]);
