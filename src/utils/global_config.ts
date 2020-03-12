@@ -82,7 +82,7 @@ export const JUDGEMAP = {
     10:['OJ_RE_FPU', '运行时错误', '#f44336', '#feefef'],
     11:['OJ_RE_ABRT', '程序中止', '#f44336', '#feefef'],
     12:['OJ_OJ_RE_UNKNOWWAIT', '未知错误', '#f44336', '#feefef'],
-    13:['OJ_RF', '使用了违规的函数', '#f44336', '#feefef'],
+    13:['OJ_RF', '函数调用受限', '#f44336', '#feefef'],
     14:['OJ_SE', '系统错误', '#f44336', '#feefef'],
-    15:['OJ_RE_JAVA', '使用了违规的函数', '#f44336', '#feefef']
+    15:['OJ_RE_JAVA', '运行时错误', '#f44336', '#feefef']
 }
