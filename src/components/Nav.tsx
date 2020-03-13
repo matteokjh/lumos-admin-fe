@@ -55,6 +55,13 @@ const Nav = (props: {
                         <span>题目管理</span>
                     </NavLink>
                 </Menu.Item>
+                {/* 提交记录 */}
+                <Menu.Item key="/solutionList">
+                    <NavLink to="/solutionList">
+                        <ContainerOutlined />
+                        <span>提交记录</span>
+                    </NavLink>
+                </Menu.Item>
                 {/* 题集管理 */}
                 <Menu.Item key="/filterGroup">
                     <NavLink to="/filterGroup">

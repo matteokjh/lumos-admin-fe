@@ -13,13 +13,15 @@ import ReactResizeDetector from "react-resize-detector";
 import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
 
 const MarkdownEditor = () => {
-    const [mdContent, setMdContent] = useState(""); // 右边的真实data
     const inputRef = useRef(null as any);
     const previewRef = useRef(null as any);
     const mdWrapperRef = useRef(null as any);
     const [isCtrl, setIsCtrl] = useState(false);
     const { dispatch, state } = useContext(store);
     const { exerciseInfo } = state;
+    const [mdContent, setMdContent] = useState(
+        exerciseInfo?.introduction || ""
+    ); // 右边的真实data
 
     // methods
 
@@ -84,7 +86,8 @@ const MarkdownEditor = () => {
     };
     // 滚动矫正（右 => 左）
     const handleScroll = (type: "input" | "preview") => {
-        if(!inputRef.current) return
+        console.log(type)
+        if (!inputRef.current) return;
         let editor = inputRef.current.editor;
         let leftHeight = editor.getScrollHeight();
         let rightHeight =
@@ -99,7 +102,7 @@ const MarkdownEditor = () => {
     // monaco editor 鼠标滚轮滚动矫正
     const editorDidMount: EditorDidMount = (editor, monaco) => {
         // @ts-ignore
-        editor.onMouseWheel(debounce(handleScroll, "input"));
+        editor.onMouseWheel(debounce(handleScroll.bind(null, "input")));
     };
     // 默认值
     useEffect(() => {
@@ -113,8 +116,8 @@ const MarkdownEditor = () => {
                 className="md-editor"
                 onKeyDown={handleKeyDown}
                 onKeyUp={handleKeyUp}
-                onWheel={debounce(handleScroll, "input")}
-                onMouseUp={debounce(handleScroll, "input")}
+                onWheel={debounce(handleScroll.bind(null, "input"))}
+                onMouseUp={debounce(handleScroll.bind(null, "input"))}
             >
                 <ReactResizeDetector
                     handleWidth
@@ -134,7 +137,7 @@ const MarkdownEditor = () => {
                             wordWrap: "bounded",
                             minimap: {
                                 enabled: false
-                            },
+                            }
                         }}
                     ></MonacoEditor>
                 </ReactResizeDetector>
@@ -142,8 +145,8 @@ const MarkdownEditor = () => {
             {/* preview */}
             <div
                 className="preview"
-                onWheel={debounce(handleScroll, "preview")}
-                onMouseUp={debounce(handleScroll, "preview")}
+                onWheel={debounce(handleScroll.bind(null, "preview"))}
+                onMouseUp={debounce(handleScroll.bind(null, "preview"))}
                 ref={previewRef}
             >
                 <ReactMarkdown

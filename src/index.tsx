@@ -5,10 +5,14 @@ import "./index.sass";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { StateProvider } from "./store/index";
+import { ConfigProvider } from "antd";
+import zhCN from 'antd/es/locale/zh_CN';
 
 ReactDOM.render(
     <StateProvider>
-        <App />
+        <ConfigProvider locale={zhCN}>
+            <App />
+        </ConfigProvider>
     </StateProvider>,
     document.getElementById("root")
 );

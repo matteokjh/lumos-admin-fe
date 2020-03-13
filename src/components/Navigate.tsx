@@ -13,6 +13,7 @@ import '@/styles/Navigate.sass'
 import { LogoutOutlined } from '@ant-design/icons'
 import ArticleDetail from '@/pages/ArticleDetail'
 import UserDetail from '@/pages/UserDetail'
+import SolutionList from '@/pages/SolutionList'
 
 
 const Navigate = (props: { collapsed: boolean }) => {
@@ -46,6 +47,8 @@ const Navigate = (props: { collapsed: boolean }) => {
                 <Route exact path='/' component={Index}></Route>
                 {/* 题目管理 */}
                 <Route exact path='/exerciseList' component={ExerciseList}></Route>
+                {/* 提交记录 */}
+                <Route exact path='/solutionList' component={SolutionList}></Route>
                 {/* 新增题目 */}
                 <Route exact path='/exerciseList/new' component={Exercise}></Route>
                 {/* 题目详情 */}

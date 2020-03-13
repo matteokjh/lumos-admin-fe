@@ -23,10 +23,10 @@ const Execute = () => {
     const location = useLocation();
     const [exercise, setExercise] = useState({} as ExeProps);
     const CodeRef = useRef(null as any);
-    const [code, setCode] = useState("");
     const [LumosLanguage, setLumosLanguage] = useState(
         (localStorage["lumos-language"] || "js") as typeof LangArr[number]
     );
+    const [code, setCode] = useState(exercise?.code?.[LumosLanguage] || "");
     const [isOpen, setIsOpen] = useState(false);
     // 用户自定的一个测试用例，默认为所有测试用例的第一个
     const [singleCaseInput, setSingleCaseInput] = useState("");
@@ -41,6 +41,8 @@ const Execute = () => {
     // t
     let T = 5;
     const [timer, setTimer] = useState([] as any);
+    // 当前题号
+    const [id] = useState(location.pathname.split("detail/")[1])
 
     // methods
     // 初始化
@@ -54,12 +56,12 @@ const Execute = () => {
     };
     // 存 localStorage
     const saveStorage = (val: string) => {
-        if (!localStorage["lumos_code"]) {
-            localStorage["lumos_code"] = JSON.stringify({});
+        if (!localStorage[`lumos_code_${id}`]) {
+            localStorage[`lumos_code_${id}`] = JSON.stringify({});
         }
-        let obj = JSON.parse(localStorage["lumos_code"]);
+        let obj = JSON.parse(localStorage[`lumos_code_${id}`]);
         obj[LumosLanguage] = val;
-        localStorage["lumos_code"] = JSON.stringify(obj);
+        localStorage[`lumos_code_${id}`] = JSON.stringify(obj);
     };
     // 变更语言
     const handleChange = (value: typeof LangArr[number]) => {
@@ -172,16 +174,16 @@ const Execute = () => {
     }, [timer]);
 
     useEffect(() => {
-        let obj = null;
-        if (localStorage["lumos_code"]) {
-            obj = JSON.parse(localStorage["lumos_code"]);
+        let obj = {} as any;
+        if (localStorage[`lumos_code_${id}`]) {
+            obj = JSON.parse(localStorage[`lumos_code_${id}`]);
         }
         setCode(
             obj[LumosLanguage] ? obj[LumosLanguage] : exercise?.code?.[LumosLanguage] || ""
         );
         exercise.defaultTestCase &&
             setSingleCaseInput(exercise.defaultTestCase.input);
-    }, [exercise, LumosLanguage]);
+    }, [exercise, LumosLanguage, id]);
 
     useEffect(() => {
         // 获取题目信息

@@ -4,7 +4,16 @@ export const COLOR = {
     EASY_MODE: "#4caf50",
     MEDIUM_MODE: "#ff9800",
     HARD_MODE: "#f44336",
-    DEFAULT: "#333"
+    DEFAULT: "#333",
+    GREY: "#999",
+    BLUE: "#1890ff",
+    CPP: "rgb(0, 87, 152)",
+    C: "rgb(0, 66, 126)",
+    JAVA: "rgb(213, 81, 60)",
+    JAVASCRIPT: "rgb(238, 216, 24)",
+    SUCCESS: "#4caf50",
+    ERROR: "#f44336",
+    PENDING: "#ff9800",
 };
 
 export const MODE = {
@@ -68,7 +77,7 @@ export const PERMISSION_GROUP = [0,1,2,3,4,5,6]
 
 // Judge 结果
 // key: judge code , value: 0 - ENG; 1 - CN; 2 - color; 3 - bg color
-export const JUDGEMAP = {
+export const JUDGEMAP: any = {
     0:['OJ_WAIT', '等待中', '', ''],
     1:['OJ_RUN', '正在运行', '', ''],
     2:['OJ_AC', '通过', '', ''],

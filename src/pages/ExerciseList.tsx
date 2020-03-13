@@ -70,7 +70,7 @@ const ExerciseList = () => {
             dataIndex: "createTime",
             key: "createTime",
             render: (val: string) => {
-                return new Date(val).toLocaleString();
+                return new Date(val).toLocaleDateString();
             }
         },
         {
@@ -78,7 +78,7 @@ const ExerciseList = () => {
             dataIndex: "modifiedTime",
             key: "modifiedTime",
             render: (val: string) => {
-                return new Date(val).toLocaleString();
+                return new Date(val).toLocaleDateString();
             }
         },
         {

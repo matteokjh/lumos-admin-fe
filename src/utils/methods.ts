@@ -1,17 +1,23 @@
 import { CommentProps, ConvertedCommentProps } from "@/types/comment";
 import { JUDGEMAP } from "./global_config";
-import { JudgeCode } from '@/types/solution'
+import { JudgeCode, OperatorProps, stateProps } from '@/types/solution'
+import { COLOR } from './global_config'
+import { LangArr } from "@/types/exercise";
 
-export const debounce = (Fn: any, ...args: any) => {
-    let timerId: any = null;
-    return () => {
-        if (timerId) {
-            clearTimeout(timerId);
-            timerId = null;
-        }
-        timerId = setTimeout(() => {
-            Fn(...args);
-        }, 300);
+// 防抖
+export const debounce = (Fn: any, delay: number = 300, immediate: boolean = false) => {
+    let timeout: any = null;
+    return function(this: any, ...args: any) {
+        const context = this;
+        
+        const lastFn = () => {
+            timeout = null;
+            Fn.apply(context, args);
+        };
+        
+        if(immediate && !timeout) Fn.apply(context, args);
+        timeout && clearTimeout(timeout);
+        timeout = setTimeout(lastFn, delay);
     };
 };
 // 处理日期
@@ -106,12 +112,38 @@ export const formatPermission = (num: number) => {
             return "违规用户";
     }
 };
-
+// 内存 KB => MB
 export const formatMemory = (m: number) => {
     return Math.round((m / 1024) * 10) / 10 + "MB";
 };
-
-
+// 代码执行结果
 export const formatJudgeResult = (judge: JudgeCode) => {
     return JUDGEMAP[judge];
 };
+// 执行者
+export const formatOperator = (val?: typeof OperatorProps[number]) => {
+    switch(val) {
+        case 'system': return ['系统', COLOR.GREY]
+        case 'user': return ['用户', COLOR.BLUE]
+        default: return ['未知', COLOR.DEFAULT]
+    }
+}
+// 语言
+export const formatLang = (lang?: typeof LangArr[number]) => {
+    switch(lang) {
+        case "c": return ["C", COLOR.C]
+        case "cpp": return ["C++", COLOR.CPP]
+        case "java": return ["Java", COLOR.JAVA]
+        case "javascript": return ["JavaScript", COLOR.JAVASCRIPT]
+        default: return ["未知", COLOR.DEFAULT]
+    }
+}
+// 运行状态
+export const formatState = (val?: stateProps) => {
+    switch(val) {
+        case "success": return ["成功", COLOR.SUCCESS]
+        case "pending": return ["等待中", COLOR.PENDING]
+        case "error": return ["失败", COLOR.ERROR]
+        default: return ["未知", COLOR.DEFAULT]
+    }
+}

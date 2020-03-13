@@ -1,9 +1,14 @@
 import fetch from './'
 
-const PREFIX = `/solution`
+
+export const getList = (obj: any) => {
+    return fetch.get(`/admin/solution/list`, {
+        params: obj
+    })
+}
 
 export const getSolution = (sid: string) => {
-    return fetch.get(`${PREFIX}`, {
+    return fetch.get(`/user/solution`, {
         params: {
             sid
         }
