@@ -14,6 +14,9 @@ export const COLOR = {
     SUCCESS: "#4caf50",
     ERROR: "#f44336",
     PENDING: "#ff9800",
+    CONTESTRUN: "#481380",
+    SUBMITRUN: "#7f78d2",
+    TESTRUN: "#ce8ed9",
 };
 
 export const MODE = {
@@ -78,9 +81,9 @@ export const PERMISSION_GROUP = [0,1,2,3,4,5,6]
 // Judge 结果
 // key: judge code , value: 0 - ENG; 1 - CN; 2 - color; 3 - bg color
 export const JUDGEMAP: any = {
-    0:['OJ_WAIT', '等待中', '', ''],
-    1:['OJ_RUN', '正在运行', '', ''],
-    2:['OJ_AC', '通过', '', ''],
+    0:['OJ_WAIT', '等待中', '#ff9800', '#fff4ed'],
+    1:['OJ_RUN', '正在运行', '#2196f3', '#e8f8ff'],
+    2:['OJ_AC', '通过', '#4caf50', '#e8ffe8'],
     3:['OJ_PE', '格式错误', '#f44336', '#feefef'], // 以下颜色都一样
     4:['OJ_TLE', '超过时间限制', '#f44336', '#feefef'],
     5:['OJ_MLE', '超过内存限制', '#f44336', '#feefef'],

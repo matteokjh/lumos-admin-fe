@@ -13,6 +13,7 @@ import ConsoleBox from "./ConsoleBox";
 import { LANGS } from "@/utils/global_config";
 import { getSolution } from "@/api/solution";
 import "@/styles/Execute.sass";
+import "@/styles/markdown.sass";
 import { resultType } from "@/types/solution";
 
 const { Option } = Select;

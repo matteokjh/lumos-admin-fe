@@ -6,6 +6,9 @@ const Waiting = () => {
             className="Waiting"
             style={{
                 display: "flex",
+                position: "fixed",
+                top: 0,
+                left: 0,
                 alignItems: "center",
                 justifyContent: "center",
                 width: "100vw",

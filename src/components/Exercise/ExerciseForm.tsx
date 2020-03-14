@@ -119,16 +119,22 @@ const ExerciseForm = (props: any) => {
     };
 
     useEffect(() => {
-        setTags(exerciseInfo.tags || []);
-        form.setFieldsValue({
-            id: exerciseInfo.id,
-            title: exerciseInfo.title,
-            mode: exerciseInfo.mode,
-            contributor: exerciseInfo.contributor,
-            timeLimit: exerciseInfo.timeLimit || 200,
-            memoryLimit: exerciseInfo.memoryLimit || 65535
-        })
-    }, [exerciseInfo, form]);
+        if(opType === 'detail') {
+            setTags(exerciseInfo.tags);
+            form.setFieldsValue({
+                id: exerciseInfo.id,
+                title: exerciseInfo.title,
+                mode: exerciseInfo.mode,
+                contributor: exerciseInfo.contributor,
+                timeLimit: exerciseInfo.timeLimit || 200,
+                memoryLimit: exerciseInfo.memoryLimit || 65535
+            })
+        } else {
+            setTags([]);
+            form.resetFields()
+        }
+        // eslint-disable-next-line
+    }, [exerciseInfo, opType]);
 
     return (
         <div className="ExerciseForm">

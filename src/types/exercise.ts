@@ -48,4 +48,4 @@ export type ExeProps = ExeBaseInfo & {
     memoryLimit: number, // 内存限制
 };
 
-export type ExecOpType = "testRun" | "submit";
+export type ExecOpType = "testRun" | "submit" | "contest";

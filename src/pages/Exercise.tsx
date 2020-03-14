@@ -1,18 +1,22 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, lazy, Suspense } from "react";
 import { Button, Menu, message } from "antd";
 import { useHistory, useLocation } from "react-router-dom";
-import MarkdownEditor from "@/components/Exercise/MarkdownEditor";
-import ExerciseForm from "@/components/Exercise/ExerciseForm";
-import CodeViewOne from "@/components/Exercise/CodeViewOne";
-import CodeViewTwo from "@/components/Exercise/CodeViewTwo";
-import TestCaseForm from "@/components/Testcase/TestCaseForm";
-import Execute from "@/components/Exercise/Execute";
 
 import { getExeInfo } from "@/api/exercise";
 
 import "@/styles/Exercise.sass";
 import { store } from "@/store/index";
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import Waiting from "./Waiting";
+
+const ExerciseForm = lazy(() => import("@/components/Exercise/ExerciseForm"));
+const MarkdownEditor = lazy(() =>
+    import("@/components/Exercise/MarkdownEditor")
+);
+const CodeViewOne = lazy(() => import("@/components/Exercise/CodeViewOne"));
+const CodeViewTwo = lazy(() => import("@/components/Exercise/CodeViewTwo"));
+const TestCaseForm = lazy(() => import("@/components/Testcase/TestCaseForm"));
+const Execute = lazy(() => import("@/components/Exercise/Execute"));
 
 // 题目详情页，适用 新增题目、题目详情（含编辑）
 const Exercise = (props: any) => {
@@ -23,7 +27,7 @@ const Exercise = (props: any) => {
     const [opType, setOpType] = useState("new");
 
     useEffect(() => {
-        let id = props.match.params["id"];
+        let id = props.match.params.id;
         (async () => {
             // 题目详情
             if (location.pathname.indexOf("detail") >= 0) {
@@ -49,8 +53,7 @@ const Exercise = (props: any) => {
                 setOpType("new");
             }
         })();
-        // eslint-disable-next-line
-    }, [location.pathname, dispatch]);
+    }, [location.pathname, dispatch, props.match.params.id]);
 
     // methods
     const back = () => {
@@ -93,20 +96,24 @@ const Exercise = (props: any) => {
                         <span>运行</span>
                     </Menu.Item>
                 </Menu>
-                {// 基本信息
-                (Active === "baseInfo" && <ExerciseForm></ExerciseForm>) ||
-                    // 题目介绍（markdown 编辑器）
-                    (Active === "markdown" && (
-                        <MarkdownEditor></MarkdownEditor>
-                    )) ||
-                    // 代码 I
-                    (Active === "code1" && <CodeViewOne></CodeViewOne>) ||
-                    // 代码 II
-                    (Active === "code2" && <CodeViewTwo></CodeViewTwo>) ||
-                    // 测试用例
-                    (Active === "testCase" && <TestCaseForm></TestCaseForm>) ||
-                    // 运行
-                    (Active === "execute" && <Execute></Execute>)}
+                <Suspense fallback={<Waiting></Waiting>}>
+                    {// 基本信息
+                    (Active === "baseInfo" && <ExerciseForm></ExerciseForm>) ||
+                        // 题目介绍（markdown 编辑器）
+                        (Active === "markdown" && (
+                            <MarkdownEditor></MarkdownEditor>
+                        )) ||
+                        // 代码 I
+                        (Active === "code1" && <CodeViewOne></CodeViewOne>) ||
+                        // 代码 II
+                        (Active === "code2" && <CodeViewTwo></CodeViewTwo>) ||
+                        // 测试用例
+                        (Active === "testCase" && (
+                            <TestCaseForm></TestCaseForm>
+                        )) ||
+                        // 运行
+                        (Active === "execute" && <Execute></Execute>)}
+                </Suspense>
             </div>
         </div>
     );

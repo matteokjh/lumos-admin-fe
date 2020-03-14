@@ -53,3 +53,18 @@ export const filters_judge = [...new Array(16)].map((e, idx) => {
         text: JUDGEMAP[idx][1]
     };
 });
+
+export const filters_optype = [
+    {
+        text: '测试运行',
+        value: 'testRun'
+    },
+    {
+        text: '题目提交',
+        value: 'submit'
+    },
+    {
+        text: '竞赛提交',
+        value: 'contest'
+    }
+]

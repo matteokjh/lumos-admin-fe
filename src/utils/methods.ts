@@ -2,7 +2,7 @@ import { CommentProps, ConvertedCommentProps } from "@/types/comment";
 import { JUDGEMAP } from "./global_config";
 import { JudgeCode, OperatorProps, stateProps } from '@/types/solution'
 import { COLOR } from './global_config'
-import { LangArr } from "@/types/exercise";
+import { LangArr, ExecOpType } from "@/types/exercise";
 
 // 防抖
 export const debounce = (Fn: any, delay: number = 300, immediate: boolean = false) => {
@@ -144,6 +144,15 @@ export const formatState = (val?: stateProps) => {
         case "success": return ["成功", COLOR.SUCCESS]
         case "pending": return ["等待中", COLOR.PENDING]
         case "error": return ["失败", COLOR.ERROR]
+        default: return ["未知", COLOR.DEFAULT]
+    }
+}
+// 执行类别
+export const formatOpType = (val?: ExecOpType) => {
+    switch(val) {
+        case "testRun": return ["测试运行", COLOR.TESTRUN]
+        case "contest": return ["竞赛提交", COLOR.CONTESTRUN]
+        case "submit": return ["题目提交", COLOR.SUBMITRUN]
         default: return ["未知", COLOR.DEFAULT]
     }
 }

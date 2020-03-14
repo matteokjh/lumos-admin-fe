@@ -41,7 +41,7 @@ const Article = () => {
             minWidth: 100,
             render: (data: UserProps) => {
                 return (
-                    <Link to={`/user/detail/${data.username}`} target="_blank">
+                    <Link to={`/user/detail/${data.username}`}>
                         <span
                             style={{
                                 color: "#ff8822"

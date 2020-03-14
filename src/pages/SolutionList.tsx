@@ -17,7 +17,8 @@ import {
     filters_operator,
     filters_lang,
     filters_state,
-    filters_judge
+    filters_judge,
+    filters_optype
 } from "@/utils/solution_filters";
 import {
     FilterProps,
@@ -28,10 +29,10 @@ import {
     OperatorProps
 } from "@/types/solution";
 import moment from "moment";
-import { debounce, formatOperator, formatLang, formatState } from "@/utils/methods";
+import { debounce, formatOperator, formatLang, formatState, formatJudgeResult, formatOpType } from "@/utils/methods";
 import { fetchUser } from "@/api/base";
-import { LangArr } from "@/types/exercise";
-import { stateProps } from '@/types/solution'
+import { LangArr, ExecOpType } from "@/types/exercise";
+import { stateProps, JudgeCode } from '@/types/solution'
 
 type OptionType = {
     text: string;
@@ -95,6 +96,18 @@ const ExerciseList = () => {
             filters: filters_operator
         },
         {
+            title: "类别",
+            dataIndex: "opType",
+            key: "opType",
+            width: 100,
+            render: (data?: ExecOpType) => {
+                return <span className="whiteText" style={{
+                    backgroundColor: formatOpType(data)[1]
+                }}>{formatOpType(data)[0]}</span>;
+            },
+            filters: filters_optype
+        },
+        {
             title: "用户名",
             dataIndex: "username",
             key: "username",
@@ -129,11 +142,14 @@ const ExerciseList = () => {
         },
         {
             title: "结果",
-            dataIndex: "result",
+            dataIndex: "judge",
             key: "judge",
             width: 150,
-            render: (data: any) => {
-                return <span>{data[0]?.judge || "null"}</span>;
+            render: (data: JudgeCode) => {
+                return <span className="whiteText" style={{
+                    color: formatJudgeResult(data)[2],
+                    backgroundColor: formatJudgeResult(data)[3],
+                }}>{formatJudgeResult(data)[1]}</span>;
             },
             filters: filters_judge
         },
