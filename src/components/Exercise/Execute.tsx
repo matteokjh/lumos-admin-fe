@@ -14,7 +14,7 @@ import { LANGS } from "@/utils/global_config";
 import { getSolution } from "@/api/solution";
 import "@/styles/Execute.sass";
 import "@/styles/markdown.sass";
-import { resultType } from "@/types/solution";
+import { SolutionProps } from "@/types/solution";
 
 const { Option } = Select;
 
@@ -36,9 +36,11 @@ const Execute = () => {
         "result" as consoleBoxType
     );
     // 输出
-    const [result, setResult] = useState({} as resultType);
-    // 正在运行
+    const [result, setResult] = useState({} as SolutionProps);
+    // 测试 - 正在运行
     const [isRunning, setIsRunning] = useState(false);
+    // 提交 - 正在运行
+    const [submitRunning, setSubmitRunning] = useState(false);
     // t
     let T = 5;
     const [timer, setTimer] = useState([] as any);
@@ -111,9 +113,7 @@ const Execute = () => {
     };
     // 运行
     const submitRun = async () => {
-        setIsRunning(true);
-        setConsoleActive("result");
-        setIsOpen(true);
+        setSubmitRunning(true) // 注意两个 running 不同
         try {
             let res = await execute({
                 opType: "submit",
@@ -122,15 +122,17 @@ const Execute = () => {
                 lang: LumosLanguage,
                 username: "429797371@qq.com"
             });
+            console.log(res);
             if (res.code === 200) {
                 getRes(res.data);
             } else {
                 message.error(res.msg);
+                setSubmitRunning(false);
             }
         } catch (err) {
             message.error(err);
+            setSubmitRunning(false);
         }
-        setIsRunning(false);
     };
     // 获取运行结果
     const getRes = async (sid: string) => {
@@ -148,17 +150,24 @@ const Execute = () => {
                     if (T === 0) {
                         message.error("执行出错");
                     }
-                    setResult(res.data);
+                    if(res.data.opType === 'testRun') {
+                        setResult(res.data);
+                    } else {
+                        console.log(res.data)
+                    }
                     setIsRunning(false);
+                    setSubmitRunning(false)
                     T = 5;
                 }
             } else {
                 message.error(res.msg);
                 setIsRunning(false);
+                setSubmitRunning(false)
             }
         } catch (err) {
             message.error(err);
             setIsRunning(false);
+            setSubmitRunning(false)
         }
     };
     // 更改测试用例
@@ -273,6 +282,7 @@ const Execute = () => {
                         setConsoleActive={setConsoleActive}
                         result={result}
                         isRunning={isRunning}
+                        submitRunning={submitRunning}
                         testRun={testRun}
                         submitRun={submitRun}
                         changeSingleCase={changeSingleCase}

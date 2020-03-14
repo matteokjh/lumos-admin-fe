@@ -3,13 +3,14 @@ import { Button, Menu, Input, Empty, Skeleton } from "antd";
 import "@/styles/ConsoleBox.sass";
 import { ExeProps } from "@/types/exercise";
 import { DownOutlined, UpOutlined, LoadingOutlined } from "@ant-design/icons";
-import { consoleBoxType, resultType } from "@/types/solution";
+import { consoleBoxType, SolutionProps } from "@/types/solution";
 import { formatMemory, formatJudgeResult } from "@/utils/methods";
 
 interface ConsoleBoxProps {
     consoleActive: consoleBoxType;
-    result: resultType;
+    result: SolutionProps;
     isRunning: boolean;
+    submitRunning: boolean;
     isOpen: boolean;
     exercise: ExeProps;
     singleCaseInput: string;
@@ -32,7 +33,8 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
         changeSingleCase,
         isOpen,
         exercise,
-        singleCaseInput
+        singleCaseInput,
+        submitRunning
     } = props;
 
     return (
@@ -76,7 +78,7 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                                 ></Input.TextArea>
                             </div>
                         ) : (
-                            // 运行结果
+                            // 测试运行结果
                             <div className="result">
                                 {/* 如果成功运行，渲染：输入，输出，期望输出 */}
                                 {isRunning ? (
@@ -84,11 +86,12 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                                 ) : (
                                     (result.state === "success" && (
                                         <div className="res_wrapper">
+                                            {/* 结果栏 */}
                                             <div
                                                 className="res_info"
                                                 style={{
                                                     backgroundColor: formatJudgeResult(
-                                                        result.result[0].judge
+                                                        result.judge
                                                     )[3]
                                                 }}
                                             >
@@ -96,56 +99,81 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                                                     className="res_done"
                                                     style={{
                                                         color: formatJudgeResult(
-                                                            result.result[0]
-                                                                .judge
+                                                            result.judge
                                                         )[2]
                                                     }}
                                                 >
                                                     {
                                                         formatJudgeResult(
-                                                            result.result[0]
-                                                                .judge
+                                                            result.judge
                                                         )[1]
                                                     }
                                                 </span>
                                                 <span>
                                                     执行用时：
-                                                    {result.result[0].time} ms
+                                                    {result.time} ms
                                                 </span>
                                                 <span>
                                                     内存消耗：
                                                     {formatMemory(
-                                                        result.result[0].memory
+                                                        result.memory
                                                     )}
                                                 </span>
                                             </div>
-                                            <div>
-                                                <p>输入：</p>
-                                                <div className="valueBox">
-                                                    {singleCaseInput}
+                                            {/* 如果 AC 或者 WA */}
+                                            {result.judge === 2 ||
+                                            result.judge === 6 ? (
+                                                <div className="AC_box">
+                                                    {/* 输入 */}
+                                                    <div>
+                                                        <p>输入：</p>
+                                                        <div className="valueBox">
+                                                            {singleCaseInput}
+                                                        </div>
+                                                    </div>
+                                                    {/* 输出 */}
+                                                    <div>
+                                                        <p>输出：</p>
+                                                        <div className="valueBox">
+                                                            {
+                                                                result.result[0]
+                                                                    .output
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    {/* 预期结果 */}
+                                                    <div>
+                                                        <p>预期结果：</p>
+                                                        <div className="valueBox">
+                                                            {
+                                                                result
+                                                                    .testdata[0]
+                                                                    .output
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    {/* stdout */}
+                                                    {result.result[0]
+                                                        .stdout && (
+                                                        <div>
+                                                            <p>stdout：</p>
+                                                            <div className="valueBox">
+                                                                {
+                                                                    result
+                                                                        .result[0]
+                                                                        .stdout
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <p>输出：</p>
-                                                <div className="valueBox">
-                                                    {result.result[0].output}
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <p>预期结果：</p>
-                                                <div className="valueBox">
-                                                    {result.testdata[0].output}
-                                                </div>
-                                            </div>
-                                            {/* stdout */}
-                                            {result.result[0].stdout && (
-                                                <div>
-                                                    <p>stdout：</p>
-                                                    <div className="valueBox">
-                                                        {
-                                                            result.result[0]
-                                                                .stdout
-                                                        }
+                                            ) : (
+                                                // 除了 AC 和 WA，其它结果标红
+                                                <div className="res_err">
+                                                    <div>
+                                                        {result.result[0]
+                                                            .stdout ||
+                                                            "执行出错"}
                                                     </div>
                                                 </div>
                                             )}
@@ -180,7 +208,7 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
             )}
             {/* 底部按钮 */}
             <div className="console_bottom">
-                {isRunning && (
+                {(isRunning || submitRunning) && (
                     <span className="waiting">
                         <span>等待中</span>
                         <LoadingOutlined />
@@ -190,19 +218,19 @@ const ConsoleBox = (props: ConsoleBoxProps) => {
                     <Button
                         size="small"
                         onClick={showConsole}
-                        disabled={isRunning}
+                        disabled={isRunning || submitRunning}
                     >
                         控制台
                     </Button>
                 </div>
                 <div className="right">
-                    <Button onClick={testRun} disabled={isRunning}>
+                    <Button onClick={testRun} disabled={isRunning || submitRunning}>
                         测试运行
                     </Button>
                     <Button
                         onClick={submitRun}
                         type="primary"
-                        disabled={isRunning}
+                        disabled={isRunning || submitRunning}
                     >
                         提交
                     </Button>

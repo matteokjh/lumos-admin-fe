@@ -15,13 +15,6 @@ export type testdataType = {
     output: string;
 };
 
-export type resultType = {
-    state: "success" | "error" | "";
-    result: outputType[];
-    error: string;
-    testdata: testdataType[];
-};
-
 export type JudgeCode =
     | 0
     | 1
@@ -77,7 +70,7 @@ export interface FilterProps
         lang?: Partial<typeof LangArr> | null;
     }> {}
 
-export type StateType = "init" | "pending" | "running" | "success";
+export type StateType = "error" | "pending" | "success";
 
 // 测试数据
 export interface TestDataProps {
@@ -94,11 +87,14 @@ export interface SolutionProps {
     lang: typeof LangArr[number]; // 语言
     testdata: TestDataProps[]; // 测试数据
     createTime: number; // 时间
-    result: string; // 结果
+    result: outputType[]; // 结果
     error: string; // 错误
     state: StateType; // 状态
     timeLimit: number;
     memoryLimit: number;
+    judge: JudgeCode // 返回结果，取决于 result
+    time: number
+    memory: number
 }
 
 export const stateArr = <const>['pending', 'success', 'error']
