@@ -96,7 +96,6 @@ const Execute = () => {
                 exerciseId: exercise.id,
                 code: code,
                 lang: LumosLanguage,
-                username: "429797371@qq.com",
                 singleCaseInput: singleCaseInput
             });
             console.log(res);
@@ -119,8 +118,7 @@ const Execute = () => {
                 opType: "submit",
                 exerciseId: exercise.id,
                 code: code,
-                lang: LumosLanguage,
-                username: "429797371@qq.com"
+                lang: LumosLanguage
             });
             console.log(res);
             if (res.code === 200) {

@@ -29,10 +29,18 @@ import {
     OperatorProps
 } from "@/types/solution";
 import moment from "moment";
-import { debounce, formatOperator, formatLang, formatState, formatJudgeResult, formatOpType } from "@/utils/methods";
+import {
+    debounce,
+    formatOperator,
+    formatLang,
+    formatState,
+    formatJudgeResult,
+    formatOpType
+} from "@/utils/methods";
 import { fetchUser } from "@/api/base";
-import { LangArr, ExecOpType } from "@/types/exercise";
-import { stateProps, JudgeCode } from '@/types/solution'
+import { LangArr, ExecOpType, ExeProps } from "@/types/exercise";
+import { stateProps, JudgeCode } from "@/types/solution";
+import { UserProps } from "@/types/user";
 
 type OptionType = {
     text: string;
@@ -79,9 +87,16 @@ const ExerciseList = () => {
         },
         {
             title: "题号",
-            dataIndex: "id",
-            key: "id",
-            width: 80
+            dataIndex: "exerciseInfo",
+            key: "exerciseInfo",
+            width: 100,
+            render: (data: ExeProps) => {
+                return (
+                    <span>
+                        {data.id}. {data.title}
+                    </span>
+                );
+            }
         },
         {
             title: "执行者",
@@ -89,9 +104,16 @@ const ExerciseList = () => {
             key: "operator",
             width: 100,
             render: (data?: typeof OperatorProps[number]) => {
-                return <span className="whiteText" style={{
-                    backgroundColor: formatOperator(data)[1]
-                }}>{formatOperator(data)[0]}</span>;
+                return (
+                    <span
+                        className="whiteText"
+                        style={{
+                            backgroundColor: formatOperator(data)[1]
+                        }}
+                    >
+                        {formatOperator(data)[0]}
+                    </span>
+                );
             },
             filters: filters_operator
         },
@@ -101,19 +123,26 @@ const ExerciseList = () => {
             key: "opType",
             width: 100,
             render: (data?: ExecOpType) => {
-                return <span className="whiteText" style={{
-                    backgroundColor: formatOpType(data)[1]
-                }}>{formatOpType(data)[0]}</span>;
+                return (
+                    <span
+                        className="whiteText"
+                        style={{
+                            backgroundColor: formatOpType(data)[1]
+                        }}
+                    >
+                        {formatOpType(data)[0]}
+                    </span>
+                );
             },
             filters: filters_optype
         },
         {
             title: "用户名",
-            dataIndex: "username",
-            key: "username",
+            dataIndex: "userInfo",
+            key: "userInfo",
             width: 100,
-            render: (data: string) => {
-                return <Link to={`/user/detail/${data}`}>{data}</Link>;
+            render: (data: UserProps) => {
+                return <Link to={`/user/detail/${data.username}`}>{data.name}</Link>;
             }
         },
         {
@@ -123,9 +152,16 @@ const ExerciseList = () => {
             width: 100,
             filters: filters_lang,
             render: (data?: typeof LangArr[number]) => {
-                return <span className="whiteText" style={{
-                    backgroundColor: formatLang(data)[1]
-                }}>{formatLang(data)[0]}</span>;
+                return (
+                    <span
+                        className="whiteText"
+                        style={{
+                            backgroundColor: formatLang(data)[1]
+                        }}
+                    >
+                        {formatLang(data)[0]}
+                    </span>
+                );
             }
         },
         {
@@ -134,9 +170,16 @@ const ExerciseList = () => {
             key: "state",
             width: 100,
             render: (data: stateProps) => {
-                return <span className="whiteText" style={{
-                    backgroundColor: formatState(data)[1]
-                }}>{formatState(data)[0]}</span>;
+                return (
+                    <span
+                        className="whiteText"
+                        style={{
+                            backgroundColor: formatState(data)[1]
+                        }}
+                    >
+                        {formatState(data)[0]}
+                    </span>
+                );
             },
             filters: filters_state
         },
@@ -146,10 +189,17 @@ const ExerciseList = () => {
             key: "judge",
             width: 150,
             render: (data: JudgeCode) => {
-                return <span className="whiteText" style={{
-                    color: formatJudgeResult(data)[2],
-                    backgroundColor: formatJudgeResult(data)[3],
-                }}>{formatJudgeResult(data)[1]}</span>;
+                return (
+                    <span
+                        className="whiteText round"
+                        style={{
+                            color: formatJudgeResult(data)[2],
+                            backgroundColor: formatJudgeResult(data)[3]
+                        }}
+                    >
+                        {formatJudgeResult(data)[1]}
+                    </span>
+                );
             },
             filters: filters_judge
         },

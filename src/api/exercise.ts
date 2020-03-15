@@ -41,7 +41,6 @@ export const getExeInfo = (id: number) => {
 // 运行代码
 export const execute = (obj: {
     opType: ExecOpType;
-    username: string;
     exerciseId: number;
     lang: typeof LangArr[number];
     code: string;
