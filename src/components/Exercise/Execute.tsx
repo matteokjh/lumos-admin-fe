@@ -7,7 +7,7 @@ import { ExeProps } from "@/types/exercise";
 import CodeBlock from "@/components/reactMd/react-markdown-code-block";
 import ReactMarkdownLink from "@/components/reactMd/react-markdown-link";
 import { LangArr } from "@/types/exercise";
-import MonacoEditor, { EditorDidMount } from "react-monaco-editor";
+import MonacoEditor from "react-monaco-editor";
 import ReactResizeDetector from "react-resize-detector";
 import ConsoleBox from "./ConsoleBox";
 import { LANGS } from "@/utils/global_config";
@@ -45,13 +45,10 @@ const Execute = () => {
     let T = 5;
     const [timer, setTimer] = useState([] as any);
     // 当前题号
-    const [id] = useState(location.pathname.split("detail/")[1])
+    const [id] = useState(location.pathname.split("detail/")[1]);
 
     // methods
-    // 初始化
-    const editorDidMount: EditorDidMount = (editor, monaco) => {
-        // console.log(editor)
-    };
+
     // 代码编辑
     const codeChange = (val: string) => {
         setCode(val);
@@ -81,9 +78,41 @@ const Execute = () => {
         }
     };
     const handleKeyUp = (e: React.KeyboardEvent<HTMLDivElement>) => {};
-    // 控制台
-    const showConsole = () => {
-        setIsOpen(!isOpen);
+    // 获取运行结果
+    const getRes = async (sid: string) => {
+        try {
+            let res = await getSolution(sid);
+            if (res.code === 200) {
+                console.log(res);
+                if (res.data.state === "pending" && T) {
+                    let t = setTimeout(() => {
+                        T--;
+                        getRes(sid);
+                    }, 3000);
+                    setTimer(timer.concat(t));
+                } else {
+                    if (T === 0) {
+                        message.error("执行出错");
+                    }
+                    if (res.data.opType === "testRun") {
+                        setResult(res.data);
+                    } else {
+                        console.log(res.data);
+                    }
+                    setIsRunning(false);
+                    setSubmitRunning(false);
+                    T = 5;
+                }
+            } else {
+                message.error(res.msg);
+                setIsRunning(false);
+                setSubmitRunning(false);
+            }
+        } catch (err) {
+            message.error(err);
+            setIsRunning(false);
+            setSubmitRunning(false);
+        }
     };
     // 测试运行
     const testRun = async () => {
@@ -112,7 +141,7 @@ const Execute = () => {
     };
     // 运行
     const submitRun = async () => {
-        setSubmitRunning(true) // 注意两个 running 不同
+        setSubmitRunning(true); // 注意两个 running 不同
         try {
             let res = await execute({
                 opType: "submit",
@@ -130,42 +159,6 @@ const Execute = () => {
         } catch (err) {
             message.error(err);
             setSubmitRunning(false);
-        }
-    };
-    // 获取运行结果
-    const getRes = async (sid: string) => {
-        try {
-            let res = await getSolution(sid);
-            if (res.code === 200) {
-                console.log(res);
-                if (res.data.state === "pending" && T) {
-                    let t = setTimeout(() => {
-                        T--;
-                        getRes(sid);
-                    }, 3000);
-                    setTimer(timer.concat(t));
-                } else {
-                    if (T === 0) {
-                        message.error("执行出错");
-                    }
-                    if(res.data.opType === 'testRun') {
-                        setResult(res.data);
-                    } else {
-                        console.log(res.data)
-                    }
-                    setIsRunning(false);
-                    setSubmitRunning(false)
-                    T = 5;
-                }
-            } else {
-                message.error(res.msg);
-                setIsRunning(false);
-                setSubmitRunning(false)
-            }
-        } catch (err) {
-            message.error(err);
-            setIsRunning(false);
-            setSubmitRunning(false)
         }
     };
     // 更改测试用例
@@ -187,7 +180,9 @@ const Execute = () => {
             obj = JSON.parse(localStorage[`lumos_code_${id}`]);
         }
         setCode(
-            obj[LumosLanguage] ? obj[LumosLanguage] : exercise?.code?.[LumosLanguage] || ""
+            obj[LumosLanguage]
+                ? obj[LumosLanguage]
+                : exercise?.code?.[LumosLanguage] || ""
         );
         exercise.defaultTestCase &&
             setSingleCaseInput(exercise.defaultTestCase.input);
@@ -266,7 +261,6 @@ const Execute = () => {
                                 language={LumosLanguage}
                                 theme="vs-dark"
                                 onChange={codeChange}
-                                editorDidMount={editorDidMount}
                                 options={{
                                     scrollBeyondLastLine: false
                                 }}
@@ -275,15 +269,15 @@ const Execute = () => {
                     </div>
                     {/* 控制台 */}
                     <ConsoleBox
-                        showConsole={showConsole}
+                        showConsole={() => setIsOpen(isOpen => !isOpen)}
+                        testRun={testRun}
+                        submitRun={submitRun}
+                        changeSingleCase={changeSingleCase}
                         consoleActive={consoleActive}
                         setConsoleActive={setConsoleActive}
                         result={result}
                         isRunning={isRunning}
                         submitRunning={submitRunning}
-                        testRun={testRun}
-                        submitRun={submitRun}
-                        changeSingleCase={changeSingleCase}
                         isOpen={isOpen}
                         exercise={exercise}
                         singleCaseInput={singleCaseInput}

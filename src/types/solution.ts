@@ -97,6 +97,6 @@ export interface SolutionProps {
     memory: number
 }
 
-export const stateArr = <const>['pending', 'success', 'error']
+export const stateArr = <const>['init', 'pending', 'success', 'error']
 
 export type stateProps = typeof stateArr[number]

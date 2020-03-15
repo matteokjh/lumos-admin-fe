@@ -13,6 +13,7 @@ export const COLOR = {
     JAVASCRIPT: "rgb(238, 216, 24)",
     SUCCESS: "#4caf50",
     ERROR: "#f44336",
+    INIT: "#6eb6ff",
     PENDING: "#ff9800",
     CONTESTRUN: "#481380",
     SUBMITRUN: "#7f78d2",

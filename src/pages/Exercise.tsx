@@ -17,6 +17,7 @@ const CodeViewOne = lazy(() => import("@/components/Exercise/CodeViewOne"));
 const CodeViewTwo = lazy(() => import("@/components/Exercise/CodeViewTwo"));
 const TestCaseForm = lazy(() => import("@/components/Testcase/TestCaseForm"));
 const Execute = lazy(() => import("@/components/Exercise/Execute"));
+const Result = lazy(() => import("@/components/Exercise/Result"));
 
 // 题目详情页，适用 新增题目、题目详情（含编辑）
 const Exercise = (props: any) => {
@@ -95,6 +96,9 @@ const Exercise = (props: any) => {
                     <Menu.Item key="execute" disabled={opType === "new"}>
                         <span>运行</span>
                     </Menu.Item>
+                    <Menu.Item key="result" disabled={opType === "new"}>
+                        <span>提交记录</span>
+                    </Menu.Item>
                 </Menu>
                 <Suspense fallback={<Waiting></Waiting>}>
                     {// 基本信息
@@ -112,7 +116,9 @@ const Exercise = (props: any) => {
                             <TestCaseForm></TestCaseForm>
                         )) ||
                         // 运行
-                        (Active === "execute" && <Execute></Execute>)}
+                        (Active === "execute" && <Execute></Execute>)
+                        || (Active === 'result' && <Result></Result>)
+                    }
                 </Suspense>
             </div>
         </div>

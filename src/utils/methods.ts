@@ -40,7 +40,7 @@ export const formatTime = (time: number) => {
         return `${~~(ds / aHour)} 小时前`;
     } else if (ds < aDay * 7) {
         return `${~~(ds / aDay)} 天前`;
-    } else return new Date(time);
+    } else return new Date(time).toLocaleDateString();
 };
 // 处理数字
 export const formatNumber = (num?: number) => {
@@ -141,6 +141,7 @@ export const formatLang = (lang?: typeof LangArr[number]) => {
 // 运行状态
 export const formatState = (val?: stateProps) => {
     switch(val) {
+        case "init": return ["初始化", COLOR.INIT]
         case "success": return ["成功", COLOR.SUCCESS]
         case "pending": return ["等待中", COLOR.PENDING]
         case "error": return ["失败", COLOR.ERROR]
