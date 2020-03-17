@@ -51,25 +51,31 @@ const Navigate = (props: { collapsed: boolean }) => {
                     {/* 题目管理 */}
                     <Route
                         exact
-                        path="/exerciseList"
+                        path="/exercise"
                         component={lazy(() => import("@/pages/ExerciseList"))}
                     ></Route>
                     {/* 提交记录 */}
                     <Route
                         exact
-                        path="/solutionList"
+                        path="/solution"
                         component={lazy(() => import("@/pages/SolutionList"))}
+                    ></Route>
+                    {/* 提交记录详情 */}
+                    <Route
+                        exact
+                        path="/solution/:sid"
+                        component={lazy(() => import("@/pages/SolutionDetail"))}
                     ></Route>
                     {/* 新增题目 */}
                     <Route
                         exact
-                        path="/exerciseList/new"
+                        path="/exercise/new"
                         component={Exercise}
                     ></Route>
                     {/* 题目详情 */}
                     <Route
                         exact
-                        path="/exerciseList/detail/:id"
+                        path="/exercise/detail/:id"
                         component={Exercise}
                     ></Route>
                     {/* 题集管理 */}

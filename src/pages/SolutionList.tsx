@@ -82,7 +82,7 @@ const ExerciseList = () => {
             dataIndex: "sid",
             key: "sid",
             render: (data: string) => {
-                return <Link to={`/solutionList/${data}`}>{data}</Link>;
+                return <Link to={`/solution/${data}`}>{data}</Link>;
             }
         },
         {
@@ -142,7 +142,11 @@ const ExerciseList = () => {
             key: "userInfo",
             width: 100,
             render: (data: UserProps) => {
-                return <Link to={`/user/detail/${data.username}`}>{data.name}</Link>;
+                return (
+                    <Link to={`/user/detail/${data.username}`}>
+                        {data.name}
+                    </Link>
+                );
             }
         },
         {

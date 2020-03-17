@@ -31,7 +31,7 @@ const ExerciseList = () => {
             dataIndex: "title",
             key: "title",
             render: (val: string, row: ExeProps) => (
-                <NavLink to={`/exerciseList/detail/${row.id}`}>
+                <NavLink to={`/exercise/detail/${row.id}`}>
                     <span>{row.title}</span>
                 </NavLink>
             ),
@@ -215,7 +215,7 @@ const ExerciseList = () => {
                     <Button onClick={refresh}>刷新</Button>
                     <Button
                         type="primary"
-                        onClick={() => history.push("/exerciseList/new")}
+                        onClick={() => history.push("/exercise/new")}
                     >
                         <PlusOutlined />
                         <span>新增题目</span>

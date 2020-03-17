@@ -49,15 +49,15 @@ const Nav = (props: {
                     </NavLink>
                 </Menu.Item>
                 {/* 题目管理 */}
-                <Menu.Item key="/exerciseList">
-                    <NavLink to="/exerciseList">
+                <Menu.Item key="/exercise">
+                    <NavLink to="/exercise">
                         <ContainerOutlined />
                         <span>题目管理</span>
                     </NavLink>
                 </Menu.Item>
                 {/* 提交记录 */}
-                <Menu.Item key="/solutionList">
-                    <NavLink to="/solutionList">
+                <Menu.Item key="/solution">
+                    <NavLink to="/solution">
                         <ContainerOutlined />
                         <span>提交记录</span>
                     </NavLink>

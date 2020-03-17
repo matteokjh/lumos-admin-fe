@@ -1,5 +1,5 @@
-import { LangArr } from "./exercise";
-
+import { LangArr, ExecOpType, ExeProps } from "./exercise";
+import { UserProps } from './user'
 export type consoleBoxType = "result" | "testcase";
 
 export type outputType = {
@@ -79,11 +79,19 @@ export interface TestDataProps {
     output: string;
 }
 
+export interface ErrObjType {
+    input: string;
+    userOutput: string;
+    sysOutput: string;
+    stdout: string;
+}
+
 export interface SolutionProps {
     sid: string; // uuid
-    id: number; // 题目编号
-    username: string; // 用户名
-    code: string; // 用户提交的代码
+    exerciseInfo: ExeProps; // 题目信息
+    userInfo: UserProps; // 用户信息
+    code: string; // 混合代码
+    userCode?: string; // 用户提交的代码
     lang: typeof LangArr[number]; // 语言
     testdata: TestDataProps[]; // 测试数据
     createTime: number; // 时间
@@ -95,6 +103,11 @@ export interface SolutionProps {
     judge: JudgeCode // 返回结果，取决于 result
     time: number
     memory: number
+    opType: ExecOpType
+    errObj?: ErrObjType
+    passTotal?: number,
+    testdataTotal?: number
+    
 }
 
 export const stateArr = <const>['init', 'pending', 'success', 'error']

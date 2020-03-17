@@ -118,7 +118,9 @@ export const formatMemory = (m: number) => {
 };
 // 代码执行结果
 export const formatJudgeResult = (judge: JudgeCode) => {
-    return JUDGEMAP[judge];
+    if(judge !== undefined) {
+        return JUDGEMAP[judge];
+    } else return []
 };
 // 执行者
 export const formatOperator = (val?: typeof OperatorProps[number]) => {

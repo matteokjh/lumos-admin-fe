@@ -37,10 +37,8 @@ const Execute = () => {
     );
     // 输出
     const [result, setResult] = useState({} as SolutionProps);
-    // 测试 - 正在运行
+    // 正在运行
     const [isRunning, setIsRunning] = useState(false);
-    // 提交 - 正在运行
-    const [submitRunning, setSubmitRunning] = useState(false);
     // t
     let T = 5;
     const [timer, setTimer] = useState([] as any);
@@ -94,24 +92,17 @@ const Execute = () => {
                     if (T === 0) {
                         message.error("执行出错");
                     }
-                    if (res.data.opType === "testRun") {
-                        setResult(res.data);
-                    } else {
-                        console.log(res.data);
-                    }
+                    setResult(res.data);
                     setIsRunning(false);
-                    setSubmitRunning(false);
                     T = 5;
                 }
             } else {
                 message.error(res.msg);
                 setIsRunning(false);
-                setSubmitRunning(false);
             }
         } catch (err) {
             message.error(err);
             setIsRunning(false);
-            setSubmitRunning(false);
         }
     };
     // 测试运行
@@ -141,7 +132,9 @@ const Execute = () => {
     };
     // 运行
     const submitRun = async () => {
-        setSubmitRunning(true); // 注意两个 running 不同
+        setIsRunning(true);
+        setConsoleActive("result");
+        setIsOpen(true);
         try {
             let res = await execute({
                 opType: "submit",
@@ -154,11 +147,11 @@ const Execute = () => {
                 getRes(res.data);
             } else {
                 message.error(res.msg);
-                setSubmitRunning(false);
+                setIsRunning(false);
             }
         } catch (err) {
             message.error(err);
-            setSubmitRunning(false);
+            setIsRunning(false);
         }
     };
     // 更改测试用例
@@ -277,7 +270,6 @@ const Execute = () => {
                         setConsoleActive={setConsoleActive}
                         result={result}
                         isRunning={isRunning}
-                        submitRunning={submitRunning}
                         isOpen={isOpen}
                         exercise={exercise}
                         singleCaseInput={singleCaseInput}
