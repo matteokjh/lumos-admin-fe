@@ -25,7 +25,7 @@ const Execute = () => {
     const [exercise, setExercise] = useState({} as ExeProps);
     const CodeRef = useRef(null as any);
     const [LumosLanguage, setLumosLanguage] = useState(
-        (localStorage["lumos-language"] || "js") as typeof LangArr[number]
+        (localStorage["lumos-language"] || "javascript") as typeof LangArr[number]
     );
     const [code, setCode] = useState(exercise?.code?.[LumosLanguage] || "");
     const [isOpen, setIsOpen] = useState(false);
@@ -216,6 +216,7 @@ const Execute = () => {
                 {/* 左边介绍 */}
                 <div className="exc_info">
                     <ReactMarkdown
+                        className="md-wrapper"
                         source={exercise.introduction}
                         escapeHtml={false}
                         renderers={{ code: CodeBlock, link: ReactMarkdownLink }}

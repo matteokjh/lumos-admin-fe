@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useContext } from "react";
 import { Route, Switch } from "react-router-dom";
 import Index from "@/pages/Index";
 import Waiting from "@/pages/Waiting";
@@ -7,10 +7,14 @@ import Exercise from "@/pages/Exercise"
 import { Popconfirm, message } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import { logout } from "@/api/user";
+import { store } from '@/store'
 import "@/styles/Navigate.sass";
+
+import UserDetail from "@/pages/UserDetail"
 
 const Navigate = (props: { collapsed: boolean }) => {
     const { collapsed } = props;
+    const { userInfo } = useContext(store).state
 
     // methods
     const handlelogout = async () => {
@@ -34,6 +38,7 @@ const Navigate = (props: { collapsed: boolean }) => {
             }}
         >
             <div className="top">
+                <span>{userInfo.name}，欢迎回来</span>
                 <Popconfirm
                     placement="bottomLeft"
                     title="确定要登出？"
@@ -98,7 +103,8 @@ const Navigate = (props: { collapsed: boolean }) => {
                     <Route
                         exact
                         path="/user/detail/:username"
-                        component={lazy(() => import("@/pages/UserDetail"))}
+                        // component={lazy(() => import("@/pages/UserDetail"))}
+                        component={UserDetail}
                     ></Route>
                     {/* 404 */}
                     <Route component={My404Component}></Route>

@@ -17,16 +17,18 @@ const UserDetail = (props: any) => {
     useEffect(() => {
         (async () => {
             let username = props.match.params.username;
-            try {
-                let res = await getUser(username);
-                if (res.code === 200) {
-                    console.log(res.data);
-                    setUserInfo(res.data);
-                } else {
-                    message.error(res.msg);
+            if (username) {
+                try {
+                    let res = await getUser(username);
+                    if (res.code === 200) {
+                        console.log(res.data);
+                        setUserInfo(res.data);
+                    } else {
+                        message.error(res.msg);
+                    }
+                } catch (err) {
+                    message.error(err);
                 }
-            } catch (err) {
-                message.error(err);
             }
         })();
     }, [props.match.params.username]);
@@ -81,7 +83,9 @@ const UserDetail = (props: any) => {
                             </div>
                             <div className="item">
                                 <p>权限</p>
-                                <span>{formatPermission(userInfo.permission)}</span>
+                                <span>
+                                    {formatPermission(userInfo.permission)}
+                                </span>
                             </div>
                         </div>
                         <div className="row">
@@ -119,7 +123,7 @@ const UserDetail = (props: any) => {
                         <div
                             className="avatar"
                             style={{
-                                backgroundImage: `url(${userInfo.avatar})`
+                                backgroundImage: userInfo.avatar && `url(${userInfo.avatar})`
                             }}
                         ></div>
                     </div>

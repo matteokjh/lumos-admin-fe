@@ -50,11 +50,13 @@ const User = () => {
             title: "昵称",
             dataIndex: "name",
             key: "name",
-            render: (data: string, row: UserProps) => (
-                <Link to={`/user/detail/${row.username}`}>
-                    <span>{data}</span>
-                </Link>
-            ),
+            render: (data: string, row: UserProps) => {
+                return (
+                    <Link to={`/user/detail/${row.username}`}>
+                        <span>{data}</span>
+                    </Link>
+                );
+            },
             minWidth: 100
         },
         {
@@ -98,8 +100,8 @@ const User = () => {
                 return (
                     <Radio.Group
                         onChange={e => handleChangePermission(e, row)}
-                        disabled={row.username === userInfo?.username}
-                        defaultValue={data}
+                        disabled={userInfo.permission >= row.permission}
+                        value={data}
                         buttonStyle="solid"
                     >
                         {PERMISSION_GROUP.map(e => (
@@ -107,6 +109,7 @@ const User = () => {
                                 key={e}
                                 value={e}
                                 className={`radioItem`}
+                                disabled={userInfo.permission >= e}
                             >
                                 {e}
                             </Radio.Button>
@@ -123,11 +126,14 @@ const User = () => {
                     <div className="btn-group">
                         <Button
                             onClick={() => {
-                                showDeleteModal(true);
-                                setSelected(row);
+                                if(0) {
+                                    showDeleteModal(true);
+                                    setSelected(row);
+                                }
                             }}
                             size="small"
                             type="danger"
+                            disabled
                         >
                             删除
                         </Button>
@@ -144,6 +150,7 @@ const User = () => {
             let res = await changePermission(userInfo.username, e.target.value);
             if (res.code === 200) {
                 message.success(res.msg);
+                refresh();
             } else {
                 message.error(res.msg);
             }

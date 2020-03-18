@@ -107,7 +107,8 @@ export interface SolutionProps {
     errObj?: ErrObjType
     passTotal?: number,
     testdataTotal?: number
-    
+    timePercent: string
+    memoryPercent: string
 }
 
 export const stateArr = <const>['init', 'pending', 'success', 'error']

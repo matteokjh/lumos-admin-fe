@@ -150,6 +150,7 @@ const MarkdownEditor = () => {
                 ref={previewRef}
             >
                 <ReactMarkdown
+                    className="md-wrapper"
                     source={mdContent}
                     escapeHtml={false}
                     renderers={{ code: CodeBlock, link: ReactMarkdownLink }}

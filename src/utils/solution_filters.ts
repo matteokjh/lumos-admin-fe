@@ -50,7 +50,7 @@ export const filters_state = [
 export const filters_judge = [...new Array(16)].map((e, idx) => {
     return {
         value: idx + '',
-        text: JUDGEMAP[idx][1]
+        text: `${idx}. ${JUDGEMAP[idx][1]}`
     };
 });
 

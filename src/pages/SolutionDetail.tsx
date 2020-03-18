@@ -4,7 +4,12 @@ import { useHistory } from "react-router-dom";
 import { SolutionProps } from "@/types/solution";
 import { getSolution } from "@/api/solution";
 import "@/styles/SolutionDetail.sass";
-import { formatJudgeResult, formatTime, formatLang } from "@/utils/methods";
+import {
+    formatJudgeResult,
+    formatTime,
+    formatLang,
+    formatMemory
+} from "@/utils/methods";
 
 const SolutionDetail = (props: any) => {
     const history = useHistory();
@@ -56,6 +61,29 @@ const SolutionDetail = (props: any) => {
                         </b>
                     </p>
                     <p>
+                        <b>执行用时：{solutionInfo.time} ms</b>
+                        {solutionInfo.opType !== "testRun" && (
+                            <span>
+                                ，在所有{" "}
+                                <b>{formatLang(solutionInfo.lang)[0]}</b>{" "}
+                                的提交中超越了 <b>{solutionInfo.timePercent}</b>{" "}
+                                的用户
+                            </span>
+                        )}
+                    </p>
+                    <p>
+                        <b>内存消耗：{formatMemory(solutionInfo.memory)}</b>
+
+                        {solutionInfo.opType !== "testRun" && (
+                            <span>
+                                ，在所有{" "}
+                                <b>{formatLang(solutionInfo.lang)[0]}</b>{" "}
+                                的提交中超越了{" "}
+                                <b>{solutionInfo.memoryPercent}</b> 的用户
+                            </span>
+                        )}
+                    </p>
+                    <p>
                         状态：
                         <span
                             style={{
@@ -71,7 +99,7 @@ const SolutionDetail = (props: any) => {
                     </p>
                 </div>
                 {/* 如果错误，显示 errObj */}
-                {solutionInfo.judge !== 2 && (
+                {solutionInfo.judge && solutionInfo.judge !== 2 && (
                     <div className="errBox">
                         <p>输入：{solutionInfo.errObj?.input}</p>
                         <p>输出：{solutionInfo.errObj?.userOutput}</p>
@@ -83,7 +111,10 @@ const SolutionDetail = (props: any) => {
                 <div className="codeBox">
                     <h3>用户提交的代码</h3>
                     <p>语言：{formatLang(solutionInfo.lang)[0]}</p>
-                    <Input.TextArea disabled value={solutionInfo.userCode}></Input.TextArea>
+                    <Input.TextArea
+                        disabled
+                        value={solutionInfo.userCode}
+                    ></Input.TextArea>
                 </div>
             </div>
         </div>

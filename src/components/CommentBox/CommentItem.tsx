@@ -31,7 +31,7 @@ const CommentItem = (props: ItemProps) => {
         <div className="commentItem">
             <div className="item_top">
                 <Link
-                    to={`/user/${commentInfo.userInfo?.username}/baseinfo`}
+                    to={`/user/${commentInfo.userInfo?.username}`}
                     target="_blank"
                 >
                     <div
