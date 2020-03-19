@@ -57,7 +57,7 @@ const ExerciseForm = (props: any) => {
             if (res.code === 200) {
                 message.success(res.msg);
                 if (opType === "new") {
-                    history.push(`/exerciseList/detail/${res.data.id}`);
+                    history.push(`/exercise/detail/${res.data.id}`);
                     setOpType("detail");
                 } else {
                     setIsEdit(false);

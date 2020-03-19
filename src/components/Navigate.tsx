@@ -38,7 +38,7 @@ const Navigate = (props: { collapsed: boolean }) => {
             }}
         >
             <div className="top">
-                <span>{userInfo.name}，欢迎回来</span>
+                <span>{userInfo?.name}，欢迎回来</span>
                 <Popconfirm
                     placement="bottomLeft"
                     title="确定要登出？"
