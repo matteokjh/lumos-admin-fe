@@ -204,7 +204,20 @@ const ExerciseList = () => {
     };
 
     useEffect(() => {
-        refresh();
+        (async () => {
+            setLoading(true);
+            try {
+                let res = await getList();
+                if (res.code === 200) {
+                    setList(res.data);
+                } else {
+                    message.error(res.msg);
+                }
+            } catch (err) {
+                message.error(err);
+            }
+            setLoading(false);
+        })();
     }, []);
 
     return (
