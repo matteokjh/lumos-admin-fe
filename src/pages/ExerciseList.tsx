@@ -205,22 +205,20 @@ const ExerciseList = () => {
 
     useEffect(() => {
         (async () => {
-            if (!list.length) {
-                setLoading(true);
-                try {
-                    let res = await getList();
-                    if (res.code === 200) {
-                        setList(res.data);
-                    } else {
-                        message.error(res.msg);
-                    }
-                } catch (err) {
-                    message.error(err);
+            setLoading(true);
+            try {
+                let res = await getList();
+                if (res.code === 200) {
+                    setList(res.data);
+                } else {
+                    message.error(res.msg);
                 }
-                setLoading(false);
+            } catch (err) {
+                message.error(err);
             }
+            setLoading(false);
         })();
-    }, [list]);
+    }, []);
 
     return (
         <Spin spinning={loading}>

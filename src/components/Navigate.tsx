@@ -3,18 +3,17 @@ import { Route, Switch } from "react-router-dom";
 import Index from "@/pages/Index";
 import Waiting from "@/pages/Waiting";
 import My404Component from "./base/My404Component";
-import Exercise from "@/pages/Exercise"
+import Exercise from "@/pages/Exercise";
 import { Popconfirm, message } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import { logout } from "@/api/user";
-import { store } from '@/store'
+import { store } from "@/store";
 import "@/styles/Navigate.sass";
 
-import UserDetail from "@/pages/UserDetail"
+import UserDetail from "@/pages/UserDetail";
 
-const Navigate = (props: { collapsed: boolean }) => {
-    const { collapsed } = props;
-    const { userInfo } = useContext(store).state
+const Navigate = () => {
+    const { userInfo } = useContext(store).state;
 
     // methods
     const handlelogout = async () => {
@@ -31,12 +30,7 @@ const Navigate = (props: { collapsed: boolean }) => {
     };
 
     return (
-        <div
-            className="Navigate"
-            style={{
-                width: `calc(100vw - ${collapsed ? "80px" : "250px"})`
-            }}
-        >
+        <div className="Navigate">
             <div className="top">
                 <span>{userInfo?.name}，欢迎回来</span>
                 <Popconfirm
@@ -90,7 +84,11 @@ const Navigate = (props: { collapsed: boolean }) => {
                         component={lazy(() => import("@/pages/FilterGroup"))}
                     ></Route>
                     {/* 文章管理 */}
-                    <Route exact path="/article" component={lazy(() => import("@/pages/Article"))}></Route>
+                    <Route
+                        exact
+                        path="/article"
+                        component={lazy(() => import("@/pages/Article"))}
+                    ></Route>
                     {/* 文章详情 */}
                     <Route
                         exact
@@ -98,7 +96,11 @@ const Navigate = (props: { collapsed: boolean }) => {
                         component={lazy(() => import("@/pages/ArticleDetail"))}
                     ></Route>
                     {/* 用户管理 */}
-                    <Route exact path="/user" component={lazy(() => import("@/pages/User"))}></Route>
+                    <Route
+                        exact
+                        path="/user"
+                        component={lazy(() => import("@/pages/User"))}
+                    ></Route>
                     {/* 用户详情 */}
                     <Route
                         exact

@@ -10,7 +10,6 @@ import { message } from "antd";
 import Waiting from "./pages/Waiting";
 
 const App = () => {
-    const [collapsed, setCollapsed] = useState(false);
     const { dispatch } = useContext(store);
     const [isLogged, setisLogged] = useState("waiting");
 
@@ -41,11 +40,8 @@ const App = () => {
                 {(isLogged === "waiting" && <Waiting></Waiting>) ||
                     (isLogged === "yes" && (
                         <>
-                            <Nav
-                                collapsed={collapsed}
-                                setCollapsed={setCollapsed}
-                            ></Nav>
-                            <Navigate collapsed={collapsed}></Navigate>
+                            <Nav></Nav>
+                            <Navigate></Navigate>
                         </>
                     )) ||
                     (isLogged === "no" && (

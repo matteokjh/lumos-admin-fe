@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Menu } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
 import Header from "./base/Header";
@@ -13,11 +13,8 @@ import {
 } from "@ant-design/icons";
 import "@/styles/Nav.sass";
 
-const Nav = (props: {
-    collapsed: boolean;
-    setCollapsed: (c: boolean) => void;
-}) => {
-    const { collapsed, setCollapsed } = props;
+const Nav = () => {
+    const [collapsed, setCollapsed] = useState(false);
     const location = useLocation();
 
     return (
