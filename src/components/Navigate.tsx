@@ -13,7 +13,7 @@ import "@/styles/Navigate.sass";
 import UserDetail from "@/pages/UserDetail"
 
 const Navigate = (props: { collapsed: boolean }) => {
-    const { collapsed } = props;
+    // const { collapsed } = props;
     const { userInfo } = useContext(store).state
 
     // methods
@@ -34,7 +34,7 @@ const Navigate = (props: { collapsed: boolean }) => {
         <div
             className="Navigate"
             style={{
-                width: `calc(100vw - ${collapsed ? "80px" : "250px"})`
+                // width: `calc(100vw - ${collapsed ? "80px" : "250px"})`
             }}
         >
             <div className="top">
