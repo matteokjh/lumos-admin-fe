@@ -24,6 +24,24 @@ export const debounce = (
         timeout = setTimeout(lastFn, delay);
     };
 };
+// 节流
+export const throttle = (
+    Fn: any,
+    delay: number = 300,
+) => {
+    let timeout: any = null;
+    return function (this: any, ...args: any) {
+        const context = this;
+
+        const lastFn = () => {
+            timeout && clearTimeout(timeout);
+            timeout = null;
+            Fn.apply(context, args);
+        };
+
+        if(!timeout) timeout = setTimeout(lastFn, delay);
+    };
+};
 // 处理日期
 export const formatDate = (time: number) => {
     if (!time) return "";

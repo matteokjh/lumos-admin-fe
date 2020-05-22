@@ -12,8 +12,8 @@ export const getArticleSummaryOption = (data: any) => {
         grid: {
             left: "0%",
             right: "0%",
-            top: "0%",
-            height: 100,
+            top: "5%",
+            height: "100%",
         },
         xAxis: [
             {
@@ -52,8 +52,8 @@ export const getSolutionSummaryOption = (data: any) => {
         grid: {
             left: "0%",
             right: "0%",
-            top: "0%",
-            height: 100,
+            top: "5%",
+            height: "100%",
         },
         xAxis: [
             {
@@ -94,8 +94,8 @@ export const getUserSummaryOption = (data: any) => {
         grid: {
             left: "0%",
             right: "0%",
-            top: "0%",
-            height: 100,
+            top: "5%",
+            height: "100%",
         },
         xAxis: [
             {

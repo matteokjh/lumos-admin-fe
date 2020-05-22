@@ -8,10 +8,11 @@ interface ItemProps {
     option?: any;
     bottom?: ReactDOM;
     toolTip?: ReactDOM;
+    refProps: any
 }
 
 const SummaryItem = (props: ItemProps) => {
-    const { title, value, option, bottom, toolTip } = props;
+    const { title, value, option, bottom, toolTip, refProps } = props;
 
     return (
         <div className="SummaryItem">
@@ -24,8 +25,8 @@ const SummaryItem = (props: ItemProps) => {
             </div>
             <div className="chart">
                 <ReactEcharts style={{
-                    height: 100
-                }} option={option}></ReactEcharts>
+                    height: "100%"
+                }} option={option} ref={refProps}></ReactEcharts>
             </div>
             <div className="bottom">{bottom}</div>
         </div>
