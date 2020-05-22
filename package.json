@@ -7,6 +7,8 @@
     "@types/react-resize-detector": "^4.2.0",
     "antd": "^4.0.1",
     "axios": "^0.19.2",
+    "echarts": "^4.7.0",
+    "echarts-for-react": "^2.0.16",
     "highlight.js": "^9.18.1",
     "monaco-editor": "^0.20.0",
     "node-sass": "^4.13.1",

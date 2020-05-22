@@ -1,21 +1,25 @@
 import { CommentProps, ConvertedCommentProps } from "@/types/comment";
 import { JUDGEMAP } from "./global_config";
-import { JudgeCode, OperatorProps, stateProps } from '@/types/solution'
-import { COLOR } from './global_config'
+import { JudgeCode, OperatorProps, stateProps } from "@/types/solution";
+import { COLOR } from "./global_config";
 import { LangArr, ExecOpType } from "@/types/exercise";
 
 // 防抖
-export const debounce = (Fn: any, delay: number = 300, immediate: boolean = false) => {
+export const debounce = (
+    Fn: any,
+    delay: number = 300,
+    immediate: boolean = false
+) => {
     let timeout: any = null;
-    return function(this: any, ...args: any) {
+    return function (this: any, ...args: any) {
         const context = this;
-        
+
         const lastFn = () => {
             timeout = null;
             Fn.apply(context, args);
         };
-        
-        if(immediate && !timeout) Fn.apply(context, args);
+
+        if (immediate && !timeout) Fn.apply(context, args);
         timeout && clearTimeout(timeout);
         timeout = setTimeout(lastFn, delay);
     };
@@ -118,44 +122,96 @@ export const formatMemory = (m: number) => {
 };
 // 代码执行结果
 export const formatJudgeResult = (judge: JudgeCode) => {
-    if(judge !== undefined) {
+    if (judge !== undefined) {
         return JUDGEMAP[judge];
-    } else return []
+    } else return [];
 };
 // 执行者
 export const formatOperator = (val?: typeof OperatorProps[number]) => {
-    switch(val) {
-        case 'system': return ['系统', COLOR.GREY]
-        case 'user': return ['用户', COLOR.BLUE]
-        default: return ['未知', COLOR.DEFAULT]
+    switch (val) {
+        case "system":
+            return ["系统", COLOR.GREY];
+        case "user":
+            return ["用户", COLOR.BLUE];
+        default:
+            return ["未知", COLOR.DEFAULT];
     }
-}
+};
 // 语言
 export const formatLang = (lang?: typeof LangArr[number]) => {
-    switch(lang) {
-        case "c": return ["C", COLOR.C]
-        case "cpp": return ["C++", COLOR.CPP]
-        case "java": return ["Java", COLOR.JAVA]
-        case "javascript": return ["JavaScript", COLOR.JAVASCRIPT]
-        default: return ["未知", COLOR.DEFAULT]
+    switch (lang) {
+        case "c":
+            return ["C", COLOR.C];
+        case "cpp":
+            return ["C++", COLOR.CPP];
+        case "java":
+            return ["Java", COLOR.JAVA];
+        case "javascript":
+            return ["JavaScript", COLOR.JAVASCRIPT];
+        default:
+            return ["未知", COLOR.DEFAULT];
     }
-}
+};
 // 运行状态
 export const formatState = (val?: stateProps) => {
-    switch(val) {
-        case "init": return ["初始化", COLOR.INIT]
-        case "success": return ["成功", COLOR.SUCCESS]
-        case "pending": return ["等待中", COLOR.PENDING]
-        case "error": return ["失败", COLOR.ERROR]
-        default: return ["未知", COLOR.DEFAULT]
+    switch (val) {
+        case "init":
+            return ["初始化", COLOR.INIT];
+        case "success":
+            return ["成功", COLOR.SUCCESS];
+        case "pending":
+            return ["等待中", COLOR.PENDING];
+        case "error":
+            return ["失败", COLOR.ERROR];
+        default:
+            return ["未知", COLOR.DEFAULT];
     }
-}
+};
 // 执行类别
 export const formatOpType = (val?: ExecOpType) => {
-    switch(val) {
-        case "testRun": return ["测试运行", COLOR.TESTRUN]
-        case "contest": return ["竞赛提交", COLOR.CONTESTRUN]
-        case "submit": return ["题目提交", COLOR.SUBMITRUN]
-        default: return ["未知", COLOR.DEFAULT]
+    switch (val) {
+        case "testRun":
+            return ["测试运行", COLOR.TESTRUN];
+        case "contest":
+            return ["竞赛提交", COLOR.CONTESTRUN];
+        case "submit":
+            return ["题目提交", COLOR.SUBMITRUN];
+        default:
+            return ["未知", COLOR.DEFAULT];
     }
+};
+
+// 获取 mock 统计数据
+export const getMockData = () => {
+    
+    return {
+        articleSummary: {
+            total: getRandomValue(),
+            chartData: getRandomValueList(10)
+        },
+        solutionSummary: {
+            total: getRandomValue(),
+            chartData: getRandomValueList(10)
+        },
+        userSummary: {
+            total: getRandomValue(),
+            chartData: getRandomValueList(10)
+        },
+    };
+};
+
+const getRandomValue = (l: number = 0, r: number = 100) => {
+    return ~~(Math.random()*(r-l)) + l
+}
+
+const getRandomValueList = (len: number) => {
+    const now = new Date()
+    const date = now.getDate()
+    const res = [...new Array(len)].map((e, idx) => {
+        return {
+            date: new Date(now.setDate(date-idx)).toLocaleDateString(),
+            value: ~~(Math.random()*10000),
+        }
+    })
+    return res
 }
