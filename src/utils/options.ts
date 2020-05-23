@@ -94,7 +94,8 @@ export const getUserSummaryOption = (data: any) => {
         grid: {
             left: "0%",
             right: "0%",
-            top: "5%",
+            top: "0%",
+            bottom: "0%",
             height: "100%",
         },
         xAxis: [
@@ -120,6 +121,19 @@ export const getUserSummaryOption = (data: any) => {
         ],
     };
 };
+// 文章统计
+export const getArticleOption = (data: any) => {
+    return {}
+}
+// 题目统计
+export const getExeOption = (data: any) => {
+    return {}
+}
+// 用户统计
+export const getUserOption = (data: any) => {
+    return {}
+}
+
 
 const getLabel = (data: any) => {
     return data?.map((e: any) => e.date);

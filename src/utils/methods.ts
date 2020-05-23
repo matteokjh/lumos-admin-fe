@@ -228,7 +228,7 @@ const getRandomValueList = (len: number) => {
     const res = [...new Array(len)].map((e, idx) => {
         return {
             date: new Date(now.setDate(date-idx)).toLocaleDateString(),
-            value: ~~(Math.random()*10000),
+            value: ~~(Math.random()*1000),
         }
     })
     return res
