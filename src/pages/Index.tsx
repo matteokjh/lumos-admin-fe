@@ -5,7 +5,6 @@ import {
     getArticleSummaryOption,
     getSolutionSummaryOption,
     getUserSummaryOption,
-    getArticleOption,
     getExeOption,
     getUserOption,
 } from "@/utils/options";
@@ -26,12 +25,12 @@ const Index = () => {
 
     // methods
     const handleResize = () => {
-        refA.current.getEchartsInstance().resize();
-        refB.current.getEchartsInstance().resize();
-        refC.current.getEchartsInstance().resize();
-        ref1.current.getEchartsInstance().resize();
-        ref2.current.getEchartsInstance().resize();
-        ref4.current.getEchartsInstance().resize();
+        refA.current?.getEchartsInstance().resize();
+        refB.current?.getEchartsInstance().resize();
+        refC.current?.getEchartsInstance().resize();
+        ref1.current?.getEchartsInstance().resize();
+        ref2.current?.getEchartsInstance().resize();
+        ref4.current?.getEchartsInstance().resize();
     };
 
     useEffect(() => {
@@ -65,9 +64,8 @@ const Index = () => {
                 option={getUserSummaryOption(data.userSummary?.chartData)}
                 refProps={refC}
             ></SummaryItem>
-            {/* 文章统计 */}
+            {/* 访问量统计 */}
             <Chart1
-                option={getArticleOption(data.article)}
                 refProps={ref1}
             ></Chart1>
             {/* 题目统计 */}

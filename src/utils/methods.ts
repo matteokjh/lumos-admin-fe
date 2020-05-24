@@ -214,7 +214,7 @@ export const getMockData = () => {
         userSummary: {
             total: getRandomValue(),
             chartData: getRandomValueList(10)
-        },
+        }
     };
 };
 
@@ -231,5 +231,5 @@ const getRandomValueList = (len: number) => {
             value: ~~(Math.random()*1000),
         }
     })
-    return res
+    return res.reverse()
 }

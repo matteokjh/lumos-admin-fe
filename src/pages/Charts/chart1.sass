@@ -1,0 +1,20 @@
+.chart1
+    display: flex
+    .loading
+        height: 100%
+    .left
+        width: 60%
+        .graph
+            height: 400px
+            padding: 0 20px
+    .right
+        width: 40%
+        .c-wrapper
+            display: grid
+            padding: 20px
+            grid-template-rows: 1fr 1fr
+            grid-template-columns: 1fr 1fr
+            height: calc(100% - 80px)
+            .MyCard
+                &:last-child
+                    grid-column: 1 / span 2
