@@ -1,24 +1,27 @@
-import fetch from './'
+import fetch from "./";
 
-const PREFIX = 'admin/statistics'
+const PREFIX = "admin/statistics";
 
-export const getCDNStatistics = (obj?: {
-    since?: string,
-    until?: string
-}) => {
+export const getCDNStatistics = (obj?: { since?: string; until?: string }) => {
     return fetch.get(`${PREFIX}`, {
-        params: obj
-    })
+        params: obj,
+    });
 };
 
 export const getExeStatistics = (obj?: any) => {
     return fetch.get(`${PREFIX}/exercise`, {
-        params: obj
-    })
-}
+        params: obj,
+    });
+};
 
 export const getSolutionStatistics = (obj?: any) => {
     return fetch.get(`${PREFIX}/solution`, {
-        params: obj
-    })
-}
+        params: obj,
+    });
+};
+
+export const getUserStatistics = (obj?: any) => {
+    return fetch.get(`${PREFIX}/user`, {
+        params: obj,
+    });
+};

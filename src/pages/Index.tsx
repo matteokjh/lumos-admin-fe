@@ -5,7 +5,6 @@ import {
     getArticleSummaryOption,
     getSolutionSummaryOption,
     getUserSummaryOption,
-    getUserOption,
 } from "@/utils/options";
 import "@/styles/Index.sass";
 import Chart1 from "./Charts/Chart1";
@@ -77,7 +76,7 @@ const Index = () => {
             {/* 提交排行 */}
             <Chart3></Chart3>
             {/* 用户统计 */}
-            <Chart4 option={getUserOption(data.user)} refProps={ref4}></Chart4>
+            <Chart4 refProps={ref4}></Chart4>
         </div>
     );
 };
