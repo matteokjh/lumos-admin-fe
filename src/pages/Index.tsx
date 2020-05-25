@@ -5,7 +5,6 @@ import {
     getArticleSummaryOption,
     getSolutionSummaryOption,
     getUserSummaryOption,
-    getExeOption,
     getUserOption,
 } from "@/utils/options";
 import "@/styles/Index.sass";
@@ -21,6 +20,7 @@ const Index = () => {
     const refC = useRef(null as any);
     const ref1 = useRef(null as any);
     const ref2 = useRef(null as any);
+    const ref2_2 = useRef(null as any);
     const ref4 = useRef(null as any);
 
     // methods
@@ -30,6 +30,7 @@ const Index = () => {
         refC.current?.getEchartsInstance().resize();
         ref1.current?.getEchartsInstance().resize();
         ref2.current?.getEchartsInstance().resize();
+        ref2_2.current?.getEchartsInstance().resize();
         ref4.current?.getEchartsInstance().resize();
     };
 
@@ -70,8 +71,8 @@ const Index = () => {
             ></Chart1>
             {/* 题目统计 */}
             <Chart2
-                option={getExeOption(data.exercise)}
                 refProps={ref2}
+                ref2Props={ref2_2}
             ></Chart2>
             {/* 提交排行 */}
             <Chart3></Chart3>

@@ -10,3 +10,15 @@ export const getCDNStatistics = (obj?: {
         params: obj
     })
 };
+
+export const getExeStatistics = (obj?: any) => {
+    return fetch.get(`${PREFIX}/exercise`, {
+        params: obj
+    })
+}
+
+export const getSolutionStatistics = (obj?: any) => {
+    return fetch.get(`${PREFIX}/solution`, {
+        params: obj
+    })
+}
