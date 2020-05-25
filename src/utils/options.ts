@@ -173,8 +173,8 @@ export const getUVOption = (data: any) => {
 export const getExeOption = (data: any) => {
     const arr = getObj(data)?.sort(function (a: any, b: any) {
         return a.value - b.value;
-    })
-    const total = arr?.reduce((acc: any,cur: any) => acc+cur.value, 0)
+    });
+    const total = arr?.reduce((acc: any, cur: any) => acc + cur.value, 0);
     return {
         title: {
             text: `题目总数：${total}`,
@@ -190,8 +190,8 @@ export const getExeOption = (data: any) => {
         },
         visualMap: {
             show: false,
-            min: arr?.[0]?.value-1,
-            max: arr?.[arr.length-1]?.value+1,
+            min: arr?.[0]?.value - 1,
+            max: arr?.[arr.length - 1]?.value + 1,
             inRange: {
                 colorLightness: [0, 1],
             },
@@ -206,6 +206,7 @@ export const getExeOption = (data: any) => {
                 roseType: "radius",
                 label: {
                     color: "#333",
+                    fontSize: 16,
                 },
                 labelLine: {
                     lineStyle: {
@@ -229,9 +230,9 @@ export const getExeOption = (data: any) => {
 };
 // 通过率
 export const getExeOption2 = (data: any) => {
-    const submitTotal = data?.submitTotal || 0
-    const passTotal = data?.passTotal || 0
-    const notPass = submitTotal - passTotal
+    const submitTotal = data?.submitTotal || 0;
+    const passTotal = data?.passTotal || 0;
+    const notPass = submitTotal - passTotal;
     return {
         title: {
             text: `总提交次数：${submitTotal}`,
@@ -247,8 +248,8 @@ export const getExeOption2 = (data: any) => {
         },
         visualMap: {
             show: false,
-            min: Math.min(passTotal, notPass)-1,
-            max: Math.max(passTotal, notPass)+1,
+            min: Math.min(passTotal, notPass) - 1,
+            max: Math.max(passTotal, notPass) + 1,
             inRange: {
                 colorLightness: [0, 1],
             },
@@ -261,16 +262,17 @@ export const getExeOption2 = (data: any) => {
                 center: ["50%", "50%"],
                 data: [
                     {
-                        name: '通过次数',
-                        value: passTotal
+                        name: "通过次数",
+                        value: passTotal,
                     },
                     {
-                        name: '失败次数',
-                        value: notPass
-                    }
+                        name: "失败次数",
+                        value: notPass,
+                    },
                 ],
                 label: {
                     color: "#333",
+                    fontSize: 16,
                 },
                 labelLine: {
                     lineStyle: {
@@ -286,12 +288,12 @@ export const getExeOption2 = (data: any) => {
             },
         ],
     };
-}
+};
 
 export const getSolutionOption = (data: any) => {
     const arr = getObj(data).sort(function (a: any, b: any) {
         return a.value - b.value;
-    })
+    });
     return {
         title: {
             text: "准确率",
@@ -307,8 +309,8 @@ export const getSolutionOption = (data: any) => {
         },
         visualMap: {
             show: false,
-            min: arr[0]?.value-1,
-            max: arr[arr.length-1]?.value+1,
+            min: arr[0]?.value - 1,
+            max: arr[arr.length - 1]?.value + 1,
             inRange: {
                 colorLightness: [0, 1],
             },
@@ -363,7 +365,7 @@ const getObj = (data: any) => {
     return data?.map((e: any) => {
         return {
             name: e._id,
-            value: e.count
-        }
-    })
-}
+            value: e.count,
+        };
+    });
+};
