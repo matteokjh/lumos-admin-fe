@@ -20,7 +20,7 @@ import {
 } from "antd";
 import {
     WarningOutlined,
-    SearchOutlined,
+    // SearchOutlined,
     ExclamationCircleFilled
 } from "@ant-design/icons";
 import { UserProps } from "@/types/user";
@@ -227,8 +227,8 @@ const User = () => {
                 {/* 按钮组 */}
                 <div className="toolbar">
                     <Button onClick={refresh}>刷新</Button>
-                    <Input placeholder="搜索用户" spellCheck="false"></Input>
-                    <SearchOutlined className="search" />
+                    {/* <Input placeholder="搜索用户" spellCheck="false"></Input> */}
+                    {/* <SearchOutlined className="search" /> */}
                 </div>
                 <div className="main">
                     <Table

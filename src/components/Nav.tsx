@@ -3,7 +3,7 @@ import { Menu } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
 import Header from "./base/Header";
 import {
-    AuditOutlined,
+    // AuditOutlined,
     ContainerOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -60,12 +60,12 @@ const Nav = () => {
                     </NavLink>
                 </Menu.Item>
                 {/* 题集管理 */}
-                <Menu.Item key="/filterGroup">
+                {/* <Menu.Item key="/filterGroup">
                     <NavLink to="/filterGroup">
                         <AuditOutlined />
                         <span>题集管理</span>
                     </NavLink>
-                </Menu.Item>
+                </Menu.Item> */}
                 {/* 文章管理 */}
                 <Menu.Item key="/article">
                     <NavLink to="/article">

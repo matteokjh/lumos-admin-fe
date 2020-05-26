@@ -25,3 +25,9 @@ export const getUserStatistics = (obj?: any) => {
         params: obj,
     });
 };
+
+export const getStatisticsSummary = (obj?: any) => {
+    return fetch.get(`${PREFIX}/summary`, {
+        params: obj,
+    });
+};

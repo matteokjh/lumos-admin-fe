@@ -2,7 +2,8 @@ import React, { useEffect, useState, ChangeEvent, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button, message, Table, Radio, Modal, Input, Spin, Empty } from "antd";
 import "@/styles/Article.sass";
-import { WarningOutlined, SearchOutlined } from "@ant-design/icons";
+import { WarningOutlined } from "@ant-design/icons";
+// SearchOutlined
 import { ArticleProps } from "@/types/article";
 import { UserProps } from "@/types/user";
 import { articleShow, deleteArticle, getList } from "@/api/article";
@@ -188,8 +189,8 @@ const Article = () => {
                 {/* 按钮组 */}
                 <div className="toolbar">
                     <Button onClick={refresh}>刷新</Button>
-                    <Input placeholder="搜索文章" spellCheck="false"></Input>
-                    <SearchOutlined className="search" />
+                    {/* <Input placeholder="搜索文章" spellCheck="false"></Input> */}
+                    {/* <SearchOutlined className="search" /> */}
                 </div>
                 <div className="main">
                     <Table

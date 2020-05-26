@@ -13,8 +13,9 @@ interface ItemProps {
 
 const getDayComp = (arr: any) => {
     if (arr?.length) {
-        let todayVal = arr[arr.length - 1].value;
-        let yesterdayVal = arr[arr.length - 2].value;
+        console.log(arr)
+        let todayVal = arr[arr.length - 1]?.value || 0;
+        let yesterdayVal = arr[arr.length - 2]?.value || 0;
         let delta = todayVal - yesterdayVal;
         let state = 0;
         if (delta > 0) state = 1;
@@ -26,7 +27,7 @@ const getDayComp = (arr: any) => {
                     marginLeft: 15,
                 }}
             >
-                {Math.round(Math.abs(delta) / yesterdayVal * 100)}%
+                {yesterdayVal ? Math.round(Math.abs(delta) / yesterdayVal * 100): 0}%
                 {(state === 1 && (
                     <CaretUpOutlined
                         style={{
@@ -70,7 +71,7 @@ const SummaryItem = (props: ItemProps) => {
                 ></ReactEcharts>
             </div>
             <div className="bottom">
-                <span>日同比{getDayComp(data?.chartData)}</span>
+                <span>同比{getDayComp(data?.chartData)}</span>
             </div>
         </div>
     );

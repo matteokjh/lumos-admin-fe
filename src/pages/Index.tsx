@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import SummaryItem from "./SummaryItem";
-import { getMockData, throttle } from "@/utils/methods";
+import { throttle } from "@/utils/methods";
+// import { getMockData } from "@/utils/methods";
 import {
     getArticleSummaryOption,
     getSolutionSummaryOption,
@@ -10,7 +11,9 @@ import "@/styles/Index.sass";
 import Chart1 from "./Charts/Chart1";
 import Chart2 from "./Charts/Chart2";
 import Chart3 from "./Charts/Chart3";
-import Chart4 from "./Charts/Chart4";
+import { message } from 'antd'
+import { getStatisticsSummary } from '@/api/statistics'
+// import Chart4 from "./Charts/Chart4";
 
 const Index = () => {
     const [data, setData] = useState({} as any);
@@ -34,7 +37,20 @@ const Index = () => {
     };
 
     useEffect(() => {
-        setData(getMockData());
+        // setData(getMockData());
+        (async () => {
+            try {
+                const res = await getStatisticsSummary()
+                if(res?.code === 200) {
+                    console.log(res.data)
+                    setData(res.data)
+                } else {
+                    message.error(res?.msg)
+                }
+            } catch(err) {
+                message.error(err)
+            }
+        })()
         const Fn = throttle(handleResize);
         window.addEventListener("resize", Fn);
         return () => {
@@ -76,7 +92,7 @@ const Index = () => {
             {/* 提交排行 */}
             <Chart3></Chart3>
             {/* 用户统计 */}
-            <Chart4 refProps={ref4}></Chart4>
+            {/* <Chart4 refProps={ref4}></Chart4> */}
         </div>
     );
 };
